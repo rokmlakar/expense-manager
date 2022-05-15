@@ -1,4 +1,4 @@
-import styles from '../../styles/PageContainer.module.scss';
+import styles from '../../styles/Containers/PageContainer.module.scss';
 
 const PageContainer = ({ children, optionClass}) => {
   return  <div className={`${styles.container} ${optionClass}`}>{children}</div>
