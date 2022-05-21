@@ -1,31 +1,42 @@
-li{
-    a,button{
+li {
+
+    a,
+    button {
         font-size: 1.1rem;
         text-decoration: none;
         color: #333;
         transition: color 200ms ease;
-        &:hover{
+
+        &:hover {
             color: blue;
         }
     }
-    button{
+
+    button {
         background: none;
         cursor: pointer;
     }
 
-    h2,h3,span{
+    h2,
+    h3,
+    span {
         color: var(--color-inactive);
         font-weight: 500;
         font-size: 1rem;
         transition: color ease-in-out 250ms;
-        &:hover{
+
+        &:hover {
             color: var(--color-active);
         }
     }
 
-    .active{
-        h2,h3,span{
+    .active {
+
+        h2,
+        h3,
+        span {
             color: var(--color-active);
         }
+
     }
 }

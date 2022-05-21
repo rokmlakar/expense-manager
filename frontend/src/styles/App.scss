@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -10,7 +10,7 @@
     text-decoration: none;
 }
 
-:root{
+:root {
     --color-active: #363636;
     --color-inactive: #aeaeae;
     --color-red-100: #ffbece;
@@ -24,11 +24,23 @@
     --color-yellow-600: #f8aa35;
 }
 
-.App{
+.App {
     overflow-x: hidden;
 }
 
-.pageContainer{
+.pageContainer {
     display: flex;
     user-select: none;
+}
+
+.mobileMenu {
+    display: none;
+
+    @media screen and (max-width: 768px) {
+        z-index: 100;
+        display: block;
+        position: fixed;
+        top: 0;
+        right: 0;
+    }
 }

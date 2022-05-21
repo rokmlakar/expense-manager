@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import styles from '../../style/navbarComponents/ListItemLink.module.scss';
+import styles from '../../styles/Navbar/ListItemLink.module.scss';
 
-const ListItemlink = ({ url, children, clickHandler, optionClass }) => {
+const ListItemLink = ({ url, children, clickHandler, optionClass }) => {
     return (
         <li className={`${styles.listIem} ${optionClass}`} onClick={clickHandler}>
             <NavLink to={`/${url}`}
@@ -13,9 +13,9 @@ const ListItemlink = ({ url, children, clickHandler, optionClass }) => {
     );
 }
 
-ListItemlink.defaultProps = {
+ListItemLink.defaultProps = {
     url: "",
     optionClass: undefined,
 }
 
-export default ListItemlink
+export default ListItemLink
