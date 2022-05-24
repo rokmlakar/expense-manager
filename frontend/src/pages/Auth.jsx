@@ -1,7 +1,7 @@
-import styles from '../../styles/authComponents/Auth.modules.scss';
+import styles from '../styles/authComponents/Auth.modules.scss';
 
-import MainContainer from '../Containers/MainContainer';
-import { Title } from '../../components/Titles/Titles';
+import MainContainer from '../components/Containers/MainContainer';
+import { Title } from '../components/Titles/Titles';
 
 import { useState, useEffect } from 'react';
 
@@ -57,8 +57,7 @@ const Auth = () => {
                         value={regPw}
                         autoComplete='new-password'
                     />
-
-                    {{/* REGISTER BTN */}}
+                    {/* REGISTER BTN */}
                     <button>Register Now</button>
                 </div>
             </form>

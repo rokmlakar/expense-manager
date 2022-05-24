@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&family=Oswald:wght@300&display=swap');
 * {
     margin: 0;
     padding: 0;
@@ -6,10 +7,9 @@
     border: none;
     outline: none;
     list-style: none;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: 'Abel', sans-serif;
     text-decoration: none;
 }
-
 :root {
     --color-active: #363636;
     --color-inactive: #aeaeae;

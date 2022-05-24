@@ -3,7 +3,7 @@ import PageContainer from './components/Containers/PageContainer';
 import Navbar from './components/Navbar/Navbar';
 import { Routes, Route } from 'react-router-dom';
 import MobileNavbar from './components/Navbar/MobileNavbar';
-import Auth from './components/pages/Auth';
+import Auth from './pages/Auth';
 
 function App() {
   return (

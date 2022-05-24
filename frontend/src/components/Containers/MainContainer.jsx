@@ -3,7 +3,7 @@ import styles from '../../styles/Containers/MainContainer.module.scss';
 
 const MainContainer = ({children, optionClass}) => {
   return <div
-    className={`${styles.MainContainer} ${optionClass}`}
+    className={`${styles.container} ${optionClass}`}
     >{children}</div>
 };
 
