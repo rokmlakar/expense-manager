@@ -1,4 +1,4 @@
-import styles from '../styles/authComponents/Auth.modules.scss';
+import styles from '../styles/authComponents/Auth.module.scss';
 
 import MainContainer from '../components/Containers/MainContainer';
 import { Title } from '../components/Titles/Titles';

@@ -1,4 +1,4 @@
-import styles from '../../styles/Titles/Titles.modules.scss'
+import styles from '../../styles/Titles/Titles.module.scss';
 
 const Title = ({ children }) => {
     return (
