@@ -15,8 +15,8 @@ const CategoryCard = ({ category, money }) => {
       default: {
         return {
           ctg: "Other",
-          icon: <HiOutlineFire style={{ color: "#ffbece" }} />,
-          background: "#ff6275",
+          icon: <HiOutlineFire style={{ color: "#333" }} />,
+          background: "#30D5c8",
         };
       }
       case "Products":
@@ -65,7 +65,7 @@ const CategoryCard = ({ category, money }) => {
 };
 
 CategoryCard.defaultProps = {
-  category: "Other",
+  category: "other",
   money: "50k",
 };
 

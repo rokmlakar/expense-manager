@@ -21,7 +21,7 @@ const Home = () => {
                 <div className={styles.categories}>
                     <Title>Categories Last 30 Days</Title>
                     <div className={styles.content}>
-                        <CategoryCard/>
+                        <CategoryCard category={"Products"}/>
                         <CategoryCard/>
                         <CategoryCard/>
                         <CategoryCard/>
