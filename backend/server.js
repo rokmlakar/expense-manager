@@ -4,6 +4,9 @@ const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
 const path = require('path');
 
+//ROUTES
+const authRoutes = require('./routes/authRoutes');
+
 const app = express();
 const port = process.env.PORT || 5000;
 const { prisma } = require('./constants/config');
@@ -12,7 +15,7 @@ const PrismaStore = require('./lib/index')(session);
 //CORS
 app.use(
     cors({
-        origin: ['http://localhost:3005', 'https://localhost:5000'],
+        origin: ['http://localhost:3006', 'https://localhost:5000'],
         methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE', 'PATCH'],
         credentials: true,
     })
@@ -36,6 +39,9 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//ROUTES
+app.use('/api', authRoutes);
 
 app.listen(port, () =>{
     console.log(`SERVER STARTED : ${port} `)

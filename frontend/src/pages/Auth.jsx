@@ -5,6 +5,8 @@ import { Title } from '../components/Titles/Titles';
 
 import { useState, useEffect } from 'react';
 
+import { useLoginUser, useRegisterUser } from '../queries/user';
+
 const Auth = () => {
     //LOGIN
     const [email, setEmail] = useState('');
@@ -12,6 +14,29 @@ const Auth = () => {
     //REGISTER 
     const [regEmail, setRegEmail] = useState('');
     const [regPw, setRegPw] = useState('');
+
+    let body = {
+        email: email,
+        password: pw,
+    }
+
+    let reqBody = {
+        email: regEmail,
+        password: regPw,
+    }
+
+    const {
+        mutate: loginHandler,
+        isError: loginError,
+        error: loginErr,
+    } = useLoginUser();
+
+    const {
+        mutateAsync: registerHandler,
+        isSuccess: registerSucc,
+        isError: registerError,
+        error: registerErr, 
+    } = useRegisterUser();
 
     return (
         <MainContainer>
@@ -58,7 +83,8 @@ const Auth = () => {
                         autoComplete='new-password'
                     />
                     {/* REGISTER BTN */}
-                    <button>Register Now</button>
+                    <button
+                    onClick={() => registerHandler(reqBody)}>Register Now</button>
                 </div>
             </form>
 
