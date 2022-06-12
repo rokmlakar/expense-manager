@@ -6,4 +6,4 @@ const Ax = axios.create({
     withCredentials: true
 })
 
-export default Ax;
+export default Ax;  

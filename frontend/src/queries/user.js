@@ -4,7 +4,6 @@ import Ax from '../utils/Axios';
 const fetchUser = async () => {
     return await Ax.get('whoami');
 }
-
 const loginUser = async (body) => {
     return await Ax.post('auth', body)
 }
@@ -15,14 +14,14 @@ const logoutUser = async (body) => {
     return await Ax.post('logout')
 }
 
-const useUser = ()=>
+const useUser = () =>
     useQuery('user', fetchUser, {
         refetchOnWindowFocus: true,
         retry: false,
     });
 
-    const useLoginUser = () => useMutation('loginUser', loginUser);
-    const useLogoutUser = () => useMutation('logoutUser', logoutUser);
-    const useRegisterUser = () => useMutation('registerUser', registerUser);
+const useLoginUser = () => useMutation('loginUser', loginUser);
+const useLogoutUser = () => useMutation('logoutUser', logoutUser);
+const useRegisterUser = () => useMutation('registerUser', registerUser);
 
-    export { useUser, useLoginUser, useRegisterUser, useLogoutUser};
+export { useUser, useLoginUser, useRegisterUser, useLogoutUser };
