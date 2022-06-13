@@ -3,9 +3,11 @@ import styles from '../styles/authComponents/Auth.module.scss';
 import MainContainer from '../components/Containers/MainContainer';
 import { Title } from '../components/Titles/Titles';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { useLoginUser, useRegisterUser } from '../queries/user';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthProvider';
 
 const Auth = () => {
     //LOGIN
@@ -15,12 +17,20 @@ const Auth = () => {
     const [regEmail, setRegEmail] = useState('');
     const [regPw, setRegPw] = useState('');
 
+    //CONTEXT
+    const { auth, setAuth } = useContext(AuthContext);
+
+    //NAVIGATE
+    const navigate = useNavigate();
+
+
+
     let body = {
         email: email,
         password: pw,
     }
 
-    let reqBody = {
+    let regBody = {
         email: regEmail,
         password: regPw,
     }
@@ -35,8 +45,12 @@ const Auth = () => {
         mutateAsync: registerHandler,
         isSuccess: registerSucc,
         isError: registerError,
-        error: registerErr, 
+        error: registerErr,
     } = useRegisterUser();
+
+    useEffect(() => {
+        if (auth) navigate('/')
+    });
 
     return (
         <MainContainer>
@@ -59,7 +73,12 @@ const Auth = () => {
                     />
 
                     {/* LOGIN BTN */}
-                    <button>Login Now</button>
+                    <button onClick={() => loginHandler(body, {
+                        onError: () => {
+                            console.log(loginErr)
+                        },
+                        onSuccess: () => setAuth(true)
+                    })}>Login Now</button>
                 </div>
             </form>
             {/* REGISTER FORM */}
@@ -84,7 +103,21 @@ const Auth = () => {
                     />
                     {/* REGISTER BTN */}
                     <button
-                    onClick={() => registerHandler(reqBody)}>Register Now</button>
+                        onClick={() => registerHandler(regBody, {
+                            //ON SUCCESS USE LOGINHANDLER
+                            onSuccess: () => {
+                                loginHandler(regBody, {
+                                    onSuccess: () => setAuth(true),
+                                    onError: () => {
+                                        console.log(loginErr);
+                                    },
+                                });
+                            },
+                        })
+                        }
+                    >
+                        Register Now
+                    </button>
                 </div>
             </form>
 
