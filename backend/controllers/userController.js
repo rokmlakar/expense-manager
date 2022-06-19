@@ -14,8 +14,8 @@ const user_update_meta = async (req, res) => {
                     firstName: firstName,
                     lastName: lastName,
                 },
-            }),
-                res.status(200).send('Updated');
+            });
+            res.status(200).send('Updated');
         } catch (e) {
             console.log(e);
             res.status(500).send('Error {Update meta}')
@@ -28,6 +28,8 @@ const user_update_meta = async (req, res) => {
 
 //UPDATE PW
 const user_update_password = async (req, res) => {
+    const {password, oldPassword} = req.body;
+    console.log('UPDATE PW')
     let user;
     if (req.session.userId) {
         //FIND USER
@@ -81,8 +83,7 @@ const user_update_password = async (req, res) => {
             //IF PW IS INCORRECT
             res.status(403).send('wrong pw');
         }
-    }
-    else {
+    } else {
         //USER NOT FOUND 
         res.status(401).send('please log in')
     }

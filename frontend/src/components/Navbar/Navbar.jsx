@@ -5,12 +5,21 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { useLogoutUser } from '../../queries/user';
 
-import { queryclient } from '../../constants/config';
+import { queryClient, queryclient } from '../../constants/config';
 
 const Navbar = () => {
   const { setAuth, auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const { mutate: logoutHandler, isSuccess } = useLogoutUser();
+
+  useEffect(() => {
+    if(isSuccess){
+      queryClient.removeQueries();
+      setAuth(false);
+      if(!auth) navigate('auth');
+    }
+  }, [isSuccess]);
+
   return (
     <div className={styles.container}>
 
@@ -63,8 +72,7 @@ const Navbar = () => {
         </ul>
       </nav>
     </div>
-
-  )
-}
+  );
+};
 
 export default Navbar

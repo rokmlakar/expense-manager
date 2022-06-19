@@ -15,7 +15,11 @@ const logoutUser = async (body) => {
 }
 
 const userUpdate = async (body) => {
-    return await Ax.patch('me/pw', body)
+    return await Ax.patch('me', body)
+};
+
+const userUpdatePassword = async (body) => {
+    return await Ax.patch('me/pw', body);
 };
 
 const useUser = () =>
@@ -28,8 +32,7 @@ const useLoginUser = () => useMutation('loginUser', loginUser);
 const useLogoutUser = () => useMutation('logoutUser', logoutUser);
 const useRegisterUser = () => useMutation('registerUser', registerUser);
 const useUserUpdate = () => useMutation('updateUser', userUpdate);
-const useUserUpdatePassword = () =>
-    useMutation('updateUserPassword', useUserUpdatePassword);
+const useUserUpdatePassword = () => useMutation('updateUserPassword', userUpdatePassword);
 
 export {
     useUser,

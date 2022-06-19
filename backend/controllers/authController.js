@@ -115,7 +115,8 @@ const auth_user = async (req, res) => {
     } else {
         res.status(401).send("please login");
     }
-}
+};
+
 module.exports = {
     auth_register,
     auth_login,
