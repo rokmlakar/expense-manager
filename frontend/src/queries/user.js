@@ -14,6 +14,10 @@ const logoutUser = async (body) => {
     return await Ax.post('logout')
 }
 
+const userUpdate = async (body) => {
+    return await Ax.patch('me/pw', body)
+};
+
 const useUser = () =>
     useQuery('user', fetchUser, {
         refetchOnWindowFocus: true,
@@ -23,5 +27,15 @@ const useUser = () =>
 const useLoginUser = () => useMutation('loginUser', loginUser);
 const useLogoutUser = () => useMutation('logoutUser', logoutUser);
 const useRegisterUser = () => useMutation('registerUser', registerUser);
+const useUserUpdate = () => useMutation('updateUser', userUpdate);
+const useUserUpdatePassword = () =>
+    useMutation('updateUserPassword', useUserUpdatePassword);
 
-export { useUser, useLoginUser, useRegisterUser, useLogoutUser };
+export {
+    useUser,
+    useLoginUser,
+    useRegisterUser,
+    useLogoutUser,
+    useUserUpdate,
+    useUserUpdatePassword
+};
