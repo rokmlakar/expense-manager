@@ -10,6 +10,7 @@ import Auth from './pages/Auth';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
+import Transactions from './pages/Transactions';
 
 import { Routes, Route, Outlet } from 'react-router-dom';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -42,6 +43,9 @@ function App() {
                 
                 {/* PROFILE */}
                 <Route path='/profile' element={<Profile />} />
+
+                {/* TRANSACTIONS */}
+                <Route path='/transactions' element={<Transactions />} />
 
                 {/* 404 */}
                 <Route
