@@ -31,7 +31,7 @@ const transaction_post = async (req, res) => {
 
 const transactions_get = async (req, res) => {
     if (req.session.userId) {
-        let { firstDate, lastDate, category, dateSort, priceSort, } =
+        let { firstDate, lastDate, category, dateSort, priceSort, skip, take } =
             req.query;
 
         if (!Number(skip)) {
@@ -50,18 +50,18 @@ const transactions_get = async (req, res) => {
                     gte: firstDate != undefined
                         ? DateTime.fromISO(firstDate).toISO()
                         : DateTime.now().minus({ days: 30 }).toISO(),
-                        lt:lastDate != undefined
+                    lt: lastDate != undefined
                         ? DateTime.fromISO(lastDate).toISO()
                         : DateTime.now().toISO(),
                 },
-                transactionCategoryId:{
-                    equals:category != undefined ? parseInt(category) : undefined,
+                transactionCategoryId: {
+                    equals: category != undefined ? parseInt(category) : undefined,
                 },
             },
-            skip:parseInt(skip),
+            skip: parseInt(skip),
             take: parseInt(take),
-            orderBy:{
-                date:dateSort != undefined ? dateSort : undefined,
+            orderBy: {
+                date: dateSort != undefined ? dateSort : undefined,
                 money: priceSort != undefined ? priceSort : undefined,
             },
             select: {
@@ -69,7 +69,7 @@ const transactions_get = async (req, res) => {
                 money: true,
                 date: true,
                 info: true,
-                id:true,
+                id: true,
                 category: {
                     select: {
                         name: true,
@@ -77,18 +77,18 @@ const transactions_get = async (req, res) => {
                 },
             },
         })
-        .catch((e) => {
-            res.status(400).send('error');
-        });
+            .catch((e) => {
+                res.status(400).send('error');
+            });
         res.json(transactions);
     } else res.status(401).send('please login');
 };
 
-const transaction_delete = async(req,res) => {
-    if(req.session.userId){
-        let transactionCategoryId = parseInt(req.params.transactionId);
+const transaction_delete = async (req, res) => {
+    if (req.session.userId) {
+        let transactionId = parseInt(req.params.transactionId);
         let tr;
-        try{
+        try {
             tr = await prisma.transaction.deleteMany({
                 where: {
                     id: transactionId,
@@ -97,21 +97,21 @@ const transaction_delete = async(req,res) => {
                     },
                 },
             })
-        }catch(e){
+        } catch (e) {
             res
-            .status(500)
-            .send(
-                'something went wrong when deleting this transaction'
-            );
+                .status(500)
+                .send(
+                    'something went wrong when deleting this transaction'
+                );
             return;
         }
 
-        if(tr?.count){
+        if (tr?.count) {
             res.status(200).send('success');
             return;
         }
         res.status(400).send('error');
-    }else{
+    } else {
         res.status(401).send('please login');
     }
 };

@@ -24,5 +24,8 @@
     "concurrently": "^7.2.1",
     "nodemon": "^2.0.16",
     "prisma": "^3.14.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }

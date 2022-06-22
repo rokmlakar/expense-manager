@@ -1,33 +1,35 @@
-import {useQuery, useMutation} from 'react-query';
-import Ax from '../utils/Axios';
+import { useQuery, useMutation } from "react-query";
+import Ax from "../utils/Axios";
 
+//AXIOS CALLS
 const deleteTr = async (params) => {
-    return await Ax.delete(`transaction/delete/${params}`);
+  return await Ax.delete(`transaction/delete/${params}`);
 };
 
 const getTrs = async (params) => {
-    return await Ax.get('transactions', {params: params}).catch((e) => 
+  return await Ax.get("transactions", { params: params }).catch((e) =>
     console.log(e)
-    );
+  );
 };
 
 const postTr = async (params) => {
-    return await Ax.post('transaction', params);
+  return await Ax.post("transaction", params);
 };
-const useTransactionDelete = () => useMutation('deleteTr', deleteTr);
+const useTransactionDelete = () => useMutation("deleteTr", deleteTr);
 const useTransactionsGet = ({
-    firstDate,
-    lastDate,
-    category,
-    dateSort,
-    priceSort,
-    skip,
-    take,
-    key,
-}) => useQuery(
+  firstDate,
+  lastDate,
+  category,
+  dateSort,
+  priceSort,
+  skip,
+  take,
+  key,
+}) =>
+  useQuery(
     key,
     () =>
-    getTrs({
+      getTrs({
         firstDate,
         lastDate,
         category,
@@ -35,13 +37,13 @@ const useTransactionsGet = ({
         priceSort,
         skip,
         take,
-    }),
+      }),
     {
-        refetchOnWindowFocus: false,
-        enabled: false,
-        keepPreviousData: true,
+      refetchOnWindowFocus: false,
+      enabled: false,
+      keepPreviousData: true,
     }
-);
+  );
 
-const useTrasactionPost = () => useMutation('postTransaction', postTr);
-export {useTransactionsGet, useTransactionDelete, useTrasactionPost}
+const useTransactionPost = () => useMutation("postTransaction", postTr);
+export { useTransactionsGet, useTransactionDelete, useTransactionPost };
