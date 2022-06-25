@@ -35,7 +35,7 @@ const categories_transaction_sum = async (req, res) => {
                     wallet: {
                         userId: req.session.userId,
                     },
-                    da: {
+                    date: {
                         gte: firstDate,
                         lt: lastDate,
                     }

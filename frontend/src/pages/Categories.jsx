@@ -84,6 +84,15 @@ const Categories = () => {
                                 >
                                     Last 90 days
                                 </option>
+                                <option
+                                    value={DateTime.now()
+                                        .minus({
+                                            days: 365,
+                                        })
+                                        .toISODate()}
+                                >
+                                    Last 365 days
+                                </option>
                             </select>
                         </div>
                     </div>

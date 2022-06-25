@@ -1,0 +1,33 @@
+.filters {
+    .filterContainer {
+        display: inline-block;
+        margin-right: 1.2rem;
+        margin-bottom: 1.2rem;
+        //outline: 1px salmon solid;
+        border: 1px solid var(--color-inactive);
+        padding: 0.5rem;
+        border-radius: 10px;
+    }
+
+    .filter {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+
+    select {
+        display: inline-block;
+        //outline: 1px solid var(--color-red-300);
+        font-size: 1rem;
+        background-color: #ececec;
+        color: black;
+        width: 180px;
+        padding: 0.6rem;
+        padding-left: 0;
+        option {
+            padding: 1rem;
+            background: #ececec;
+        }
+    }
+}

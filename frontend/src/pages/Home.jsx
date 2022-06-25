@@ -5,9 +5,30 @@ import CategoryCard from "../components/Cards/CategoryCard";
 import TransactionCard from "../components/Cards/TransactionCard";
 import HomeProfile from "../components/homeComponents/HomeProfile";
 
+
+import { DateTime } from 'luxon';
+import { useTransactionsGet } from "../queries/transaction";
+import { useCategoriesSum } from "../queries/category";
+import { useEffect } from "react";
+
 import styles from '../styles/homeComponents/Home.module.scss';
 
 const Home = () => {
+
+    //LATEST TRANSACTIONS
+    const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
+        {
+            key: 'Trs_latest',
+            skip: 0,
+            take: 5,
+        }
+    );
+
+    const { data: CategoriesSum } = useCategoriesSum();
+    useEffect(() => {
+        fetchTransactions();
+    }, [])
+
     return (
         <MainContainer optionClass={styles.container}>
             <div className={styles.main}>
@@ -21,10 +42,16 @@ const Home = () => {
                 <div className={styles.categories}>
                     <Title>Categories Last 30 Days</Title>
                     <div className={styles.content}>
-                        <CategoryCard category={"Products"}/>
-                        <CategoryCard/>
-                        <CategoryCard/>
-                        <CategoryCard/>
+                        {/* SUM */}
+                        {CategoriesSum && CategoriesSum.data.map((category, index) => {
+                            return (
+                                <CategoryCard
+                                    key={index}
+                                    category={category.transactionCategoryId}
+                                    money={category._sum.money.toFixed(2)}
+                                />
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -32,15 +59,24 @@ const Home = () => {
                 <div className={styles.transactions}>
                     <Title>Latest Transactions</Title>
                     <div className={styles.content}>
-                        <TransactionCard/>
-                        <TransactionCard/>
-                        <TransactionCard/>
-                        <TransactionCard/>
+                        {/* LATEST TRANSACTIONS */}
+                        {transactions && transactions.data.map((transaction, index) => {
+                            return (
+                                <TransactionCard
+                                    key={index}
+                                    category={transaction.category.name}
+                                    date={DateTime.fromISO(transaction.date).toISODate()}
+                                    money={transaction.money.toFixed(2)}
+                                    description={transaction.info}
+                                    title={transaction.title}
+                                />
+                            );
+                        })}
                     </div>
                 </div>
             </div>
             <div className={styles.profile}>
-                <HomeProfile/>
+                <HomeProfile />
             </div>
         </MainContainer>
     )
