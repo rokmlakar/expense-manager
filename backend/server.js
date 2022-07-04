@@ -15,10 +15,19 @@ const port = process.env.PORT || 5000;
 const { prisma } = require("./constants/config");
 const PrismaStore = require("./lib/index")(session);
 
+//SERVER CLIENT FOLDER IE REACT BUILD
+app.use(express.static(path.join(__dirname, 'client')));
+
 //CORS
+//ADD URL HERE
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://localhost:5000"],
+    origin: [
+      "http://localhost:3000",
+      "https://localhost:5000",
+      'http://expenseTracker20/5000',
+      'http://expenseTracker20'
+    ],
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE", "PATCH"],
     credentials: true,
   })
@@ -47,6 +56,9 @@ app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", transactionRoutes);
 app.use("/api", categoriesRoutes);
+app.use('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 
 app.listen(port, () => {
   console.log(`SERVER STARTED : ${port}`);

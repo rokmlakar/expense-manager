@@ -16,15 +16,32 @@ import styles from '../styles/homeComponents/Home.module.scss';
 const Home = () => {
 
     //LATEST TRANSACTIONS
-    const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
-        {
-            key: 'Trs_latest',
-            skip: 0,
-            take: 5,
-        }
-    );
+    //OBJEKT USETRANSACTIONS KI PREJME PARAMETRE KEY SKIP TAKE IN NASTAVI OBJEKT KI IMA DATA KJER SO VSI 
+    //TRANSACTIONI IN REFETCH KI PONOVNO POŠLJE FETCH
+    
+     const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
+         {
+             key: 'Trs_latest',
+             skip: 0,
+             take: 5,
+         }
+     );
+    
+    //ISTO KOT ZGORAJ
+    // useTransactionsGet({key: 'Trs_latest', skip: 0, take: 5,}) = {
+    //     data:transactions, 
+    //     refetch: fetchTransactions
+    // }
+    
 
-    const { data: CategoriesSum } = useCategoriesSum();
+    console.log(transactions)
+
+     const { data: CategoriesSum } = useCategoriesSum();
+    // useCategoriesSum() = {
+    //     data: CategoriesSum
+    // } 
+
+    //DOBI TRENUTNE TRANSAKCIJE, SPROZI SE OB LOADU IN POŠLJE FETCH
     useEffect(() => {
         fetchTransactions();
     }, [])

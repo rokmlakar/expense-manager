@@ -12,6 +12,7 @@ import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Transactions from './pages/Transactions';
 import Categories from './pages/Categories';
+import Wallet from './pages/Wallet';
 
 import { Routes, Route, Outlet } from 'react-router-dom';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -50,6 +51,9 @@ function App() {
 
                 {/* CATEGORIES */}
                 <Route path='/categories' element={<Categories />} />
+
+                {/* WALLET */}
+                <Route path='/wallet' element={<Wallet />} />
 
                 {/* 404 */}
                 <Route

@@ -8,7 +8,7 @@ li {
         transition: color 200ms ease;
 
         &:hover {
-            color: blue;
+            color: --color-green-600;
         }
     }
 

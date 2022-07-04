@@ -7,7 +7,7 @@
         justify-content: center;
         border-radius: 50%;
         border: 2px solid transparent;
-        background: var(--color-red-300);
+        background: var(--color-green-300);
         cursor: pointer;
         transition: border-color ease-in-out 250ms;
         transition: background ease-in-out 250ms;
@@ -43,7 +43,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        background: var(--color-red-300);
+        background: var(--color-green-300);
         transform: translateX(100%);
         min-height: 100vh;
         transition: transform 300ms ease-in-out;
