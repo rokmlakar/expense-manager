@@ -21,12 +21,12 @@ const Home = () => {
     
      const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
          {
-             key: 'Trs_latest',
-             skip: 0,
-             take: 5,
+             key: 'Trs_latest',  //key v tem primeru je string ID
+             skip: 0,  //koliko transactionov skipa
+             take: 5,  //koliko jih vzame oz. prikaze
          }
      );
-    
+
     //ISTO KOT ZGORAJ
     // useTransactionsGet({key: 'Trs_latest', skip: 0, take: 5,}) = {
     //     data:transactions, 
@@ -50,9 +50,9 @@ const Home = () => {
         <MainContainer optionClass={styles.container}>
             <div className={styles.main}>
                 {/* SEARCHBAR */}
-                <div className={styles.searchbar}>
+                {/* <div className={styles.searchbar}>
                     <SearchBar />
-                </div>
+                </div> */}
 
 
                 {/* CATEGORIES */}

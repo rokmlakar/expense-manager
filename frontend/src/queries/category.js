@@ -7,6 +7,7 @@ const getCtgs = async () => {
 };
 
 const getCtgsSum = async () => {
+  //return await(await Ax.get("/categories/sum")) -- da počaka json, mogoce povzroci bug da se ne nalodajo podatki
   return await Ax.get("/categories/sum");
 };
 

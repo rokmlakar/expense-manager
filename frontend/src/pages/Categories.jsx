@@ -157,7 +157,7 @@ const Categories = () => {
                 {/* RESULTS */}
                 <div className={styles.results}>
                     <button className={styles.btn} onClick={() => fetchTransactions()}>
-                        Show Result
+                        Show Results
                     </button>
                     <div className={styles.inner}>
                         {FilteredTransactions &&

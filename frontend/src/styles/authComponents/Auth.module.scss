@@ -1,41 +1,85 @@
-.container{
+.flexContainer {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    h1{
-        font-size: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    span{
-        color:#333;
-        font-size: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    input{
-        width: 100%;
-        max-width: 350px;
-        font-size: 1rem;
-        padding: 0.8rem 0.5em;
-        background: #ececec;
-        margin-bottom: 1rem;
-    }
-
-    button{
-        cursor: pointer;
-        transition: all ease-in-out 300ms;
-        padding: 0.2rem 0.5rem;
-        border-radius: 10px;
-        &:hover{
-            color: whitesmoke;
-            background: #333;
+    margin: max(5vw, 2rem);
+    background: #ececec;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-radius: 20px;
+    .mainContent {
+        padding: 20px;
+        flex: 2;
+        text-align: bottom;
+        
+        h2{
+            padding: 1rem;
+            text-align: center;
         }
+        .container{
+            padding-right: 10px;
+            img{
+                border-radius: 10px;
+                height:500px;
+                width: auto;
+            }
+        }
+        // background-image: url('../../imgs/expenseLanding.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
     }
-}
 
-.registerForm{
-    margin-top: 5rem;
+    .sideContent {
+        flex: 1;
+        background: var(--color-green-300);
+        border-radius: 25px;
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            span {
+                color: #333;
+                font-size: 1rem;
+                // margin-bottom: 2rem;
+            }
+
+            input {
+                width: 100%;
+                max-width: 350px;
+                font-size: 1rem;
+                padding: 0.8rem 0.5em;
+                background: #ececec;
+                margin-bottom: 1rem;
+                border-radius: 7px;
+            }
+
+            button {
+                cursor: pointer;
+                transition: all ease-in-out 300ms;
+                padding: 0.5rem 1rem;
+                border-radius: 10px;
+                font-size: 18px;
+                margin-bottom: 5px;
+
+                &:hover {
+                    color: whitesmoke;
+                    background: #333;
+                }
+            }
+        }
+
+        .registerForm {
+            // margin-top: 2rem;
+        }
+
+    }
+
 }
