@@ -1,5 +1,6 @@
 import styles from '../../styles/Containers/PageContainer.module.scss';
 
+//wrappa vse komponente za lepsi prikaz
 const PageContainer = ({ children, optionClass}) => {
   return  <div className={`${styles.container} ${optionClass}`}>{children}</div>
   

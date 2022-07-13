@@ -8,8 +8,13 @@ import { HiOutlineFire } from "react-icons/hi";
 //UTILS
 import { useEffect, useState } from "react";
 
+
+//CATEGORYCARDU PODAMO IZBRANO KATEGORIJO IN PA DENAR
 const CategoryCard = ({ category, money }) => {
+  //NASTAVIMO STIL(VSAKA KATEGORIJA IMA SVOJO BARVO)
   const [style, setStyle] = useState({});
+
+  //SWITCH Z VSEMI KATEGORIJAMI
   const categoryStyle = () => {
     switch (category) {
       default: {
@@ -51,6 +56,7 @@ const CategoryCard = ({ category, money }) => {
     setStyle(categoryStyle());
   }, []);
 
+  //VRNEMO IZBRANO KATEGORIJO Z DOLOČENIM STILOM(BARVO) TER PODAMO ŠE IME KATEGORIJE IN PA VSOTO VSEH TRANSAKCIJ KI SPADAJO POD TO KATEGORIJO
   return (
     <div className={styles.container} style={{ background: style.background }}>
       <div className={styles.inner}>

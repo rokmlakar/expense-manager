@@ -6,7 +6,7 @@ import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { HiOutlineFire } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 
-
+//CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
 const CategoryIcon = ({ category }) => {
     const [style, setStyle] = useState({});
     const categoryStyle = () => {
@@ -49,6 +49,7 @@ const CategoryIcon = ({ category }) => {
     useEffect(() => {
         setStyle(categoryStyle());
     }, [category]);
+
     return (<div className={styles.iconContainer}
         style={{ background: style.background, color: style.color }}
     >
@@ -61,10 +62,10 @@ CategoryIcon.defaultProps = {
     category: 'Products',
 }
 
-
+//TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
 const TransactionCard = ({ category, date, money, description, title }) => {
+    //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
-    console.log(visible)
     return (
         <div className={styles.container}>
             <div className={styles.inner}>

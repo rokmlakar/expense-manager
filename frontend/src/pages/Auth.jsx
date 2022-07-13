@@ -12,7 +12,6 @@ import { AuthContext } from '../context/AuthProvider';
 import { BsFileX } from 'react-icons/bs';
 
 const Auth = () => {
-    console.log(img)
     //LOGIN VNOS EMAIL, GESLA
     const [email, setEmail] = useState('');
     const [pw, setPw] = useState('');
@@ -36,6 +35,8 @@ const Auth = () => {
         password: regPw,
     }
 
+    //useLoginUser => useMutation('loginUser', loginUser)
+    //loginUser => async klic z (body) parametrom => Ax.post('auth',body)
     const {
         mutate: loginHandler,
         isError: loginError,

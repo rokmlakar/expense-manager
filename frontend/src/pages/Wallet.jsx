@@ -1,8 +1,12 @@
-import styles from '../styles/WalletComponents/Wallet.module.scss';
-
+import MainContainer from '../components/Containers/MainContainer';
+import styles from '../styles/walletComponents/Wallet.module.scss';
+import AddWalletForm from '../components/walletComponents/AddWalletForm'
 const Wallet = () => {
+
   return (
-    <div>Wallet</div>
+    <MainContainer>
+      <AddWalletForm />
+    </MainContainer>
   )
 }
 

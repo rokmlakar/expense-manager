@@ -18,15 +18,12 @@ const DeleteTransactionForm = () => {
   const [firstDate, setFirstDate] = useState(
     DateTime.now()
       .minus({
-        day: 1,
+        days: 6,
       })
       .toISODate()
   );
   const [lastDate, setLastDate] = useState(
     DateTime.now()
-      .plus({
-        day: 1,
-      })
       .toISODate()
   );
   const { mutate: deleteTr } = useTransactionDelete();

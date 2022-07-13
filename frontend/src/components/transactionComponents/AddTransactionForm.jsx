@@ -9,18 +9,21 @@ import { DateTime } from 'luxon';
 import { queryClient } from '../../constants/config';
 
 const AddTransactionForm = () => {
+    //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
     const [title, setTitle] = useState('');
     const [money, setMoney] = useState('');
     const [date, setDate] = useState(DateTime.now().toISODate());
     const [info, setInfo] = useState('');
     const [category, setCategory] = useState(10);
 
+    //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
     const { data: ctgs } = useCategoriesGet();
      useEffect(() => {
-         if (ctgs) setCategory(ctgs.data[0].id);
+         if (ctgs) setCategory(ctgs.data[1].id);
          else setCategory(1);
      }, [ctgs]);
 
+    //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
     const {
         mutate: postTransaction,
         isLoading,
@@ -29,6 +32,7 @@ const AddTransactionForm = () => {
         error,
     } = useTransactionPost();
 
+    //V BODY ZAPIŠEMO VSE PODATKE KI JIH MORAMO POSLATI NA BAZO DA LAHKO USTVARIMO NOVO TRANSAKCIJO
     let body = {
         title: title,
         money: parseFloat(money),

@@ -29,11 +29,13 @@ const user_update_meta = async (req, res) => {
 //UPDATE PW
 const user_update_password = async (req, res) => {
     const {password, oldPassword} = req.body;
+    //PASSWORD NOVI PASS KI GA USER HOČE, OLDPASS TRENUTEN PASS OD USERJA
     console.log('UPDATE PW')
     let user;
     if (req.session.userId) {
         //FIND USER
         try {
+            //NAJDE USERJA Z PRISMA FINDUNIQUE KI IMA USTREZEN USERID
             user = await prisma.user.findUnique({
                 where: {
                     id: req.session.userId,
@@ -49,7 +51,10 @@ const user_update_password = async (req, res) => {
 
     //IF USER IS FOUND
     if (user) {
+
+        //ČE GA NAJDE PREVERI DA JE TRENUTEN PASSWORD ENAK OLDPASSWORD KI GA PODA UPORABNIK
         const isPassCorrect = await bcrypt.compare(oldPassword, user.password);
+        //ČE JE PASSWORD KATEREGA JE UPORABNIK PRAV TAKO POSLAL HAŠIRAMO IN ENKRIPTAMO, MU DAMO SALTROUND IN GA NASTAVIMO KOT NOVO GESLO
         if (isPassCorrect) {
             //HASH AND SALT NEW PW
             const saltRounds = 10;

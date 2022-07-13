@@ -3,12 +3,14 @@ const { DateTime } = require('luxon');
 
 const categories_get = async (req, res) => {
     if (req.session.userId) {
+        //KLIC ZA VSE KATEGORIJE, SHRANIJO SE V ctgs
         let ctgs;
         try {
             ctgs = await prisma.transactionCategory
                 .findMany()
                 .catch(() => console.log('err'));
 
+                //ČE JIH NAJDE JIH POŠLE UPORABNIKU 
             if (ctgs) res.status(200).send(ctgs);
         } catch {
             res.status(400).send('error');
@@ -16,8 +18,10 @@ const categories_get = async (req, res) => {
     } else res.status(401).send('please login');
 };
 
+
 const categories_transaction_sum = async (req, res) => {
     if (req.session.userId) {
+        //ZAPOMNE SI DATUM USTVARJENE TRANSAKCIJE IN TRENUTNI DATUN
         let firstDate = req.query.first;
         let lastDate = DateTime.now().toISO();
 
@@ -26,6 +30,8 @@ const categories_transaction_sum = async (req, res) => {
         }
 
         try {
+            //V TRANSACTIONS ZAPIŠEMO TRANSAKCIJE KATERE GRUPIRAMO PO IDJU TRANSAKCIJ KJER JE WALLET ENAK WALLETIDU OD USERJA 
+            // IN DATUM USTREZA ČASU MED VREDNOSTIMA V FIRST/LAST DATE
             const transactions = await prisma.transaction.groupBy({
                 by: ['transactionCategoryId'],
                 _sum: {
@@ -41,6 +47,7 @@ const categories_transaction_sum = async (req, res) => {
                     }
                 },
             });
+            //POŠLE NAZAJ TRANSAKCIJE KOT RESPONSE
             res.send(transactions);
         } catch {
             res.status(400).send('Err');

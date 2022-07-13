@@ -25,7 +25,6 @@ const AuthProvider = ({ children }) => {
         }
     }, [data, isError, Navigate]);
 
-    console.log(value)
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 };
 

@@ -57,6 +57,19 @@
                 width: 100%;
                 display: unset;
             }
+            .deleteContainer{
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                margin-right: 2rem;
+                margin-bottom: 2rem;
+                width: 400px;
+                @media screen and (max-width: 500px) {
+                    margin-right: 0;
+                    justify-content: space-between;
+                    width: unset;
+                }
+            }
             .iconContainer{
                 cursor: pointer;
                 padding: 0.5rem;

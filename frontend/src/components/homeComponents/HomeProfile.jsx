@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useUser } from '../../queries/user';
 
 const HomeProfile = () => {
+    //V konst data se zapisejo podatki userja (email, firstName, lastName, userId)
     const {data} = useUser();
     return (
         <div className={styles.container}>
@@ -18,6 +19,7 @@ const HomeProfile = () => {
                     {data && `Hi ${data?.data.firstName}!`}
                 </span>
                 <div className={styles.options}>
+                    {/* NAS PREUSMERI NA PROFILE */}
                     <Link to='profile'>
                         <span>Profile</span>
                         <BsPencil />

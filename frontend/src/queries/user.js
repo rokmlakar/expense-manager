@@ -28,11 +28,11 @@ const useUser = () =>
         retry: false,
     });
 
-const useLoginUser = () => useMutation('loginUser', loginUser);
+const useLoginUser = () => useMutation('loginUser', loginUser); //odstranjen prvi param ki je bil 'loginUser,' enako pri ostalih
 const useLogoutUser = () => useMutation('logoutUser', logoutUser);
-const useRegisterUser = () => useMutation('registerUser', registerUser);
-const useUserUpdate = () => useMutation('updateUser', userUpdate);
-const useUserUpdatePassword = () => useMutation('updateUserPassword', userUpdatePassword);
+const useRegisterUser = () => useMutation(registerUser);
+const useUserUpdate = () => useMutation(userUpdate);
+const useUserUpdatePassword = () => useMutation(userUpdatePassword);
 
 export {
     useUser,
