@@ -31,7 +31,6 @@ const transaction_post = async (req, res) => {
 
 const transactions_get = async (req, res) => {
     if (req.session.userId) {
-        console.log(req.query, 'qqqqqrrr')
         //ZAPIŠE SI PODANE PARAMETRE TO SO LAHKO KATERIKOLI OD NAVEDENIH SPODAJ (1 ali več)
         let { firstDate, lastDate, category, dateSort, priceSort, skip, take } =
             req.query;
@@ -117,7 +116,6 @@ const transaction_delete = async (req, res) => {
                 );
             return;
         }
-        console.log(tr)
 
         //ČE COUNT OBSTAJA POMENI DA SE TRANSAKCIJA USPEŠNO POBRIŠE
         if (tr?.count) {

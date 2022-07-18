@@ -1,6 +1,7 @@
 import styles from '../styles/CategoriesComponents/Categories.module.scss';
 import { Title } from '../components/Titles/Titles';
 import TransactionCard from '../components/Cards/TransactionCard';
+import AddCategoryForm from '../components/categoryComponents/AddCategoryForm';
 
 import { DateTime } from 'luxon';
 import { useState, useEffect } from 'react';
@@ -41,10 +42,10 @@ const Categories = () => {
 
 
     return (
-        <MainContainer>
-            <Title>Categories</Title>
+        <div className={styles.flexContainer}>
 
-            <div className={styles.container}>
+            <div className={styles.mainContent}>
+            <Title>Categories</Title>
                 {/* FILTERS */}
                 <div className={styles.filters}>
                     <div className={styles.filterContainer}>
@@ -176,7 +177,11 @@ const Categories = () => {
                     </div>
                 </div>
             </div>
-        </MainContainer>
+
+            <div className={styles.sideContent}>
+                <AddCategoryForm/>
+            </div>
+        </div>
     )
 }
 

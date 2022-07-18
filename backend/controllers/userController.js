@@ -17,7 +17,6 @@ const user_update_meta = async (req, res) => {
             });
             res.status(200).send('Updated');
         } catch (e) {
-            console.log(e);
             res.status(500).send('Error {Update meta}')
         }
     } else {
@@ -30,7 +29,6 @@ const user_update_meta = async (req, res) => {
 const user_update_password = async (req, res) => {
     const {password, oldPassword} = req.body;
     //PASSWORD NOVI PASS KI GA USER HOČE, OLDPASS TRENUTEN PASS OD USERJA
-    console.log('UPDATE PW')
     let user;
     if (req.session.userId) {
         //FIND USER

@@ -22,7 +22,6 @@ const Auth = () => {
     const [errPass, setErrPass] = useState(false);
     const [errEmail, setErrEmail] = useState(false);
 
-
     //CONTEXT
     const { auth, setAuth } = useContext(AuthContext);
 
@@ -37,13 +36,6 @@ const Auth = () => {
     let regBody = {
         email: regEmail,
         password: regPw,
-        passwordConfirm: regPwConf,
-    }
-
-    const checkValidate = (e) => {
-
-
-        console.log(regPw, regPwConf)
     }
 
     useEffect(() => {

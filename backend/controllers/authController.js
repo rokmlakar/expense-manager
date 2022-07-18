@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 
 //GET ReQ FROM USER(LOGIN INFO) AND CHECK IF IT MATCHES THE INFO MATCHES THE INFO ON THE SERVER/DB
 const auth_login = async (req, res) => {
-    console.log(req.body)
     if (req.session.userId) {
         res.status(500).send("Logged in");
         console.log('loggd')
@@ -38,7 +37,6 @@ const auth_login = async (req, res) => {
 
 const auth_register = async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body)
     let emailCheck;
     //PREVERIMO ALI UPORABNIK S TEM EMAILOM ŽE OBSTAJA
     try {
@@ -47,10 +45,8 @@ const auth_register = async (req, res) => {
                 email: email,
             },
         });
-        console.log(emailCheck)
     } catch {
         res.status(400)
-        console.log('??????')
             .send([{ instancePath: "Email Availability", message: "Error" }]);
     }
     //ČE OBSTAJA VRNEMO ERROR DA JE EMAIL ŽE ZASEDEN
@@ -74,6 +70,15 @@ const auth_register = async (req, res) => {
                     password: salted_password,
                     firstName: "",
                     lastName: "",
+                    // transactionCategories: {
+                    //     create:
+                    //         [
+                    //             { name: "Products" },
+                    //             { name: "Entertainment" },
+                    //             { name: "Bills" },
+                    //             { name: "Other" },
+                    //         ]
+                    // }
                 },
             });
             //ČE PRIDE DO ERRORJA VRNEMO ERR MESSAGE
@@ -81,8 +86,28 @@ const auth_register = async (req, res) => {
             res.status(500).send([{ instancePath: "Err", message: "Err" }]);
             return;
         }
-
         //KO USTVARIMO USERJA MU USTVARIMO ŠE WALLET GLEDE NA NJEGOV ID
+        // try {
+        // try{
+        //     await prisma.transactionCategory.update({
+        //         where:{
+        //             id : 1
+        //         },
+        //         data:{
+        //             user: newUser,
+        //         },
+        //     })
+        //     res.status(200).send("ok");
+        // }catch{
+        //     res.status(400).send("err");
+        //     return
+        // }
+
+        // res.status(200).send("ok")
+        // } catch {
+        // return;
+        // }
+
         try {
             await prisma.wallet.create({
                 data: {
@@ -91,7 +116,6 @@ const auth_register = async (req, res) => {
             });
             res.status(200).send("ok");
         } catch {
-            res.status(400).send("err");
             return;
         }
     }
@@ -101,7 +125,6 @@ const auth_register = async (req, res) => {
 //PRI LOGOUTU PREJMEMO PODATKE SESSIONA KJER VIDIMO USER ID, SESSION PA UNIČIMO Z session.prisma.destroy() TAKO DA NAM POBRIŠE
 //PIŠKOTKE
 const auth_logout = async (req, res) => {
-    console.log(req.session)
     if (req.session.userId) {
         req.session.destroy();
         res.clearCookie("sess").status(200).send("cleared cookie");

@@ -18,19 +18,22 @@ model Session {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  firstName String?
-  lastName  String?
-  email     String  @unique
-  password  String
-  Wallet    Wallet?
+  id                  Int                  @id @default(autoincrement())
+  firstName           String?
+  lastName            String?
+  email               String               @unique
+  password            String
+  Wallet              Wallet?
+
 }
 
 model Wallet {
   id           Int           @id @default(autoincrement())
   user         User          @relation(fields: [userId], references: [id])
   userId       Int           @unique
+
   transactions Transaction[]
+
   money        Float?
 }
 
@@ -41,7 +44,9 @@ model Transaction {
   date                  DateTime            @default(now())
   info                  String?
   category              TransactionCategory @relation(references: [id], fields: [transactionCategoryId])
+
   transactionCategoryId Int
+
   wallet                Wallet              @relation(fields: [walletId], references: [id])
   walletId              Int
 }
@@ -50,4 +55,6 @@ model TransactionCategory {
   id          Int           @id @default(autoincrement())
   name        String        @unique
   Transaction Transaction[]
+         
+  userId      Int? 
 }

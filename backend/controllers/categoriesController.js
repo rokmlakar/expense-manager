@@ -1,17 +1,50 @@
 const { prisma } = require('../constants/config.js');
 const { DateTime } = require('luxon');
 
+
+const category_post = async (req, res) => {
+    if (req.session.userId) {
+        console.log(req.body)
+        try {
+            await prisma.TransactionCategory.create({
+                data: {
+                    name: req.body.title,
+                    userId: req.session.userId,
+                    Transaction: {},
+                }
+            })
+            res.status(200).send('success');
+        } catch {
+            res.status(400).send([{ instancePath: 'Errddd', message: 'Err' }]);
+        }
+    } else res.status(401).send('please login');
+};
+
 const categories_get = async (req, res) => {
     if (req.session.userId) {
+        console.log(req.session.userId)
         //KLIC ZA VSE KATEGORIJE, SHRANIJO SE V ctgs
         let ctgs;
         try {
             ctgs = await prisma.transactionCategory
-                .findMany()
+                .findMany({
+                    where: {
+                        OR: [
+                            {
+                                userId: req.session.userId
+                            },
+                            {
+                                userId: null
+                            }
+                        ]
+
+                    }
+                })
                 .catch(() => console.log('err'));
 
-                //ČE JIH NAJDE JIH POŠLE UPORABNIKU 
+            //ČE JIH NAJDE JIH POŠLE UPORABNIKU 
             if (ctgs) res.status(200).send(ctgs);
+            console.log(ctgs)
         } catch {
             res.status(400).send('error');
         }
@@ -58,4 +91,5 @@ const categories_transaction_sum = async (req, res) => {
 module.exports = {
     categories_get,
     categories_transaction_sum,
+    category_post
 };
