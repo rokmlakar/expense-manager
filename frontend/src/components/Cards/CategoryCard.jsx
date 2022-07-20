@@ -4,22 +4,37 @@ import { FiBox } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { BsHouseDoor } from "react-icons/bs";
 import { HiOutlineFire } from "react-icons/hi";
-
 //UTILS
 import { useEffect, useState } from "react";
 
 
+
 //CATEGORYCARDU PODAMO IZBRANO KATEGORIJO IN PA DENAR
-const CategoryCard = ({ category, money }) => {
+const CategoryCard = ({ category, money, ctgs }) => {
   //NASTAVIMO STIL(VSAKA KATEGORIJA IMA SVOJO BARVO)
   const [style, setStyle] = useState({});
+  // console.log(ctgs)
+
+  const [ctg, setCtg] = useState();
+console.log(category)
+  ctgs.map(cat => {
+    console.log(cat)
+    if(cat.id === category && ! ctg){
+      setCtg(cat.name);
+    }
+    console.log()
+  })
+
+
+
 
   //SWITCH Z VSEMI KATEGORIJAMI
   const categoryStyle = () => {
+
     switch (category) {
       default: {
         return {
-          ctg: "Other",
+          ctg: ctg,
           icon: <HiOutlineFire style={{ color: "#333" }} />,
           background: "#30D5c8",
         };

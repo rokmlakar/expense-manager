@@ -17,11 +17,13 @@ const AddTransactionForm = () => {
     const [category, setCategory] = useState(10);
 
     //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
-    const { data: ctgs } = useCategoriesGet();
+    
+    const { data: ctgs, refetch: fetchCategories } = useCategoriesGet();
      useEffect(() => {
+        fetchCategories()
          if (ctgs) setCategory(ctgs.data[1].id);
          else setCategory(1);
-     }, [ctgs]);
+     }, []);
 
     //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
     const {

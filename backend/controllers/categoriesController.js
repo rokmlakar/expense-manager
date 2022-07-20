@@ -80,6 +80,7 @@ const categories_transaction_sum = async (req, res) => {
                     }
                 },
             });
+            console.log(transactions)
             //POŠLE NAZAJ TRANSAKCIJE KOT RESPONSE
             res.send(transactions);
         } catch {

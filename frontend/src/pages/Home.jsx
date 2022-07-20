@@ -9,42 +9,59 @@ import HomeProfile from "../components/homeComponents/HomeProfile";
 import { DateTime } from 'luxon';
 import { useTransactionsGet } from "../queries/transaction";
 import { useCategoriesSum } from "../queries/category";
+import { useCategoriesGet } from '../queries/category';
 import { useEffect } from "react";
 
 import styles from '../styles/homeComponents/Home.module.scss';
+import { useState } from "react";
 
 const Home = () => {
 
+    const [ctgs, setCtgs] = useState();
+
     //LATEST TRANSACTIONS
     //OBJEKT USETRANSACTIONS KI PREJME PARAMETRE KEY SKIP TAKE IN NASTAVI OBJEKT KI IMA DATA KJER SO VSI 
-    //TRANSACTIONI IN REFETCH KI PONOVNO POŠLJE FETCH
-    
-     const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
-         {
-             key: 'Trs_latest',  //key v tem primeru je string ID
-             skip: 0,  //koliko transactionov skipa
-             take: 5,  //koliko jih vzame oz. prikaze
-         }
-     );
+    //TRANSACTIONI IN REFETCH KI PONOVNO POŠLJE FETCH    
+    const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
+        {
+            key: 'Trs_latest',  //key v tem primeru je string ID
+            skip: 0,  //koliko transactionov skipa
+            take: 5,  //koliko jih vzame oz. prikaze
+        }
+    );
 
     //ISTO KOT ZGORAJ
     // useTransactionsGet({key: 'Trs_latest', skip: 0, take: 5,}) = {
     //     data:transactions, 
     //     refetch: fetchTransactions
     // }
-    
 
-    console.log(transactions)
+    const { data: cat } = useCategoriesGet();
+    console.log(cat)
 
-     const { data: CategoriesSum } = useCategoriesSum();
+    useEffect(() => {
+        setCtgs(cat)
+    }, [])
+
+    if(!ctgs){
+
+        // setctgs(cat)
+    }
+    // if (cat) {
+    //     setctgs(cat)
+    // }
+
+    const { data: CategoriesSum } = useCategoriesSum();
     // useCategoriesSum() = {
     //     data: CategoriesSum
     // } 
 
+    console.log(CategoriesSum)
     //DOBI TRENUTNE TRANSAKCIJE, SPROZI SE OB LOADU IN POŠLJE FETCH
     useEffect(() => {
         fetchTransactions();
     }, [])
+    console.log(ctgs)
 
     return (
         <MainContainer optionClass={styles.container}>
@@ -60,12 +77,13 @@ const Home = () => {
                     <Title>Categories Last 30 Days</Title>
                     <div className={styles.content}>
                         {/* SUM */}
-                        {CategoriesSum && CategoriesSum.data.map((category, index) => {
+                        {CategoriesSum && ctgs && CategoriesSum.data.map((category, index) => {
                             return (
                                 <CategoryCard
                                     key={index}
                                     category={category.transactionCategoryId}
                                     money={category._sum.money.toFixed(2)}
+                                    ctgs={ctgs.data}
                                 />
                             );
                         })}
