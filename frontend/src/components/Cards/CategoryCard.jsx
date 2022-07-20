@@ -6,6 +6,8 @@ import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { HiOutlineFire } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 
+import { useCategoriesSum } from "../../queries/category";
+
 //CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
 const CategoryIcon = ({ category }) => {
     const [style, setStyle] = useState({});
@@ -63,6 +65,23 @@ const CategoryIcon = ({ category }) => {
 const CategoryCard = ({ category, date, money, description, title }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
+    const [catSum, setCatSum] = useState();
+
+    const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
+
+    if(CategoriesSum){
+      CategoriesSum.data.map((cat) => {
+          // console.log(cat, '--', category)
+          if(cat.transactionCategoryId === category && !catSum){
+            console.log(cat)
+            setCatSum(cat._sum.money)
+          } 
+      })
+    }
+
+
+
+// console.log(CategoriesSum)
     return (
         <div className={styles.container}>
             <div className={styles.inner}>
@@ -71,7 +90,8 @@ const CategoryCard = ({ category, date, money, description, title }) => {
                     {/* <CategoryIcon category={category} /> */}
                     <div className={styles.categoryContainer}>
                         <span className={styles.title}>{title}</span>
-                        {/*<span className={styles.category}>{category}</span>
+                        <span className={styles.category}>{catSum}</span>
+                        {/*
                         <span className={styles.date}>{date}</span>
                         <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}
                         >

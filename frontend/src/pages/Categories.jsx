@@ -30,7 +30,7 @@ const Categories = () => {
 
     useEffect(() => {
         if (ctgs) setCategories(ctgs.data);
-        console.log(ctgs);
+        // console.log(ctgs);
     }, [ctgs])
 
     const { data: FilteredTransactions, refetch: fetchTransactions } =
@@ -54,7 +54,7 @@ const Categories = () => {
                     {/* FILTERS */}
                     LIST OF CATEGORIES
                     {categories && categories.map((cat) => (
-                        <CategoryCard title={cat.name} />
+                        <CategoryCard title={cat.name} category={cat.id}/>
                     ))}
                 </div>
 
