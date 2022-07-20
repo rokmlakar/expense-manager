@@ -1,12 +1,13 @@
-import styles from '../styles/CategoriesComponents/Categories.module.scss';
+import styles from '../styles/walletComponents/Wallet.module.scss';
 import { Title } from '../components/Titles/Titles';
-import TransactionCard from '../components/Cards/TransactionCard';
-import AddCategoryForm from '../components/categoryComponents/AddCategoryForm';
+import WalletCard from '../components/Cards/WalletCard';
+import AddWalletForm from '../components/walletComponents/AddWalletForm';
 
 import { DateTime } from 'luxon';
 import { useState, useEffect } from 'react';
 import { useCategoriesGet } from '../queries/category';
 import { useTransactionsGet } from '../queries/transaction';
+import { useWalletsGet } from '../queries/wallet';
 
 
 const Wallet = () => {
@@ -21,12 +22,23 @@ const Wallet = () => {
   const [categories, setCategories] = useState('');
   const [sortingField, setSortingField] = useState('dateSort');
   const [order, setOrder] = useState('asc');
-  const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
   const [skip, setSkip] = useState(0);
+
+
+  const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
+
+  const { data: wallets } = useWalletsGet();
+
+   useEffect(() => {
+     if (wallets) {
+       console.log(wallets)
+     }
+
+   }, [wallets])
 
   useEffect(() => {
     if (ctgs) setCategories(ctgs.data[0].id);
-    console.log(ctgs);
+    // console.log(ctgs);
   }, [ctgs])
 
   const { data: FilteredTransactions, refetch: fetchTransactions } =
@@ -44,141 +56,15 @@ const Wallet = () => {
     <div className={styles.flexContainer}>
 
       <div className={styles.mainContent}>
-        <Title>Categories</Title>
-        {/* FILTERS */}
-        <div className={styles.filters}>
-          <div className={styles.filterContainer}>
-            {/* TIME SPAN */}
-            <div className={styles.filter}>
-              <label htmlFor="timeSpan">Time Span :</label>
-              <select
-                name="timeSpan"
-                onChange={(e) => {
-                  setTimeSpan(e.target.value)
-                }}
-              >
-                <option
-                  value={DateTime.now()
-                    .minus({
-                      days: 7,
-                    })
-                    .toISODate()}
-                >
-                  Last 7 days
-                </option>
-                <option
-                  value={DateTime.now()
-                    .minus({
-                      days: 28,
-                    })
-                    .toISODate()}
-                >
-                  Last 28 days
-                </option>
-                <option
-                  value={DateTime.now()
-                    .minus({
-                      days: 90,
-                    })
-                    .toISODate()}
-                >
-                  Last 90 days
-                </option>
-                <option
-                  value={DateTime.now()
-                    .minus({
-                      days: 365,
-                    })
-                    .toISODate()}
-                >
-                  Last 365 days
-                </option>
-              </select>
-            </div>
-          </div>
-          {/* CATEGORIES */}
-          <div className={styles.filterContainer}>
-            <div className={styles.filter}>
-              <label htmlFor="categories">Categories :</label>
-              {isCtgsFetched ? (
-                <select
-                  name='categories'
-                  onChange={(e) => {
-                    setCategories(e.target.value);
+        <Title>Wallets</Title>
 
-                  }}>
-                  {ctgs?.data?.map((category, index) => {
-                    return (
-                      <option key={index} value={category.id}>
-                        {category.name}
-                      </option>
-                    )
-                  })}
-                  <option value="">All</option>
-                </select>
-              ) : (
-                <div>Loading...</div>
-              )}
-            </div>
-          </div>
-
-          {/* SORTING FIELD */}
-          <div className={styles.filterContainer}>
-            <div className={styles.filter}>
-              <label htmlFor="sortingField">Sorting Field :</label>
-              <select
-                name="sortingField"
-                onChange={(e) => {
-                  setSortingField(e.target.value);
-                }}
-              >
-                <option value="date">Date</option>
-                <option value="price">Price</option>
-              </select>
-            </div>
-          </div>
-
-          {/* ASC OR DESC ORDER */}
-          <div className={styles.filterContainer}>
-            <div className={styles.filter}>
-              <label htmlFor="order">Order :</label>
-              <select
-                name="order"
-                onChange={(e) => {
-                  setOrder(e.target.value);
-                }}
-              >
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        {/* RESULTS */}
-        <div className={styles.results}>
-          <button className={styles.btn} onClick={() => fetchTransactions()}>
-            Show Results
-          </button>
-          <div className={styles.inner}>
-            {FilteredTransactions &&
-              FilteredTransactions.data?.map((transaction, index) => {
-                return (
-                  <TransactionCard
-                    key={index}
-                    category={transaction.category.name}
-                    money={transaction.money}
-                    date={DateTime.fromISO(transaction.date).toISODate()}
-                    description={transaction.info}
-                    title={transaction.title}
-                  />
-                );
-              })}
-          </div>
-        </div>
+        {wallets && wallets.data.map((wallet) => (
+          <WalletCard name={wallet.name} money={wallet.money} />
+        ))}
       </div>
 
       <div className={styles.sideContent}>
-        <AddCategoryForm />
+        <AddWalletForm />
       </div>
     </div>
   )

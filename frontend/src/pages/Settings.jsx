@@ -19,15 +19,15 @@ const Settings = () => {
     } = useUserUpdatePassword();
 
     const [oldPw, setOldPw] = useState("");
-    const [oldPwConfirm, setOldPwConfirm] = useState("");
+    const [newPwConfirm, setNewPwConfirm] = useState("");
     const [newPw, setNewPw] = useState("");
     const [errPass, setErrPass] = useState(false);
 
     useEffect(() => {
-        if (oldPw !== oldPwConfirm) {
+        if (newPw !== newPwConfirm) {
             setErrPass(true)
         } else setErrPass(false);
-    }, [oldPwConfirm])
+    }, [newPwConfirm])
 
 
     let body = {
@@ -51,22 +51,9 @@ const Settings = () => {
                             onChange={(e) => setOldPw(e.target.value)}
                         />
                     </div>
-                    {/* CONFIRM OLD PW */}
+
+                    {/* NEW PW */}
                     <div className={styles.password}>
-                        <label htmlFor="oldPassword">Confirm Current Password : </label>
-                        <input
-                            type="password"
-                            name="oldConfirmPassword"
-                            value={oldPwConfirm}
-                            autoComplete="current-confirm-password"
-                            onChange={(e) => setOldPwConfirm(e.target.value)}
-                        />
-                    </div>
-                    {errPass && oldPwConfirm &&
-                        <span style={{ color: 'red', fontSize: '20px', fontWeight: '600', border: '1px solid red', background: '#e3e3e3', padding: '5px', borderRadius: '10px', marginBottom: '1rem' }}>Passwords must Match!</span>
-                    }
-                    <div className={styles.password}>
-                        {/* NEW PW */}
                         <label htmlFor="newPassword">New Password : </label>
                         <input
                             type="password"
@@ -76,6 +63,20 @@ const Settings = () => {
                             onChange={(e) => setNewPw(e.target.value)}
                         />
                     </div>
+                    {/* CONFIRM OLD PW */}
+                    <div className={styles.password}>
+                        <label htmlFor="oldPassword">Confirm New Password : </label>
+                        <input
+                            type="password"
+                            name="oldConfirmPassword"
+                            value={newPwConfirm}
+                            autoComplete="current-confirm-password"
+                            onChange={(e) => setNewPwConfirm(e.target.value)}
+                        />
+                    </div>
+                    {errPass && newPwConfirm &&
+                        <span style={{ color: 'red', fontSize: '20px', fontWeight: '600', border: '1px solid red', background: '#e3e3e3', padding: '5px', borderRadius: '10px', marginBottom: '1rem' }}>Passwords must Match!</span>
+                    }
                     <button
                         disabled={!errPass ? false : true}
                         onClick={() =>

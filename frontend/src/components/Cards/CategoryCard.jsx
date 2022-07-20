@@ -1,93 +1,106 @@
-//STYLES
-import styles from "../../styles/Cards/CategoryCard.module.scss";
-import { FiBox } from "react-icons/fi";
-import { IoGameControllerOutline } from "react-icons/io5";
-import { BsHouseDoor } from "react-icons/bs";
-import { HiOutlineFire } from "react-icons/hi";
-//UTILS
-import { useEffect, useState } from "react";
+import styles from '../../styles/Cards/TransactionCard.module.scss';
+import { FiBox } from 'react-icons/fi';
+import { IoGameControllerOutline } from 'react-icons/io5';
+import { BsHouseDoor } from 'react-icons/bs';
+import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import { HiOutlineFire } from 'react-icons/hi';
+import { useEffect, useState } from 'react';
 
+//CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
+const CategoryIcon = ({ category }) => {
+    const [style, setStyle] = useState({});
+    const categoryStyle = () => {
+        // switch (category) {
+        //     default: {
+        //         return {
+        //             background: '#ffbece',
+        //             icon: <HiOutlineFire />,
+        //             color: "#ff6275",
+        //         };
+        //     }
+        //     case "Products":
+        //     case 1: {
+        //         return {
+        //             background: '#fdeacc',
+        //             icon: <FiBox />,
+        //             color: "#f8aa35",
+        //         };
+        //     }
 
+        //     case "Entertainment":
+        //     case 2:
+        //         return {
+        //             background: '#e4f1d5',
+        //             icon: <IoGameControllerOutline />,
+        //             color: "#92c44c",
+        //         };
 
-//CATEGORYCARDU PODAMO IZBRANO KATEGORIJO IN PA DENAR
-const CategoryCard = ({ category, money, ctgs }) => {
-  //NASTAVIMO STIL(VSAKA KATEGORIJA IMA SVOJO BARVO)
-  const [style, setStyle] = useState({});
-  // console.log(ctgs)
+        //     case "Bills":
+        //     case 3: {
+        //         return {
+        //             background: '#b7dffd',
+        //             icon: <BsHouseDoor />,
+        //             color: "#5a92d6",
+        //         };
+        //     }
+        // }
+    };
 
-  const [ctg, setCtg] = useState();
-console.log(category)
-  ctgs.map(cat => {
-    console.log(cat)
-    if(cat.id === category && ! ctg){
-      setCtg(cat.name);
-    }
-    console.log()
-  })
+    useEffect(() => {
+        setStyle(categoryStyle());
+    }, [category]);
 
-
-
-
-  //SWITCH Z VSEMI KATEGORIJAMI
-  const categoryStyle = () => {
-
-    switch (category) {
-      default: {
-        return {
-          ctg: ctg,
-          icon: <HiOutlineFire style={{ color: "#333" }} />,
-          background: "#30D5c8",
-        };
-      }
-      case "Products":
-      case 1: {
-        return {
-          ctg: "Products",
-          icon: <FiBox style={{ color: "#fdeacc" }} />,
-          background: "#f8aa35",
-        };
-      }
-
-      case "Entertainment":
-      case 2:
-        return {
-          ctg: "Entertainment",
-          icon: <IoGameControllerOutline style={{ color: "#e4f1d5" }} />,
-          background: "#92c44c",
-        };
-
-      case "Bills":
-      case 3: {
-        return {
-          ctg: "Bills",
-          icon: <BsHouseDoor style={{ color: "#b7dffd" }} />,
-          background: "#5a92d6",
-        };
-      }
-    }
-  };
-
-  useEffect(() => {
-    setStyle(categoryStyle());
-  }, []);
-
-  //VRNEMO IZBRANO KATEGORIJO Z DOLOČENIM STILOM(BARVO) TER PODAMO ŠE IME KATEGORIJE IN PA VSOTO VSEH TRANSAKCIJ KI SPADAJO POD TO KATEGORIJO
-  return (
-    <div className={styles.container} style={{ background: style.background }}>
-      <div className={styles.inner}>
-        <div className={styles.iconContainer}>{style.icon}</div>
-        <div className={styles.info}>
-          <div className={styles.title}>{style.ctg}</div>
-          <div className={styles.money}>{`-$${money}`}</div>
-        </div>
-      </div>
+    return (<div className={styles.iconContainer}
+        style={{ background: style.background, color: style.color }}
+    >
+        {style.icon}
     </div>
-  );
+    );
+};
+
+
+//TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
+const CategoryCard = ({ category, date, money, description, title }) => {
+    //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
+    const [visible, setVisible] = useState(false);
+    return (
+        <div className={styles.container}>
+            <div className={styles.inner}>
+                {/* INFO */}
+                <div className={styles.info}>
+                    {/* <CategoryIcon category={category} /> */}
+                    <div className={styles.categoryContainer}>
+                        <span className={styles.title}>{title}</span>
+                        {/*<span className={styles.category}>{category}</span>
+                        <span className={styles.date}>{date}</span>
+                        <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}
+                        >
+                            <p>desc</p>
+                        </div>*/}
+                    </div>
+                </div>
+                {/* MONEY */}
+                {/* <div className={styles.moneyContainer}>
+                    <span>{`-$${money}`}</span>
+                    <div
+                        className={styles.iconContainer}
+                        onClick={() => setVisible(!visible)}
+                        style={description ? {} : { opacity: 0, pointerEvents: 'none' }}
+
+                    >
+                        {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
+                    </div>
+                </div> */}
+            </div>
+        </div>
+    );
 };
 
 CategoryCard.defaultProps = {
-  category: "other",
-  money: "50k",
+    category: 'Products',
+    date: '29 Feb 2020',
+    description: 'Lorem Iipsum',
+    money: '30.65'
 };
 
-export default CategoryCard;
+export default CategoryCard

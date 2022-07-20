@@ -1,4 +1,5 @@
 .container {
+    padding: 0.7rem 2rem;
     .dateSearchFilter {
         display: flex;
         flex-direction: column;
@@ -17,7 +18,6 @@
                 max-width: 400px;
                 font-size: 1rem;
                 padding: 0.8rem;
-                background: rgb(236, 236, 236);
             }
 
             label {
@@ -48,7 +48,7 @@
     }
 
     .results {
-        margin-top: 1.2rem;
+        // margin-top: 1.2rem;
 
         .container {
             display: inline-block;
@@ -60,10 +60,10 @@
             .deleteContainer{
                 display: flex;
                 align-items: center;
-                gap: 2rem;
-                margin-right: 2rem;
-                margin-bottom: 2rem;
-                width: 400px;
+                // gap: 2rem;
+                // margin-right: 2rem;
+                // margin-bottom: 2rem;
+                // width: 400px;
                 @media screen and (max-width: 500px) {
                     margin-right: 0;
                     justify-content: space-between;

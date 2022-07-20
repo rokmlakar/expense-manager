@@ -111,6 +111,7 @@ const auth_register = async (req, res) => {
         try {
             await prisma.wallet.create({
                 data: {
+                    name: 'Wallet 1',
                     userId: newUser?.id,
                 },
             });

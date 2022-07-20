@@ -7,6 +7,7 @@ import { useCategoriesGet } from '../../queries/category'
 import { useTransactionPost } from '../../queries/transaction';
 import { DateTime } from 'luxon';
 import { queryClient } from '../../constants/config';
+import { useWalletsGet } from '../../queries/wallet';
 
 const AddTransactionForm = () => {
     //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
@@ -24,6 +25,8 @@ const AddTransactionForm = () => {
          if (ctgs) setCategory(ctgs.data[1].id);
          else setCategory(1);
      }, []);
+
+     const { data: wallets } = useWalletsGet();
 
     //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
     const {
@@ -80,6 +83,21 @@ const AddTransactionForm = () => {
                             return (
                                 <option key={ctg.id} value={ctg.id}>
                                     {ctg.name}
+                                </option>
+                            );
+                        })}
+                    </select>
+                ) : (
+                    <div>loading...</div>
+                )}
+
+                {/* WALLET */}
+                {wallets ? (
+                    <select onChange={(e) => setCategory(e.target.value)}>
+                        {wallets.data.map((wal) => {
+                            return (
+                                <option key={wal.id} value={wal.id}>
+                                    {wal.name}
                                 </option>
                             );
                         })}

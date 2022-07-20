@@ -2,21 +2,8 @@ import { useQuery, useMutation } from "react-query";
 import Ax from "../utils/Axios";
 
 
-const useWalletGet = ({ key }) => useQuery(key,
-    () => getWall({
-       
-    }),
-    {
-        refetchOnWindowFocus: false,
-        enabled: false,
-        keepPreviousData: true
-    }
-)
-
-const getWall = async (params) => {
-    return await Ax.get('wallet', { params: params }).catch((e) =>
-        console.log(e)
-    );
+const getWall = async () => {
+    return await Ax.get('/wallets');
 };
 
 const postWall = async (params) => {
@@ -25,4 +12,20 @@ const postWall = async (params) => {
 
 const useWalletPost = () => useMutation("postWallet", postWall)
 
-export { useWalletPost, useWalletGet }
+const useWalletsGet = () =>
+    useQuery("Wallets", getWall, {
+        staleTime: 50000,
+    });
+
+// const useWalletGet = ({ key }) => useQuery(key,
+//     () => getWall({
+
+//     }),
+//     {
+//         refetchOnWindowFocus: false,
+//         enabled: false,
+//         keepPreviousData: true
+//     }
+// )
+
+export { useWalletPost, useWalletsGet }

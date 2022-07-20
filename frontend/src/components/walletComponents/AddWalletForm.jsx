@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { queryClient } from '../../constants/config';
 import { Title } from '../Titles/Titles';
 
-import { useWalletPost, useWalletGet } from '../../queries/wallet';
+import { useWalletPost } from '../../queries/wallet';
 
 
 const AddWalletForm = () => {
@@ -22,26 +22,23 @@ const AddWalletForm = () => {
     let body = {
         title: title,
         money: parseFloat(money),
-        info: info,
+        // info: info,
     };
 
-    const {
-        data,
-        refetch: fetchWallet,
-        isLoading: walletLoading,
-    } = useWalletGet({
-        key: "Wall",
-    });
+    // const {
+    //     data,
+    //     refetch: fetchWallet,
+    //     isLoading: walletLoading,
+    // } = useWalletGet({
+    //     key: "Wall",
+    // });
 
-    console.log(data)
+    // console.log(data)
 
 
     return (
         <div className={styles.container}>
             <Title>Add a Wallet</Title>
-            <button className={styles.btn} onClick={() => fetchWallet()}>
-                Show Wallet
-            </button>
             <div className={styles.inner}>
                 <input
                     type="text"
@@ -49,21 +46,28 @@ const AddWalletForm = () => {
                     onChange={(e) => setTitle(e.target.value)}
                     value={title}
                 />
+
                 <input
                     type="number"
                     placeholder='money'
                     onChange={(e) => setMoney(e.target.value)}
                     value={money}
                 />
+
                 <input
                     type="text"
                     placeholder='info'
                     onChange={(e) => setInfo(e.target.value)}
                     value={info}
                 />
+
                 <button
                     onClick={() => {
-                        postWallet(body);
+                        postWallet(body, {
+                            onSuccess: async () => {
+                                await queryClient.invalidateQueries('Categories_Sum');
+                            },
+                        });
                     }}
                 >
                     {isLoading ? 'Loading...' : 'Add Wallet'}
@@ -82,7 +86,7 @@ const AddWalletForm = () => {
                     {isSuccess && <div style={{ color: 'green' }}>Success</div>}
                 </div>
             </div>
-        </div>
+        </div >
     )
 
 }

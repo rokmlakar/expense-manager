@@ -1,7 +1,7 @@
 import MainContainer from "../components/Containers/MainContainer";
 import SearchBar from "../components/homeComponents/SearchBar";
 import { Title } from "../components/Titles/Titles";
-import CategoryCard from "../components/Cards/CategoryCard";
+import CategorySumCard from "../components/Cards/CategorySumCard";
 import TransactionCard from "../components/Cards/TransactionCard";
 import HomeProfile from "../components/homeComponents/HomeProfile";
 
@@ -36,14 +36,14 @@ const Home = () => {
     //     refetch: fetchTransactions
     // }
 
-    const { data: cat } = useCategoriesGet();
+    const { data: cat, refetch: fetchCategories } = useCategoriesGet();
     console.log(cat)
 
     useEffect(() => {
         setCtgs(cat)
     }, [])
 
-    if(!ctgs){
+    if (!ctgs) {
 
         // setctgs(cat)
     }
@@ -51,7 +51,7 @@ const Home = () => {
     //     setctgs(cat)
     // }
 
-    const { data: CategoriesSum } = useCategoriesSum();
+    const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
     // useCategoriesSum() = {
     //     data: CategoriesSum
     // } 
@@ -60,6 +60,8 @@ const Home = () => {
     //DOBI TRENUTNE TRANSAKCIJE, SPROZI SE OB LOADU IN POŠLJE FETCH
     useEffect(() => {
         fetchTransactions();
+        fetchCategories();
+        fetchCategoriesSum();
     }, [])
     console.log(ctgs)
 
@@ -79,7 +81,7 @@ const Home = () => {
                         {/* SUM */}
                         {CategoriesSum && ctgs && CategoriesSum.data.map((category, index) => {
                             return (
-                                <CategoryCard
+                                <CategorySumCard
                                     key={index}
                                     category={category.transactionCategoryId}
                                     money={category._sum.money.toFixed(2)}

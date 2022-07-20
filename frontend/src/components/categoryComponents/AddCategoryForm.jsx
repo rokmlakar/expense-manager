@@ -32,7 +32,7 @@ const AddTransactionForm = () => {
         error,
     } = useCategoryPost();
 
-    //V BODY ZAPIŠEMO VSE PODATKE KI JIH MORAMO POSLATI NA BAZO DA LAHKO USTVARIMO NOVO TRANSAKCIJO
+    //V BODY ZAPIŠEMO VSE PODATKE KI JIH MORAMO POSLATI NA BAZO DA LAHKO USTVARIMO NOVO KATEGORIJO
     let body = {
         title: title,
     };
@@ -56,7 +56,6 @@ const AddTransactionForm = () => {
                     value={info}
                 />
 
-                {/* POST TRANSACTION */}
                 <button
                     onClick={() => {
                         postCategory(body, {
@@ -66,7 +65,7 @@ const AddTransactionForm = () => {
                         });
                     }}
                 >
-                    {isLoading ? 'Loading...' : 'Add Transaction'}
+                    {isLoading ? 'Loading...' : 'Add Category'}
                 </button>
 
                 {/* ERROR */}

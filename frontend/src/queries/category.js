@@ -18,9 +18,8 @@ const postCtg = async (params) => {
 
 //HOOKS
 const useCategoriesGet = () =>
-  useQuery("Categories", getCtgs, {
-    staleTime: 50000,
-  });
+  useQuery("Categories", getCtgs
+  );
 
 const useCategoriesSum = () =>
   useQuery("Categories_Sum", getCtgsSum, { staleTime: 30000 });
