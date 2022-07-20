@@ -9,6 +9,8 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes")
 const transactionRoutes = require('./routes/transactionRoutes');
 const categoriesRoutes = require('./routes/categoriesRoutes');
+ const walletRoutes = require('./routes/walletRoutes');
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -56,6 +58,9 @@ app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", transactionRoutes);
 app.use("/api", categoriesRoutes);
+app.use("/api", walletRoutes);
+// app.use("/api", walletRoutes);
+
 app.use('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
