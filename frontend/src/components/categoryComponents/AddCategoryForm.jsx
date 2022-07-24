@@ -10,7 +10,7 @@ import { queryClient } from '../../constants/config';
 import { CirclePicker } from 'react-color';
 import { IconPicker } from 'react-fa-icon-picker';
 
-const AddTransactionForm = () => {
+const AddTransactionForm = ({ reloadSetter, reload }) => {
     //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
     const [title, setTitle] = useState('');
     const [money, setMoney] = useState('');
@@ -60,7 +60,9 @@ const AddTransactionForm = () => {
     const handleClick = () => {
         postCategory(body, {
             onSuccess: async () => {
-                await queryClient.invalidateQueries('Categories_Sum');
+                await queryClient.invalidateQueries('Categories_Sum')
+                    .then(await reloadSetter(!reload))
+                    .catch;
             },
         });
         fetchTransactions()

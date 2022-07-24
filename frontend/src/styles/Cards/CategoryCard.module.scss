@@ -2,17 +2,18 @@
     display: flex;
     padding: 0.3rem;
     border-radius: 5px;
-    svg{
+
+    svg {
         --svg-size: 1.8rem;
         width: var(--svg-size);
         height: var(--svg-size);
     }
 }
 
-.container{
+.container {
     width: 85%;
-    -webkit-box-shadow: -4px 6px 12px 3px rgba(0,0,0,0.12);
-    box-shadow: -4px 6px 12px 3px rgba(0,0,0,0.12);
+    -webkit-box-shadow: -4px 6px 12px 3px rgba(0, 0, 0, 0.12);
+    box-shadow: -4px 6px 12px 3px rgba(0, 0, 0, 0.12);
     border-radius: 10px;
     padding: 1.5rem;
     height: max-content;
@@ -20,59 +21,89 @@
     margin-top: 10px;
 }
 
-.inner{
+.inner {
     display: flex;
     align-items: flex-start;
+
     @media screen and (max-width: 480px) {
         flex-direction: column;
         gap: 1rem;
     }
 
-    .info{
+    .info {
         display: flex;
         align-items: flex-start;
         gap: 1rem;
         width: 100%;
-        .categoryContainer{
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            .title{
-                font-size: 1rem;
-                font-weight: 400;
-                &::first-letter{
-                    text-transform: capitalize;
-                }
-            }
-            .category{
-                color:var(--color-active);
-                font-size: 1.1rem;
-                font-weight: 500;
-                line-height: 1.2;
-            }
 
-            .description{
-                height: 0;
-                transition: all ease-in-out 0.2s;
-                z-index: -1;
-                p{
-                    opacity: 0;
+        .categoryContainer {
+            display: flex;
+            // flex-direction: column;
+            width: 100%;
+            gap: 4rem;
+            border-radius: 10px;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: -4px 6px 12px 3px rgba(0, 0, 0, 0.12);
+
+            .column {
+                width: 30%;
+                display: flex;
+                flex-direction: column;
+                // justify-content: center;
+                // gap: 2rem;
+
+
+                .title, .categoryTitle {
+                    font-size: 20px;
+                    font-weight: 400;
+                    // padding: 1rem;
+
+                    &::first-letter {
+                        text-transform: capitalize;
+                    }
                 }
-            }
-            .descriptionActive{
-                margin-top: 1.2rem;
-                height: auto;
-                p{
-                    transition: opacity ease-in-out 300ms;
-                    transition-delay: 200ms;
-                    opacity: 1;
+                .categoryTitle{
+                    font-size: 20px;
+                    text-align: center;
+                    font-weight: 600;
+                    padding: 1rem ;
+                }
+
+                .category {
+                    color: var(--color-active);
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    line-height: 1.2;
+                }
+
+                // .description {
+                //     height: 0;
+                //     transition: all ease-in-out 0.2s;
+                //     z-index: -1;
+                    
+
+                //     // p {
+                //     //     opacity: 0;
+                //     // }
+                // }
+
+                .descriptionActive {
+                    margin-top: 1.2rem;
+                    height: auto;
+
+                    p {
+                        transition: opacity ease-in-out 300ms;
+                        transition-delay: 200ms;
+                        opacity: 1;
+                    }
                 }
             }
         }
     }
 
     //MONEYCONTAINER
-    .moneyContainer{
+    .moneyContainer {
         display: flex;
         align-items: center;
         gap: 0.2rem;
@@ -82,29 +113,32 @@
             justify-content: space-between;
         }
 
-        span{
+        span {
             color: var(--color-active);
             font-size: 1.1rem;
             font-weight: 500;
         }
 
-        .iconContainer{
+        .iconContainer {
             display: flex;
             color: var(--color-active);
             cursor: pointer;
             padding: 4px 15px;
             border-radius: 50%;
             transition: background 200ms ease-in-out;
-            &:hover{
+
+            &:hover {
                 background: lightgrey;
             }
-            svg{
+
+            svg {
                 --svg-size: 1.7rem;
                 width: var(--svg-size);
                 height: var(--svg-size);
             }
         }
     }
+
     .iconContainerDelete {
         cursor: pointer;
         padding: 0.5rem;
@@ -127,5 +161,5 @@
             color: var(--color-red-600);
         }
     }
-    
+
 }

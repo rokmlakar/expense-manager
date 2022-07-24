@@ -24,8 +24,9 @@ const Categories = () => {
     const [sortingField, setSortingField] = useState('dateSort');
     const [order, setOrder] = useState('asc');
     const [skip, setSkip] = useState(0);
+    const [reload, setReload] = useState(false)
 
-    const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
+    const { data: ctgs, refetch:fetchCategories, isFetched: isCtgsFetched } = useCategoriesGet();
 
 
 
@@ -44,8 +45,12 @@ const Categories = () => {
             key: 'CategoriesTrs',
         });
 
+    useEffect(() => {
+        fetchCategories()
+    }, [reload])
 
 
+    console.log(ctgs)
     return (
         <div className={styles.flexContainer}>
 
@@ -56,14 +61,25 @@ const Categories = () => {
                     {/* FILTERS */}
                     LIST OF CATEGORIES
                     {ctgs && [...ctgs.data].reverse().map((cat, index) => (
-                        <CategoryCard key={index} title={cat.name} category={cat.id} color={cat.color} info={cat.info} userId={cat.userId}/>
+                        <CategoryCard
+                            key={index}
+                            title={cat.name}
+                            category={cat.id}
+                            color={cat.color}
+                            info={cat.info}
+                            userId={cat.userId}
+                        />
+
                     ))}
                 </div>
 
             </div>
 
             <div className={styles.sideContent}>
-                <AddCategoryForm />
+                <AddCategoryForm
+                    reloadSetter={setReload}
+                    reload={reload}
+                />
             </div>
         </div>
     )

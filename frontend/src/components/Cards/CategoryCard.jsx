@@ -64,25 +64,17 @@ const CategoryIcon = ({ category }) => {
 
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const CategoryCard = ({ title, category, color, info, userId }) => {
+const CategoryCard = ({ title, category, color, info: description, userId }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [catSum, setCatSum] = useState();
     let [transactionsCount, setTransactionsCount] = useState();
-    // console.log(title, category, color, info, userId)
+     console.log(title, category, color, description, userId)
 
     const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
 
 
-
-    if (CategoriesSum) {
-        CategoriesSum.data.map((cat) => {
-            //   console.log(cat, '--', category)
-            if (cat.transactionCategoryId === category && !catSum) {
-                setCatSum(cat._sum.money)
-            }
-        })
-    }
+   
 
     const { data: transactions, refetch: fetchTransactions } =
         useTransactionsGet({
@@ -94,7 +86,7 @@ const CategoryCard = ({ title, category, color, info, userId }) => {
     //DOBI ŠT TRANSAKCIJ V KATEGORIJI
     useEffect(() => {
         let count = 0;
-        transactions.data.forEach(tran => {
+        transactions && transactions.data.forEach(tran => {
             if (tran.category.name === title) {
                 console.log(tran)
                 count++
@@ -105,22 +97,42 @@ const CategoryCard = ({ title, category, color, info, userId }) => {
 
         setTransactionsCount(count)
 
-    }, [transactions])
+        if (CategoriesSum) {
+            CategoriesSum.data.map((cat) => {
+                //   console.log(cat, '--', category)
+                if (cat.transactionCategoryId === category && !catSum) {
+                    setCatSum(cat._sum.money)
+                }
+            })
+        }
+
+    }, [transactions, title, category, color, description, userId])
 
 
 
     // console.log(CategoriesSum)
     return (
-        <div className={styles.container} >
+        <div className={styles.container} style={{ background: color }}>
             <div className={styles.inner} >
                 {/* INFO */}
-                <div className={styles.info}>
+                <div className={styles.info} >
                     {/* <CategoryIcon category={category} /> */}
-                    <div className={styles.categoryContainer} >
-                        <span className={styles.title} style={{ background: color }}>{title}</span>
-                        <span className={styles.category}>{catSum}$ </span>
-                        <span className={styles.category}>{info}</span>
-                        <span className={styles.category}>{transactionsCount}</span>
+                    <div className={styles.categoryContainer}  >
+                        <div className={styles.column} style={{justifyContent: 'center', borderRight:`2px solid ${color}`}}>
+                            <span className={styles.categoryTitle} >{title}</span>
+                        </div>
+                        <div className={styles.column}>
+                            <span className={styles.title} style={{borderBottom: `1px solid ${color}`, padding:'2px', marginBottom: '1rem'}}>Money Spent</span>
+                            <span className={styles.category}>${catSum} </span>
+                        </div>
+                        <div className={styles.column}>
+                            <span className={styles.title} style={{borderBottom: `1px solid ${color}`, padding:'2px', marginBottom: '1rem'}}>Transactions</span>
+                            <span className={styles.category}>{transactionsCount}</span>
+                        </div>
+                        <div className={styles.column}>
+                            <span className={styles.title} style={{borderBottom: `1px solid ${color}`, padding:'2px', marginBottom: '1rem'}}>Description</span>
+                            <span className={styles.description}>{description}</span>
+                        </div>
                         {/*
                         <span className={styles.date}>{date}</span>
                         <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}
