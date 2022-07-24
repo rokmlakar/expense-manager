@@ -62,18 +62,18 @@ const CategoryIcon = ({ category }) => {
 
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const CategoryCard = ({ category, date, money, description, title }) => {
+const CategoryCard = ({ title, category, color, info, user }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [catSum, setCatSum] = useState();
+    console.log(title, category, color, info, user)
 
     const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
 
     if(CategoriesSum){
       CategoriesSum.data.map((cat) => {
-          // console.log(cat, '--', category)
+        //   console.log(cat, '--', category)
           if(cat.transactionCategoryId === category && !catSum){
-            console.log(cat)
             setCatSum(cat._sum.money)
           } 
       })
@@ -83,13 +83,15 @@ const CategoryCard = ({ category, date, money, description, title }) => {
 
 // console.log(CategoriesSum)
     return (
-        <div className={styles.container}>
-            <div className={styles.inner}>
+        <div className={styles.container} >
+            <div className={styles.inner} >
                 {/* INFO */}
                 <div className={styles.info}>
                     {/* <CategoryIcon category={category} /> */}
-                    <div className={styles.categoryContainer}>
+                    <div className={styles.categoryContainer} >
                         <span className={styles.title}>{title}</span>
+                        <span className={styles.category}>{catSum}</span>
+                        <span className={styles.category}>{catSum}</span>
                         <span className={styles.category}>{catSum}</span>
                         {/*
                         <span className={styles.date}>{date}</span>

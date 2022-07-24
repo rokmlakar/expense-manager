@@ -20,12 +20,12 @@ const AddTransactionForm = () => {
     const [visible, setVisible] = useState(false);
     const [icon, setIcon] = useState('');
     const [color, setColor] = useState({
-        background: '##49c5b7',
+        background: 'lightgrey',
     }
     );
 
     //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
-    const { data: ctgs } = useCategoriesGet();
+    const { data: ctgs, refetch: fetchTransactions } = useCategoriesGet();
     useEffect(() => {
         if (ctgs) setCategory(ctgs.data[1].id);
         else setCategory(1);
@@ -57,6 +57,15 @@ const AddTransactionForm = () => {
         setVisible(!visible);
     }
 
+    const handleClick = () => {
+        postCategory(body, {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries('Categories_Sum');
+            },
+        });
+        fetchTransactions()
+    }
+
     return (
 
         <div className={styles.container}>
@@ -75,28 +84,22 @@ const AddTransactionForm = () => {
                     onChange={(e) => setInfo(e.target.value)}
                     value={info}
                 />
-                <button onClick={vis} style={{background: color.background }}>
+                <button className={styles.color} onClick={vis} style={{ background: color.background }}>
                     Pick a Category Color
                 </button>
 
-                {visible && 
-                <CirclePicker
-                color={color.background}
-                onChangeComplete={handleChange}
-                />
-            }
-             {/* <IconPicker/> */}
+                {visible &&
+                    <CirclePicker
+                        color={color.background}
+                        onChangeComplete={handleChange}
+                    />
+                }
+                {/* <IconPicker/> */}
 
 
 
                 <button
-                    onClick={() => {
-                        postCategory(body, {
-                            onSuccess: async () => {
-                                await queryClient.invalidateQueries('Categories_Sum');
-                            },
-                        });
-                    }}
+                    onClick={handleClick}
                 >
                     {isLoading ? 'Loading...' : 'Add Category'}
                 </button>

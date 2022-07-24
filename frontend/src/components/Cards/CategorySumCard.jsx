@@ -27,8 +27,6 @@ const CategorySumCard = ({ category, money, ctgs }) => {
     }
   })
 
-console.log(ctgName, ctgInfo, ctgColor)
-
 
   //SWITCH Z VSEMI KATEGORIJAMI
   const categoryStyle = () => {
@@ -38,7 +36,7 @@ console.log(ctgName, ctgInfo, ctgColor)
         return {
           ctg: ctgName,
           icon: <HiOutlineFire style={{ color: "#333" }} />,
-          background: "#30D5c8",
+          background: ctgColor ? ctgColor : "#30D5c8",
         };
       }
       case "Products":

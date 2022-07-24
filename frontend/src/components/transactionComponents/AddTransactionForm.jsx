@@ -16,19 +16,21 @@ const AddTransactionForm = () => {
     const [date, setDate] = useState(DateTime.now().toISODate());
     const [info, setInfo] = useState('');
     const [category, setCategory] = useState(10);
-    const [wallet, setWallet] = useState(10);
+    const [wallet, setWallet] = useState();
 
     //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
-    
-    const { data: ctgs, refetch: fetchCategories } = useCategoriesGet();
-     useEffect(() => {
-        fetchCategories()
-         if (ctgs) setCategory(ctgs.data[1].id);
-         else setCategory(1);
-     }, []);
 
-     const { data: wallets } = useWalletsGet();
-     console.log(wallets, wallet, category)
+    const { data: ctgs, refetch: fetchCategories } = useCategoriesGet();
+    useEffect(() => {
+        fetchCategories()
+        console.log(ctgs)
+        if (ctgs) setCategory(ctgs.data[0].id);
+        else setCategory(1);
+        console.log(wallets)
+        if(wallets) setWallet(wallets.data[0].id)
+    }, []);
+
+    const { data: wallets } = useWalletsGet();
 
     //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
     const {

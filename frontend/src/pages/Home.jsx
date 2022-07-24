@@ -37,8 +37,7 @@ const Home = () => {
     // }
 
     const { data: cat, refetch: fetchCategories } = useCategoriesGet();
-    console.log(cat)
-
+    
     useEffect(() => {
         setCtgs(cat)
     }, [])
@@ -56,7 +55,6 @@ const Home = () => {
     //     data: CategoriesSum
     // } 
 
-    console.log(CategoriesSum)
     //DOBI TRENUTNE TRANSAKCIJE, SPROZI SE OB LOADU IN POŠLJE FETCH
     useEffect(() => {
         fetchTransactions();

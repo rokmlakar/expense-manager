@@ -20,16 +20,15 @@ const Transactions = () => {
       })
       .toISODate()
   );
-  const [categories, setCategories] = useState('');
+  const [categories, setCategories] = useState();
   const [sortingField, setSortingField] = useState('dateSort');
   const [order, setOrder] = useState('asc');
   const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
   const [skip, setSkip] = useState(0);
 
-  useEffect(() => {
-    if (ctgs) setCategories(ctgs.data[0].id);
-    console.log(ctgs);
-  }, [ctgs])
+  // useEffect(() => {
+  //    if (ctgs) setCategories(ctgs.data[0].id);
+  // }, [ctgs])
 
   const { data: FilteredTransactions, refetch: fetchTransactions } =
     useTransactionsGet({
@@ -43,11 +42,10 @@ const Transactions = () => {
 
   return (
 
-
     <div className={styles.flexContainer}>
 
       <div className={styles.mainContent}>
-        <Title>Categories</Title>
+        <Title>Transactions</Title>
         {/* FILTERS */}
         <div className={styles.filters}>
           <div className={styles.filterContainer}>
@@ -110,6 +108,7 @@ const Transactions = () => {
                     setCategories(e.target.value);
 
                   }}>
+                  <option value="">All</option>
                   {ctgs?.data?.map((category, index) => {
                     return (
                       <option key={index} value={category.id}>
@@ -117,7 +116,6 @@ const Transactions = () => {
                       </option>
                     )
                   })}
-                  <option value="">All</option>
                 </select>
               ) : (
                 <div>Loading...</div>

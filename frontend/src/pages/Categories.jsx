@@ -29,10 +29,10 @@ const Categories = () => {
 
 
 
-    useEffect(() => {
-        if (ctgs) setCategories(ctgs.data);
-        // console.log(ctgs);
-    }, [ctgs])
+    // useEffect(() => {
+    //     if (ctgs) setCategories(ctgs.data);
+    //      console.log(ctgs);
+    // }, [ctgs])
 
     const { data: FilteredTransactions, refetch: fetchTransactions } =
         useTransactionsGet({
@@ -45,6 +45,7 @@ const Categories = () => {
         });
 
 
+
     return (
         <div className={styles.flexContainer}>
 
@@ -54,8 +55,8 @@ const Categories = () => {
 
                     {/* FILTERS */}
                     LIST OF CATEGORIES
-                    {categories && categories.map((cat) => (
-                        <CategoryCard title={cat.name} category={cat.id}/>
+                    {ctgs && [...ctgs.data].reverse().map((cat, index) => (
+                        <CategoryCard key={index} title={cat.name} category={cat.id} color={cat.color} info={cat.info} userId={cat.userId}/>
                     ))}
                 </div>
 
