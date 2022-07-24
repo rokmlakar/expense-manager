@@ -6,6 +6,13 @@ import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { HiOutlineFire } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 import { useCategoriesGet } from '../../queries/category';
+import { useTransactionsGet, useTransactionDelete } from '../../queries/transaction';
+import { DateTime } from 'luxon';
+//STYLES
+import { BsTrash } from "react-icons/bs";
+//UTILS
+import { queryClient } from "../../constants/config";
+
 
 //CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
 // const CategoryIcon = ({ category }) => {
@@ -66,22 +73,46 @@ import { useCategoriesGet } from '../../queries/category';
 // }
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const TransactionCard = ({ categoryName, date, money, description, title }) => {
+const TransactionCard = ({ categoryName, date, money, description, title, transactionId }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [currentCat, setCurrentCat] = useState()
+    const [firstDate, setFirstDate] = useState(
+        DateTime.now()
+            .minus({
+                days: 6,
+            })
+            .toISODate()
+    );
+    const [lastDate, setLastDate] = useState(
+        DateTime.now()
+            .toISODate()
+    );
 
     const { data: categories, refetch: fetchCategories } = useCategoriesGet();
     console.log(categoryName, date, money, description, title)
-     console.log(categoryName)
+    console.log(categoryName)
 
-     categories && categories.data.map((cat) => {
+    categories && categories.data.map((cat) => {
         //   console.log('ctg',category)
-         if(categoryName === cat.name && !currentCat){
+        if (categoryName === cat.name && !currentCat) {
             setCurrentCat(cat)
-         }
+        }
         //  console.log('KAT' , currentCat)
-     })
+    })
+
+    const { mutate: deleteTr } = useTransactionDelete();
+    const {
+        data,
+        refetch: fetchTransactionsDel,
+        isLoading: transactionsLoading,
+    } = useTransactionsGet({
+        firstDate: firstDate,
+        lastDate: lastDate,
+        key: "Trs",
+    });
+
+
 
 
     return (
@@ -112,6 +143,27 @@ const TransactionCard = ({ categoryName, date, money, description, title }) => {
                         {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
                     </div>
                 </div>
+                <div
+                    className={styles.iconContainerDelete}
+                    style={
+                        transactionsLoading
+                            ? {
+                                pointerEvents: "none",
+                                background: "#333",
+                            }
+                            : {}
+                    }
+                    onClick={() => {
+                        deleteTr(transactionId, {
+                            onSuccess: async () => {
+                                await queryClient
+                                    .invalidateQueries("Trs")
+                                    .then(await fetchTransactionsDel())
+                                    .catch();
+                            },
+                        });
+                    }}
+                ><BsTrash /></div>
             </div>
         </div>
     );

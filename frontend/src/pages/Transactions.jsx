@@ -209,28 +209,9 @@ const Transactions = () => {
                       date={DateTime.fromISO(transaction.date).toISODate()}
                       description={transaction.info}
                       title={transaction.title}
+                      transactionId={transaction.id}
                     />
-                    <div
-                      className={styles.iconContainer}
-                      style={
-                        transactionsLoading
-                          ? {
-                            pointerEvents: "none",
-                            background: "#333",
-                          }
-                          : {}
-                      }
-                      onClick={() => {
-                        deleteTr(transaction.id, {
-                          onSuccess: async () => {
-                            await queryClient
-                              .invalidateQueries("Trs")
-                              .then(await fetchTransactions())
-                              .catch();
-                          },
-                        });
-                      }}
-                    ><BsTrash /></div>
+                    
                   </div>
                 );
 
