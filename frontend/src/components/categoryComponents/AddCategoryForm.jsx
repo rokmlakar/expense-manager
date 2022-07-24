@@ -46,10 +46,11 @@ const AddTransactionForm = () => {
         setColor({ background: color.hex })
     }
 
-    console.log(color)
     //V BODY ZAPIŠEMO VSE PODATKE KI JIH MORAMO POSLATI NA BAZO DA LAHKO USTVARIMO NOVO KATEGORIJO
     let body = {
         title: title,
+        info: info,
+        color: color.background,
     };
 
     const vis = () => {

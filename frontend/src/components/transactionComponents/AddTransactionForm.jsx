@@ -16,6 +16,7 @@ const AddTransactionForm = () => {
     const [date, setDate] = useState(DateTime.now().toISODate());
     const [info, setInfo] = useState('');
     const [category, setCategory] = useState(10);
+    const [wallet, setWallet] = useState(10);
 
     //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
     
@@ -27,6 +28,7 @@ const AddTransactionForm = () => {
      }, []);
 
      const { data: wallets } = useWalletsGet();
+     console.log(wallets, wallet, category)
 
     //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
     const {
@@ -44,6 +46,7 @@ const AddTransactionForm = () => {
         date: date,
         info: info,
         transactionCategoryId: parseInt(category),
+        walletId: parseInt(wallet)
     };
 
     return (
@@ -93,7 +96,7 @@ const AddTransactionForm = () => {
 
                 {/* WALLET */}
                 {wallets ? (
-                    <select onChange={(e) => setCategory(e.target.value)}>
+                    <select onChange={(e) => setWallet(e.target.value)}>
                         {wallets.data.map((wal) => {
                             return (
                                 <option key={wal.id} value={wal.id}>

@@ -86,6 +86,7 @@ const Home = () => {
                                     category={category.transactionCategoryId}
                                     money={category._sum.money.toFixed(2)}
                                     ctgs={ctgs.data}
+                                    color={ctgs.color}
                                 />
                             );
                         })}

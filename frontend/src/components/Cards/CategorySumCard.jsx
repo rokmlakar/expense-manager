@@ -15,15 +15,19 @@ const CategorySumCard = ({ category, money, ctgs }) => {
   const [style, setStyle] = useState({});
   // console.log(ctgs)
 
-  const [ctg, setCtg] = useState();
+  const [ctgName, setCtgName] = useState();
+  const [ctgInfo, setCtgInfo] = useState();
+  const [ctgColor, setCtgColor] = useState();
+
   ctgs.map(cat => {
-    if(cat.id === category && ! ctg){
-      setCtg(cat.name);
+    if(cat.id === category && ! ctgName){
+      setCtgName(cat.name);
+      setCtgInfo(cat.info);
+      setCtgColor(cat.color);
     }
-    console.log()
   })
 
-
+console.log(ctgName, ctgInfo, ctgColor)
 
 
   //SWITCH Z VSEMI KATEGORIJAMI
@@ -32,7 +36,7 @@ const CategorySumCard = ({ category, money, ctgs }) => {
     switch (category) {
       default: {
         return {
-          ctg: ctg,
+          ctg: ctgName,
           icon: <HiOutlineFire style={{ color: "#333" }} />,
           background: "#30D5c8",
         };

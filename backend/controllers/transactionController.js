@@ -3,14 +3,15 @@ const { DateTime } = require('luxon');
 
 const transaction_post = async (req, res) => {
     if (req.session.userId) {
+        console.log(req.body)
         const date = new Date(req.body.date).toISOString();
-        const wallet = await prisma.wallet
-            .findUnique({
-                where: {
-                    userId: req.session.userId,
-                },
-            })
-            .catch();
+        // const wallet = await prisma.wallet
+        //     .findUnique({
+        //         where: {
+        //             userId: req.session.userId,
+        //         },
+        //     })
+        //     .catch();
         try {
             await prisma.transaction.create({
                 data: {
@@ -19,7 +20,7 @@ const transaction_post = async (req, res) => {
                     date: date,
                     info: req.body.info,
                     transactionCategoryId: req.body.transactionCategoryId,
-                    walletId: wallet.id,
+                    walletId: req.body.walletId,
                 }
             })
             res.status(200).send('success');

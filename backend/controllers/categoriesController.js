@@ -11,6 +11,8 @@ const category_post = async (req, res) => {
                     name: req.body.title,
                     userId: req.session.userId,
                     Transaction: {},
+                    info: req.body.info,
+                    color:req.body.color
                 }
             })
             res.status(200).send('success');
@@ -22,7 +24,6 @@ const category_post = async (req, res) => {
 
 const categories_get = async (req, res) => {
     if (req.session.userId) {
-        console.log(req.session.userId)
         //KLIC ZA VSE KATEGORIJE, SHRANIJO SE V ctgs
         let ctgs;
         try {
@@ -44,7 +45,6 @@ const categories_get = async (req, res) => {
 
             //ČE JIH NAJDE JIH POŠLE UPORABNIKU 
             if (ctgs) res.status(200).send(ctgs);
-            console.log(ctgs)
         } catch {
             res.status(400).send('error');
         }
@@ -80,7 +80,6 @@ const categories_transaction_sum = async (req, res) => {
                     }
                 },
             });
-            console.log(transactions)
             //POŠLE NAZAJ TRANSAKCIJE KOT RESPONSE
             res.send(transactions);
         } catch {
