@@ -9,6 +9,7 @@ import { useCategoriesGet } from '../queries/category';
 import { useTransactionsGet } from '../queries/transaction';
 import MainContainer from '../components/Containers/MainContainer';
 
+
 const Categories = () => {
 
     //SEARCH FILTERS

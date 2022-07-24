@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-color": "^2.19.3",
+    "react-fa-icon-picker": "^1.0.3"
+  }
+}

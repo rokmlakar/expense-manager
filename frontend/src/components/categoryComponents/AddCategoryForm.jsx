@@ -7,6 +7,8 @@ import { useCategoriesGet } from '../../queries/category'
 import { useCategoryPost } from '../../queries/category';
 import { DateTime } from 'luxon';
 import { queryClient } from '../../constants/config';
+import { CirclePicker } from 'react-color';
+import { IconPicker } from 'react-fa-icon-picker';
 
 const AddTransactionForm = () => {
     //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
@@ -15,13 +17,19 @@ const AddTransactionForm = () => {
     const [date, setDate] = useState(DateTime.now().toISODate());
     const [info, setInfo] = useState('');
     const [category, setCategory] = useState(10);
+    const [visible, setVisible] = useState(false);
+    const [icon, setIcon] = useState('');
+    const [color, setColor] = useState({
+        background: '##49c5b7',
+    }
+    );
 
     //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
     const { data: ctgs } = useCategoriesGet();
-     useEffect(() => {
-         if (ctgs) setCategory(ctgs.data[1].id);
-         else setCategory(1);
-     }, [ctgs]);
+    useEffect(() => {
+        if (ctgs) setCategory(ctgs.data[1].id);
+        else setCategory(1);
+    }, [ctgs]);
 
     //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
     const {
@@ -32,10 +40,21 @@ const AddTransactionForm = () => {
         error,
     } = useCategoryPost();
 
+
+    const handleChange = (color) => {
+        setVisible(!visible)
+        setColor({ background: color.hex })
+    }
+
+    console.log(color)
     //V BODY ZAPIŠEMO VSE PODATKE KI JIH MORAMO POSLATI NA BAZO DA LAHKO USTVARIMO NOVO KATEGORIJO
     let body = {
         title: title,
     };
+
+    const vis = () => {
+        setVisible(!visible);
+    }
 
     return (
 
@@ -48,13 +67,26 @@ const AddTransactionForm = () => {
                     onChange={(e) => setTitle(e.target.value)}
                     value={title}
                 />
-               
+
                 <input
                     type="text"
                     placeholder='info'
                     onChange={(e) => setInfo(e.target.value)}
                     value={info}
                 />
+                <button onClick={vis} style={{background: color.background }}>
+                    Pick a Category Color
+                </button>
+
+                {visible && 
+                <CirclePicker
+                color={color.background}
+                onChangeComplete={handleChange}
+                />
+            }
+             {/* <IconPicker/> */}
+
+
 
                 <button
                     onClick={() => {
