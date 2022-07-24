@@ -73,7 +73,7 @@ import { queryClient } from "../../constants/config";
 // }
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const TransactionCard = ({ categoryName, date, money, description, title, transactionId }) => {
+const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [currentCat, setCurrentCat] = useState()
@@ -88,6 +88,8 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
         DateTime.now()
             .toISODate()
     );
+
+    // setterChange('neki')
 
     const { data: categories, refetch: fetchCategories } = useCategoriesGet();
     console.log(categoryName, date, money, description, title)
@@ -158,7 +160,7 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
                             onSuccess: async () => {
                                 await queryClient
                                     .invalidateQueries("Trs")
-                                    .then(await fetchTransactionsDel())
+                                    .then(await reloadSetter(!reload))
                                     .catch();
                             },
                         });

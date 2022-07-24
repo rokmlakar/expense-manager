@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 import { queryClient } from '../../constants/config';
 import { useWalletsGet } from '../../queries/wallet';
 
-const AddTransactionForm = () => {
+const AddTransactionForm = ({reloadSetter, reload}) => {
     //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
     const [title, setTitle] = useState('');
     const [money, setMoney] = useState('');
@@ -115,7 +115,9 @@ const AddTransactionForm = () => {
                     onClick={() => {
                         postTransaction(body, {
                             onSuccess: async () => {
-                                await queryClient.invalidateQueries('Categories_Sum');
+                                await queryClient.invalidateQueries('Categories_Sum')
+                                .then(await reloadSetter(!reload))
+                                .catch;
                             },
                         });
                     }}

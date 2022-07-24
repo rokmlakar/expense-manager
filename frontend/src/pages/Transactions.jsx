@@ -36,7 +36,7 @@ const Transactions = () => {
   const [order, setOrder] = useState('asc');
   const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
   const [skip, setSkip] = useState(0);
-
+  const [reload, setReload] = useState(false)
   // useEffect(() => {
   //    if (ctgs) setCategories(ctgs.data[0].id);
   // }, [ctgs])
@@ -51,6 +51,11 @@ const Transactions = () => {
       key: 'CategoriesTrs',
     });
 
+  useEffect(() => {
+    console.log('SETTER', reload);
+    fetchTransactions()
+
+  }, [reload])
   console.log(FilteredTransactions)
 
   const [firstDate, setFirstDate] = useState(
@@ -74,8 +79,6 @@ const Transactions = () => {
     lastDate: lastDate,
     key: "Trs",
   });
-
-
 
   return (
 
@@ -210,8 +213,10 @@ const Transactions = () => {
                       description={transaction.info}
                       title={transaction.title}
                       transactionId={transaction.id}
+                      reloadSetter={setReload}
+                      reload={reload}
                     />
-                    
+
                   </div>
                 );
 
@@ -222,7 +227,9 @@ const Transactions = () => {
       </div>
 
       <div className={styles.sideContent}>
-        <AddTransactionForm />
+        <AddTransactionForm
+          reloadSetter={setReload}
+          reload={reload} />
         <DeleteTransactionForm />
       </div>
     </div>
