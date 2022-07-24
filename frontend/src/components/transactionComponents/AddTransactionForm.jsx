@@ -23,10 +23,8 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
     const { data: ctgs, refetch: fetchCategories } = useCategoriesGet();
     useEffect(() => {
         fetchCategories()
-        console.log(ctgs)
         if (ctgs) setCategory(ctgs.data[0].id);
         else setCategory(1);
-        console.log(wallets)
         if(wallets) setWallet(wallets.data[0].id)
     }, []);
 

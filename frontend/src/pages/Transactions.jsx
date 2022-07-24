@@ -13,7 +13,7 @@ import { useTransactionsGet } from '../queries/transaction';
 
 
 //STYLES
-import { BsTrash } from "react-icons/bs";
+
 //UTILS
 import {
   useTransactionDelete,
@@ -52,7 +52,6 @@ const Transactions = () => {
     });
 
   useEffect(() => {
-    console.log('SETTER', reload);
     fetchTransactions()
   }, [reload])
   

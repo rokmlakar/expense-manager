@@ -47,10 +47,10 @@ const Categories = () => {
 
     useEffect(() => {
         fetchCategories()
+        console.log('YOOYOYO')
     }, [reload])
 
 
-    console.log(ctgs)
     return (
         <div className={styles.flexContainer}>
 
@@ -68,6 +68,8 @@ const Categories = () => {
                             color={cat.color}
                             info={cat.info}
                             userId={cat.userId}
+                            reloadSetter={setReload}
+                            reload={reload}
                         />
 
                     ))}

@@ -6,9 +6,11 @@ import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { HiOutlineFire } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 
-import { useCategoriesSum } from "../../queries/category";
+import { useCategoriesSum, useCategoryDelete } from "../../queries/category";
 import { useTransactionsGet } from '../../queries/transaction';
+import { queryClient } from "../../constants/config";
 
+import { BsTrash } from "react-icons/bs";
 
 //CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
 const CategoryIcon = ({ category }) => {
@@ -64,17 +66,16 @@ const CategoryIcon = ({ category }) => {
 
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const CategoryCard = ({ title, category, color, info: description, userId }) => {
+const CategoryCard = ({ title, category, color, info: description, userId, reloadSetter, reload }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [catSum, setCatSum] = useState();
     let [transactionsCount, setTransactionsCount] = useState();
-     console.log(title, category, color, description, userId)
 
     const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
 
+    const { mutate: deleteCat } = useCategoryDelete();
 
-   
 
     const { data: transactions, refetch: fetchTransactions } =
         useTransactionsGet({
@@ -88,11 +89,9 @@ const CategoryCard = ({ title, category, color, info: description, userId }) => 
         let count = 0;
         transactions && transactions.data.forEach(tran => {
             if (tran.category.name === title) {
-                console.log(tran)
                 count++
                 // setTransactionsCount(transactionsCount++)
             }
-            console.log(count)
         });
 
         setTransactionsCount(count)
@@ -108,7 +107,23 @@ const CategoryCard = ({ title, category, color, info: description, userId }) => 
 
     }, [transactions, title, category, color, description, userId])
 
+    const handleClick = () => {
 
+        deleteCat(category, {
+            // onSuccess: async () => {
+            //  await reloadSetter(!reload)
+            // },
+        });
+        reloadSetter(!reload)
+
+        // postCategory(body, {
+        //     onSuccess: async () => {
+        //         await queryClient.invalidateQueries('Categories_Sum')
+        //             .then(await reloadSetter(!reload))
+        //             .catch;
+        //     },
+        // });
+    }
 
     // console.log(CategoriesSum)
     return (
@@ -118,21 +133,33 @@ const CategoryCard = ({ title, category, color, info: description, userId }) => 
                 <div className={styles.info} >
                     {/* <CategoryIcon category={category} /> */}
                     <div className={styles.categoryContainer}  >
-                        <div className={styles.column} style={{justifyContent: 'center', borderRight:`2px solid ${color}`}}>
+                        <div className={styles.column} style={{ justifyContent: 'center', borderRight: `2px solid ${color}` }}>
                             <span className={styles.categoryTitle} >{title}</span>
                         </div>
                         <div className={styles.column}>
-                            <span className={styles.title} style={{borderBottom: `1px solid ${color}`, padding:'2px', marginBottom: '1rem'}}>Money Spent</span>
+                            <span className={styles.title} style={{ borderBottom: `1px solid ${color}`, padding: '2px', marginBottom: '1rem' }}>Money Spent</span>
                             <span className={styles.category}>${catSum} </span>
                         </div>
                         <div className={styles.column}>
-                            <span className={styles.title} style={{borderBottom: `1px solid ${color}`, padding:'2px', marginBottom: '1rem'}}>Transactions</span>
+                            <span className={styles.title} style={{ borderBottom: `1px solid ${color}`, padding: '2px', marginBottom: '1rem' }}>Transactions</span>
                             <span className={styles.category}>{transactionsCount}</span>
                         </div>
                         <div className={styles.column}>
-                            <span className={styles.title} style={{borderBottom: `1px solid ${color}`, padding:'2px', marginBottom: '1rem'}}>Description</span>
+                            <span className={styles.title} style={{ borderBottom: `1px solid ${color}`, padding: '2px', marginBottom: '1rem' }}>Description</span>
                             <span className={styles.description}>{description}</span>
                         </div>
+                        <div
+                            className={styles.iconContainerDelete}
+                            // style={
+                            //     transactionsLoading
+                            //         ? {
+                            //             pointerEvents: "none",
+                            //             background: "#333",
+                            //         }
+                            //         : {}
+                            // }
+                            onClick={handleClick}
+                        ><BsTrash /></div>
                         {/*
                         <span className={styles.date}>{date}</span>
                         <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}

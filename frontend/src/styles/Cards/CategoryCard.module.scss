@@ -145,12 +145,14 @@
         border-radius: 10px;
         border: 2px solid var(--color-red-300);
         display: flex;
-        background: var(--color-red-100);
+        // background: var(--color-red-100);
         transition: all ease-in-out 300ms;
         align-items: center;
 
         &:hover {
-            background: whitesmoke;
+            background: var(--color-red-100);
+            color: whitesmoke;
+           
         }
 
         svg {

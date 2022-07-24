@@ -10,7 +10,7 @@ import { queryClient } from '../../constants/config';
 import { CirclePicker } from 'react-color';
 import { IconPicker } from 'react-fa-icon-picker';
 
-const AddTransactionForm = ({ reloadSetter, reload }) => {
+const AddTransactionForm = ({reloadSetter, reload}) => {
     //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
     const [title, setTitle] = useState('');
     const [money, setMoney] = useState('');

@@ -12,7 +12,7 @@ const category_post = async (req, res) => {
                     userId: req.session.userId,
                     Transaction: {},
                     info: req.body.info,
-                    color:req.body.color
+                    color: req.body.color
                 }
             })
             res.status(200).send('success');
@@ -49,6 +49,52 @@ const categories_get = async (req, res) => {
             res.status(400).send('error');
         }
     } else res.status(401).send('please login');
+};
+
+const category_delete = async (req, res) => {
+    //KOT REQ PREJMEMO TRANSACTIONID
+    if (req.session.userId) {
+        console.log(req.params)
+        let category = parseInt(req.params.transactionCategoryId);
+        let tr;
+        let ctgs;
+        //S FUNKCIJO DELETEMANY() ZBRISEMO TRANSAKCIJO TAKO DA JO NAJDEMO S POMOČJO TRANSACTIONID KATERO DOBIMO OD USERJA
+        try {
+
+            tr = await prisma.transaction.deleteMany({
+                where: {
+                    transactionCategoryId: category,
+                    wallet: {
+                        userId: req.session.userId,
+                    },
+                },
+            })
+            console.log('yo')
+            ctgs = await prisma.transactionCategory.deleteMany({
+                where: {
+                    id: category,
+                    userId: req.session.userId,
+                },
+            })
+        } catch (e) {
+            res
+                .status(500)
+                .send(
+                    'something went wrong when deleting this transaction'
+                );
+            return;
+        }
+
+        console.log('hgell')
+        //ČE COUNT OBSTAJA POMENI DA SE TRANSAKCIJA USPEŠNO POBRIŠE
+        // if (tr?.count) {
+        //     res.status(200).send('success');
+        //     return;
+        // }
+        // res.status(400).send('error');
+    } else {
+        res.status(401).send('please login');
+    }
 };
 
 
@@ -91,5 +137,6 @@ const categories_transaction_sum = async (req, res) => {
 module.exports = {
     categories_get,
     categories_transaction_sum,
-    category_post
+    category_post,
+    category_delete
 };

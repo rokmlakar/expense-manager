@@ -12,6 +12,10 @@ const getCtgsSum = async () => {
   return await Ax.get("/categories/sum");
 };
 
+const deleteCtg = async (params) => {
+  return await Ax.delete(`category/delete/${params}`);
+};
+
 const postCtg = async (params) => {
   return await Ax.post("category", params);
 };
@@ -21,9 +25,12 @@ const useCategoriesGet = () =>
   useQuery("Categories", getCtgs
   );
 
+  const useCategoryDelete = () => useMutation("deleteCtg", deleteCtg);
+
 const useCategoriesSum = () =>
   useQuery("Categories_Sum", getCtgsSum, { staleTime: 30000 });
 
 const useCategoryPost = () => useMutation("postCategory", postCtg);
 
-export { useCategoriesGet, useCategoriesSum, useCategoryPost };
+
+export { useCategoriesGet, useCategoriesSum, useCategoryPost, useCategoryDelete };
