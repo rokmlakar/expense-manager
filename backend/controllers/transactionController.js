@@ -22,13 +22,32 @@ const transaction_post = async (req, res) => {
     } else res.status(401).send('please login');
 };
 
+const transaction_count_category = async (req, res) => {
+    if (req.session.userId) {
+        console.log(req.query)
+        console.log('yyysss')
+        let { category } = req.query
+    }
+
+    const transactions = await prisma.transaction.findMany({
+        where: {
+            transactionCategoryId: {
+                equals: category != undefined ? parseInt(category) : undefined,
+            },
+        }
+    }).count()
+
+    console.log(transactions)
+}
+
 const transactions_get = async (req, res) => {
     if (req.session.userId) {
+        console.log(req.query)
         //ZAPIŠE SI PODANE PARAMETRE TO SO LAHKO KATERIKOLI OD NAVEDENIH SPODAJ (1 ali več)
         let { firstDate, lastDate, category, dateSort, priceSort, skip, take } =
             req.query;
 
-            //ČE SKIP NI PODAN JE DEFAULT 0
+        //ČE SKIP NI PODAN JE DEFAULT 0
         if (!Number(skip)) {
             skip = 0;
         }
@@ -125,4 +144,5 @@ module.exports = {
     transaction_post,
     transactions_get,
     transaction_delete,
+    transaction_count_category
 };

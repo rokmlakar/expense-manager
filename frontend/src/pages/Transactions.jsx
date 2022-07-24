@@ -54,10 +54,8 @@ const Transactions = () => {
   useEffect(() => {
     console.log('SETTER', reload);
     fetchTransactions()
-
   }, [reload])
-  console.log(FilteredTransactions)
-
+  
   const [firstDate, setFirstDate] = useState(
     DateTime.now()
       .minus({

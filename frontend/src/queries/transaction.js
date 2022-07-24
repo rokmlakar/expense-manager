@@ -12,10 +12,34 @@ const getTrs = async (params) => {
   );
 };
 
+const getTrsCount = async (params) => {
+  return await Ax.get('transactionsCount', { params: params }).catch((e) =>
+    console.log(e)
+  );
+}
+
 const postTr = async (params) => {
   return await Ax.post("transaction", params);
 };
 const useTransactionDelete = () => useMutation("deleteTr", deleteTr);
+
+const useTransactionsGetCount = ({
+  category,
+  key
+}) =>
+  useQuery(
+    key,
+    () =>
+      getTrsCount({
+        category
+      }),
+    {
+      refetchOnWindowFocus: false,
+      enabled: false,
+      keepPreviousData: true,
+    }
+  );
+
 const useTransactionsGet = ({
   firstDate,
   lastDate,
@@ -46,4 +70,4 @@ const useTransactionsGet = ({
   );
 
 const useTransactionPost = () => useMutation("postTransaction", postTr);
-export { useTransactionsGet, useTransactionDelete, useTransactionPost };
+export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount };

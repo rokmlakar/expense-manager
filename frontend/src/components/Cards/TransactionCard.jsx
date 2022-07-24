@@ -92,8 +92,6 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
     // setterChange('neki')
 
     const { data: categories, refetch: fetchCategories } = useCategoriesGet();
-    console.log(categoryName, date, money, description, title)
-    console.log(categoryName)
 
     categories && categories.data.map((cat) => {
         //   console.log('ctg',category)

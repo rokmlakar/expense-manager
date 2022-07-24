@@ -9,4 +9,6 @@ router.delete(
 );
 router.get("/transactions", transactionController.transactions_get);
 
+router.get("/transactionsCount", transactionController.transaction_count_category);
+
 module.exports = router;

@@ -1,4 +1,4 @@
-import styles from '../../styles/Cards/TransactionCard.module.scss';
+import styles from '../../styles/Cards/CategoryCard.module.scss';
 import { FiBox } from 'react-icons/fi';
 import { IoGameControllerOutline } from 'react-icons/io5';
 import { BsHouseDoor } from 'react-icons/bs';
@@ -7,6 +7,8 @@ import { HiOutlineFire } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 
 import { useCategoriesSum } from "../../queries/category";
+import { useTransactionsGet } from '../../queries/transaction';
+
 
 //CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
 const CategoryIcon = ({ category }) => {
@@ -62,26 +64,52 @@ const CategoryIcon = ({ category }) => {
 
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const CategoryCard = ({ title, category, color, info, user }) => {
+const CategoryCard = ({ title, category, color, info, userId }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [catSum, setCatSum] = useState();
-    console.log(title, category, color, info, user)
+    let [transactionsCount, setTransactionsCount] = useState();
+    // console.log(title, category, color, info, userId)
 
     const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
 
-    if(CategoriesSum){
-      CategoriesSum.data.map((cat) => {
-        //   console.log(cat, '--', category)
-          if(cat.transactionCategoryId === category && !catSum){
-            setCatSum(cat._sum.money)
-          } 
-      })
+
+
+    if (CategoriesSum) {
+        CategoriesSum.data.map((cat) => {
+            //   console.log(cat, '--', category)
+            if (cat.transactionCategoryId === category && !catSum) {
+                setCatSum(cat._sum.money)
+            }
+        })
     }
 
+    const { data: transactions, refetch: fetchTransactions } =
+        useTransactionsGet({
+            key: 'CategoriesTrs',
+        });
+
+    // console.log(transactions)
+
+    //DOBI ŠT TRANSAKCIJ V KATEGORIJI
+    useEffect(() => {
+        let count = 0;
+        transactions.data.forEach(tran => {
+            if (tran.category.name === title) {
+                console.log(tran)
+                count++
+                // setTransactionsCount(transactionsCount++)
+            }
+            console.log(count)
+        });
+
+        setTransactionsCount(count)
+
+    }, [transactions])
 
 
-// console.log(CategoriesSum)
+
+    // console.log(CategoriesSum)
     return (
         <div className={styles.container} >
             <div className={styles.inner} >
@@ -89,10 +117,10 @@ const CategoryCard = ({ title, category, color, info, user }) => {
                 <div className={styles.info}>
                     {/* <CategoryIcon category={category} /> */}
                     <div className={styles.categoryContainer} >
-                        <span className={styles.title}>{title}</span>
-                        <span className={styles.category}>{catSum}</span>
-                        <span className={styles.category}>{catSum}</span>
-                        <span className={styles.category}>{catSum}</span>
+                        <span className={styles.title} style={{ background: color }}>{title}</span>
+                        <span className={styles.category}>{catSum}$ </span>
+                        <span className={styles.category}>{info}</span>
+                        <span className={styles.category}>{transactionsCount}</span>
                         {/*
                         <span className={styles.date}>{date}</span>
                         <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}
