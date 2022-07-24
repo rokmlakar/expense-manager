@@ -19,7 +19,9 @@ const Auth = () => {
     const [regEmail, setRegEmail] = useState('');
     const [regPw, setRegPw] = useState('');
     const [regPwConf, setRegPwConf] = useState('');
+    const [errPassMatch, setErrPassMatch] = useState(false);
     const [errPass, setErrPass] = useState(false);
+
     const [errEmail, setErrEmail] = useState(false);
 
     //CONTEXT
@@ -27,6 +29,46 @@ const Auth = () => {
 
     //NAVIGATE
     const navigate = useNavigate();
+
+    const Validation = () => {
+
+        const regExEmail = /[a-zA-Z0-9]+[\.]?([a-zA-Z0-9]+)?[\@][a-z]{3,9}[\.][a-z]{2,5}/g;
+        const emailTest = regExEmail.test(regEmail);
+        const passTest = /\d/.test(regPw) && regPw.length > 5;
+        const passMatchTest = regPw === regPwConf
+        console.log('TST', emailTest, passTest, passMatchTest)
+
+        if (!emailTest || !passTest || !passMatchTest) {
+            !emailTest &&
+                setErrEmail(true);
+            !passTest &&
+                setErrPass(true);
+            !passMatchTest &&
+                setErrPassMatch(true);
+
+            console.log(errEmail, errPass, errPassMatch)
+        }
+        else {
+
+            if (emailTest === true) {
+                console.log('tRUUU')
+                registerHandler(regBody, {
+                    //ON SUCCESS USE LOGINHANDLER
+                    onSuccess: () => {
+                        loginHandler(regBody, {
+                            onSuccess: () => setAuth(true),
+                            onError: () => {
+                                console.log(loginErr);
+                            },
+                        });
+                    },
+                })
+            }
+        }
+
+
+    }
+
 
     let body = {
         email: email,
@@ -38,15 +80,18 @@ const Auth = () => {
         password: regPw,
     }
 
-    useEffect(() => {
-        if (regPw !== regPwConf) {
-            setErrPass(true)
-        } else setErrPass(false);
 
-        if (!regEmail.includes('@')) {
-            setErrEmail(true);
-        } else setErrEmail(false);
-    }, [regPwConf, regEmail])
+    useEffect(() => {
+        errEmail &&
+            setErrEmail(false);
+    }, [regEmail])
+
+    useEffect(() => {
+        errPass &&
+            setErrPass(false);
+        errPassMatch &&
+            setErrPassMatch(false);
+    }, [regPwConf])
 
 
     //useLoginUser => useMutation('loginUser', loginUser)
@@ -63,6 +108,7 @@ const Auth = () => {
         isError: registerError,
         error: registerErr,
     } = useRegisterUser();
+
 
     useEffect(() => {
         if (auth) navigate('/')
@@ -134,24 +180,22 @@ const Auth = () => {
                             onChange={(e) => setRegPwConf(e.target.value)}
                             value={regPwConf}
                         />
-                        {errPass && regPwConf &&
+                        {errPassMatch && regPwConf &&
                             <span style={{ color: 'red', fontSize: '20px', fontWeight: '600', border: '1px solid red', background: '#e3e3e3', padding: '5px', borderRadius: '10px', marginBottom: '1rem' }}>Passwords must Match!</span>
+                        }
+                        {errPass &&
+                            <span style={{ color: 'red', fontSize: '17px', border: '1px solid red', background: '#e3e3e3', padding: '10px', borderRadius: '10px', marginBottom: '1rem' }}>
+                                <p style={{ fontSize: '20px', fontWeight: '600' }}>Passwords Must Contain:</p>
+                                <ul>
+                                    <li>-More than 6 characters</li>
+                                    <li>-At least one number</li>
+                                </ul>
+                            </span>
                         }
                         {/* REGISTER BTN */}
                         <button
-                            disabled={!errPass && !errEmail && regEmail && regPwConf ? false : true}
-                            onClick={() => registerHandler(regBody, {
-                                //ON SUCCESS USE LOGINHANDLER
-                                onSuccess: () => {
-                                    loginHandler(regBody, {
-                                        onSuccess: () => setAuth(true),
-                                        onError: () => {
-                                            console.log(loginErr);
-                                        },
-                                    });
-                                },
-                            })
-                            }
+                            disabled={!errPassMatch && !errEmail && regEmail && regPwConf ? false : true}
+                            onClick={Validation}
                         >
                             Register Now
                         </button>
