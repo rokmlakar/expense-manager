@@ -5,76 +5,94 @@ import { BsHouseDoor } from 'react-icons/bs';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { HiOutlineFire } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
+import { useCategoriesGet } from '../../queries/category';
 
 //CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
-const CategoryIcon = ({ category }) => {
-    const [style, setStyle] = useState({});
-    const categoryStyle = () => {
-        switch (category) {
-            default: {
-                return {
-                    background: '#ffbece',
-                    icon: <HiOutlineFire />,
-                    color: "#ff6275",
-                };
-            }
-            case "Products":
-            case 1: {
-                return {
-                    background: '#fdeacc',
-                    icon: <FiBox />,
-                    color: "#f8aa35",
-                };
-            }
+// const CategoryIcon = ({ category }) => {
+//     const [style, setStyle] = useState({});
+//     const categoryStyle = () => {
+//         switch (category) {
+//             default: {
+//                 return {
+//                     background: '#ffbece',
+//                     icon: <HiOutlineFire />,
+//                     color: "#ff6275",
+//                 };
+//             }
+//             case "Products":
+//             case 1: {
+//                 return {
+//                     background: '#fdeacc',
+//                     icon: <FiBox />,
+//                     color: "#f8aa35",
+//                 };
+//             }
 
-            case "Entertainment":
-            case 2:
-                return {
-                    background: '#e4f1d5',
-                    icon: <IoGameControllerOutline />,
-                    color: "#92c44c",
-                };
+//             case "Entertainment":
+//             case 2:
+//                 return {
+//                     background: '#e4f1d5',
+//                     icon: <IoGameControllerOutline />,
+//                     color: "#92c44c",
+//                 };
 
-            case "Bills":
-            case 3: {
-                return {
-                    background: '#b7dffd',
-                    icon: <BsHouseDoor />,
-                    color: "#5a92d6",
-                };
-            }
-        }
-    };
+//             case "Bills":
+//             case 3: {
+//                 return {
+//                     background: '#b7dffd',
+//                     icon: <BsHouseDoor />,
+//                     color: "#5a92d6",
+//                 };
+//             }
+//         }
+//     };
 
-    useEffect(() => {
-        setStyle(categoryStyle());
-    }, [category]);
 
-    return (<div className={styles.iconContainer}
-        style={{ background: style.background, color: style.color }}
-    >
-        {style.icon}
-    </div>
-    );
-};
 
-CategoryIcon.defaultProps = {
-    category: 'Products',
-}
+//     useEffect(() => {
+//         setStyle(categoryStyle());
+//     }, [category]);
+
+//     return (<div className={styles.iconContainer}
+//         style={{ background: style.background, color: style.color }}
+//     >
+//         {style.icon}
+//     </div>
+//     );
+// };
+
+// CategoryIcon.defaultProps = {
+//     category: 'Products',
+// }
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const TransactionCard = ({ category, date, money, description, title }) => {
+const TransactionCard = ({ categoryName, date, money, description, title }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
+    const [currentCat, setCurrentCat] = useState()
+
+    const { data: categories, refetch: fetchCategories } = useCategoriesGet();
+    console.log(categoryName, date, money, description, title)
+     console.log(categoryName)
+
+     categories && categories.data.map((cat) => {
+        //   console.log('ctg',category)
+         if(categoryName === cat.name && !currentCat){
+            setCurrentCat(cat)
+         }
+        //  console.log('KAT' , currentCat)
+     })
+
+
     return (
         <div className={styles.container}>
             <div className={styles.inner}>
                 {/* INFO */}
                 <div className={styles.info}>
-                    <CategoryIcon category={category} />
+                    {/* <CategoryIcon category={category} /> */}
                     <div className={styles.categoryContainer}>
                         <span className={styles.title}>{title}</span>
-                        <span className={styles.category}>{category}</span>
+                        <span className={styles.categoryName}>{categoryName}</span>
                         <span className={styles.date}>{date}</span>
                         <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}
                         >

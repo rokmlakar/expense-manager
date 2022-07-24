@@ -10,6 +10,17 @@ import { DateTime } from 'luxon';
 import { useCategoriesGet } from '../queries/category';
 import { useTransactionsGet } from '../queries/transaction';
 
+
+
+//STYLES
+import { BsTrash } from "react-icons/bs";
+//UTILS
+import {
+  useTransactionDelete,
+} from "../queries/transaction";
+import { queryClient } from "../constants/config";
+
+
 const Transactions = () => {
 
   //SEARCH FILTERS
@@ -39,6 +50,32 @@ const Transactions = () => {
       take: 10,
       key: 'CategoriesTrs',
     });
+
+  console.log(FilteredTransactions)
+
+  const [firstDate, setFirstDate] = useState(
+    DateTime.now()
+      .minus({
+        days: 6,
+      })
+      .toISODate()
+  );
+  const [lastDate, setLastDate] = useState(
+    DateTime.now()
+      .toISODate()
+  );
+  const { mutate: deleteTr } = useTransactionDelete();
+  const {
+    data,
+    refetch: fetchTransactionsDel,
+    isLoading: transactionsLoading,
+  } = useTransactionsGet({
+    firstDate: firstDate,
+    lastDate: lastDate,
+    key: "Trs",
+  });
+
+
 
   return (
 
@@ -164,16 +201,41 @@ const Transactions = () => {
             {FilteredTransactions &&
               FilteredTransactions.data?.map((transaction, index) => {
                 return (
-                  <TransactionCard
-                    key={index}
-                    category={transaction.category.name}
-                    money={transaction.money}
-                    date={DateTime.fromISO(transaction.date).toISODate()}
-                    description={transaction.info}
-                    title={transaction.title}
-                  />
+                  <div className={styles.transactionsContainer}>
+                    <TransactionCard
+                      key={index}
+                      categoryName={transaction.category.name}
+                      money={transaction.money}
+                      date={DateTime.fromISO(transaction.date).toISODate()}
+                      description={transaction.info}
+                      title={transaction.title}
+                    />
+                    <div
+                      className={styles.iconContainer}
+                      style={
+                        transactionsLoading
+                          ? {
+                            pointerEvents: "none",
+                            background: "#333",
+                          }
+                          : {}
+                      }
+                      onClick={() => {
+                        deleteTr(transaction.id, {
+                          onSuccess: async () => {
+                            await queryClient
+                              .invalidateQueries("Trs")
+                              .then(await fetchTransactions())
+                              .catch();
+                          },
+                        });
+                      }}
+                    ><BsTrash /></div>
+                  </div>
                 );
+
               })}
+
           </div>
         </div>
       </div>
