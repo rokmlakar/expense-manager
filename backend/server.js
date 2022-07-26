@@ -61,9 +61,9 @@ app.use("/api", categoriesRoutes);
 app.use("/api", walletRoutes);
 // app.use("/api", walletRoutes);
 
-app.use('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
+// app.use('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client', 'index.html'));
+// });
 
 app.listen(port, () => {
   console.log(`SERVER STARTED : ${port}`);

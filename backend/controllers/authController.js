@@ -1,5 +1,10 @@
 const { prisma } = require("../constants/config");
 const bcrypt = require("bcrypt");
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
+const exphbs = require('express-handlebars');
 
 //GET ReQ FROM USER(LOGIN INFO) AND CHECK IF IT MATCHES THE INFO MATCHES THE INFO ON THE SERVER/DB
 const auth_login = async (req, res) => {
@@ -35,6 +40,36 @@ const auth_login = async (req, res) => {
 
 }
 
+const createToken = (id) => {
+    return jwt.sign({ id }, JWT_SECRET)
+}
+
+// var transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: transporter,
+//         pass: 'rolercoster',
+//     },
+//     tls: {
+//         rejectUnauthorized: false
+//     }
+// })
+let testAccount = nodemailer.createTestAccount();
+let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: 'roky.mlakar@gmail.com', // generated ethereal user
+      pass: 'gtmwkghxfljrjiul', // generated ethereal password
+    },
+    tls:{
+      rejectUnauthorized:false
+    }
+  });
+
+
+
 const auth_register = async (req, res) => {
     const { email, password } = req.body;
     let emailCheck;
@@ -68,45 +103,48 @@ const auth_register = async (req, res) => {
                 data: {
                     email: email,
                     password: salted_password,
-                    firstName: "",
-                    lastName: "",
-                    // transactionCategories: {
-                    //     create:
-                    //         [
-                    //             { name: "Products" },
-                    //             { name: "Entertainment" },
-                    //             { name: "Bills" },
-                    //             { name: "Other" },
-                    //         ]
-                    // }
+                    firstName: "ss",
+                    lastName: "ss",
+                    emailToken: crypto.randomBytes(64).toString('hex'),
+                    isVerified: false
                 },
             });
+            console.log(newUser)
+
+            //SEND VERIFICATION TO USR
+            var mailOptions = {
+                from: ' "Verify your email" <roky.mlakar@gmail.com> ',
+                to: newUser.email,
+                subject: 'verify your email',
+                html: `<h2> "${newUser.name}! Thanks for registering </h2>
+                        <h4> Please verify your mail to continue...</h4>
+                        <a href="http://${req.headers.host}/user/verify-email?token=${newUser.emailToken}">Verify Your Email</a>`
+            }
+            let info = {
+                from: '"Fred Foo 👻" <foo@example.com>', // sender address
+                to: "bar@example.com, baz@example.com", // list of receivers
+                subject: "Hello ✔", // Subject line
+                text: "Hello world?", // plain text body
+                html: "<b>Hello world?</b>", // html body
+            };
+
+            //SENDING
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error)
+                }
+                else {
+                    console.log('Verification email is sent to your gmail account')
+                }
+            })
+            res.redirect('/auth')
+
             //ČE PRIDE DO ERRORJA VRNEMO ERR MESSAGE
         } catch {
             res.status(500).send([{ instancePath: "Err", message: "Err" }]);
             return;
         }
         //KO USTVARIMO USERJA MU USTVARIMO ŠE WALLET GLEDE NA NJEGOV ID
-        // try {
-        // try{
-        //     await prisma.transactionCategory.update({
-        //         where:{
-        //             id : 1
-        //         },
-        //         data:{
-        //             user: newUser,
-        //         },
-        //     })
-        //     res.status(200).send("ok");
-        // }catch{
-        //     res.status(400).send("err");
-        //     return
-        // }
-
-        // res.status(200).send("ok")
-        // } catch {
-        // return;
-        // }
 
         try {
             await prisma.wallet.create({

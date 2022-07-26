@@ -40,7 +40,7 @@ const Home = () => {
     
     useEffect(() => {
         setCtgs(cat)
-    }, [])
+    }, [cat])
 
     if (!ctgs) {
 

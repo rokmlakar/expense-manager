@@ -2,7 +2,7 @@ import { useQuery, useMutation } from 'react-query';
 import Ax from '../utils/Axios';
 
 const fetchUser = async () => {
-    return await Ax.get('whoami');
+    return await Ax.get('user');
 }
 const loginUser = async (body) => {
     return await Ax.post('auth', body)
