@@ -44,29 +44,20 @@ const createToken = (id) => {
     return jwt.sign({ id }, JWT_SECRET)
 }
 
-// var transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: transporter,
-//         pass: 'rolercoster',
-//     },
-//     tls: {
-//         rejectUnauthorized: false
-//     }
-// })
+
 let testAccount = nodemailer.createTestAccount();
 let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-      user: 'roky.mlakar@gmail.com', // generated ethereal user
-      pass: 'gtmwkghxfljrjiul', // generated ethereal password
+        user: 'roky.mlakar@gmail.com', // generated ethereal user
+        pass: 'gtmwkghxfljrjiul', // generated ethereal password
     },
-    tls:{
-      rejectUnauthorized:false
+    tls: {
+        rejectUnauthorized: false
     }
-  });
+});
 
 
 
@@ -118,15 +109,8 @@ const auth_register = async (req, res) => {
                 subject: 'verify your email',
                 html: `<h2> "${newUser.name}! Thanks for registering </h2>
                         <h4> Please verify your mail to continue...</h4>
-                        <a href="http://${req.headers.host}/user/verify-email?token=${newUser.emailToken}">Verify Your Email</a>`
+                        <a href="http://localhost:5000/api/verify-email?token=${newUser.emailToken}">Verify Your Email</a>`
             }
-            let info = {
-                from: '"Fred Foo 👻" <foo@example.com>', // sender address
-                to: "bar@example.com, baz@example.com", // list of receivers
-                subject: "Hello ✔", // Subject line
-                text: "Hello world?", // plain text body
-                html: "<b>Hello world?</b>", // html body
-            };
 
             //SENDING
             transporter.sendMail(mailOptions, function (error, info) {
@@ -160,6 +144,62 @@ const auth_register = async (req, res) => {
     }
 };
 
+const auth_verify = async (req, res) => {
+    console.log('test')
+    try {
+        const token = req.query.token;
+        console.log(token)
+       
+        await prisma.user.updateMany({
+            where: {
+                emailToken: token
+            },
+            data: {
+                isVerified: true,
+                emailToken: null
+            }
+        });
+        // console.log(user)
+       
+        // const user = await prisma.user.findMany({
+        //     where: {
+        //         emailToken: token
+        //     }
+        // })
+        // if (user) {
+        //     user.emailToken = null
+        //     user.isVerified = true
+        //     res.redirect('/auth')
+        //     console.log('verfied')
+        //     console.log(user)
+        //     await user.prisma.save()
+        // }
+        // else {
+        //     res.redirect('/auth')
+        //     console.log('not verified')
+        // }
+
+
+        
+
+        //await user.save()
+        // if (user) {
+
+        //     console.log(user)
+        //     user.emailToken = null
+        //     user.isVerified = true
+        //     await user.save()
+        //     res.redirect('/auth')
+        // }
+        // else {
+        //     res.redirect('/rip')
+        //     console.log('email is not verified')
+        // }
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
 
 //PRI LOGOUTU PREJMEMO PODATKE SESSIONA KJER VIDIMO USER ID, SESSION PA UNIČIMO Z session.prisma.destroy() TAKO DA NAM POBRIŠE
 //PIŠKOTKE
@@ -177,31 +217,31 @@ const auth_logout = async (req, res) => {
 //AUTHUSER DOBI REQ IZ KATEREGA VZAMEMO USERID KJER PREVERIMO ALI USER S TEM IDJOM OBSTAJA
 const auth_user = async (req, res) => {
     //NAJPREJ PREVERIMO ALI JE USER LOGGAN IN
-    if (req.session.userId) {
-        try {
-            //POIŠČE USERJA Z PREJETIM IDJOM
-            const user = await prisma.user.findUnique({
-                where: {
-                    id: req.session.userId,
-                },
-            });
-            //ČE NE OBSTAJA VRNEMO 401
-            if (!user) res.status(401).json("User Not Found");
-            //DRUGAČE ZAPIŠEMO PODATKE V KONST DATA IN JIH POŠLJEMO NA FRONTEND
-            const data = {
-                email: user.email,
-                userId: user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-            };
-            //VRNEMO DATA V JSON OBLIKI
-            res.status(200).json(data);
-        } catch {
-            res.status(500).json("Something Went Wrong {auth}");
-        }
-    } else {
-        res.status(401).send("please login");
+    // if (req.session.userId) {
+    try {
+        //POIŠČE USERJA Z PREJETIM IDJOM
+        const user = await prisma.user.findUnique({
+            where: {
+                id: req.session.userId,
+            },
+        });
+        //ČE NE OBSTAJA VRNEMO 401
+        if (!user) res.status(401).json("User Not Found");
+        //DRUGAČE ZAPIŠEMO PODATKE V KONST DATA IN JIH POŠLJEMO NA FRONTEND
+        const data = {
+            email: user.email,
+            userId: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+        };
+        //VRNEMO DATA V JSON OBLIKI
+        res.status(200).json(data);
+    } catch {
+        res.status(500).json("Something Went Wrong {auth}");
     }
+    // } else {
+    //     res.status(401).send("please login");
+    // }
 };
 
 module.exports = {
@@ -209,4 +249,5 @@ module.exports = {
     auth_login,
     auth_logout,
     auth_user,
+    auth_verify
 };
