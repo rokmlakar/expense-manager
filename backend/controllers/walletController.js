@@ -36,11 +36,14 @@ let transporter = nodemailer.createTransport({
     }
 });
 
+
+
 const walletViewer_post = async (req, res) => {
     if (req.session.userId) {
         console.log(req.body);
         let wallet = parseInt(req.body.wallet)
         let viewerEmail = req.body.viewer
+        let newViewer
         try {
             const user = await prisma.user.findUnique({
                 where: {
@@ -48,13 +51,34 @@ const walletViewer_post = async (req, res) => {
                 },
             })
             if (user) {
-                const newViewer = await prisma.walletViewer.create({
+                newViewer = await prisma.walletViewer.create({
                     data: {
                         userId: user.id,
-                        walletId: wallet
+                        walletId: wallet,
+                        emailToken: crypto.randomBytes(64).toString('hex'),
+                        isVerified: false
                     },
                 });
                 console.log(newViewer)
+                //SEND VERIFICATION TO USR
+                var mailOptions = {
+                    from: ' "Verify your email" <roky.mlakar@gmail.com> ',
+                    to: viewerEmail,
+                    subject: 'verify your email',
+                    html: `<h2> "${newViewer.name}! Thanks for registering </h2>
+                        <h4> Please verify your mail to continue...</h4>
+                        <a href="http://localhost:5000/api/verify-wallet-viewer?token=${newViewer.emailToken}">Verify Your Email</a>`
+                }
+                //SENDING
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error)
+                    }
+                    else {
+                        console.log('Verification email is sent to your gmail account')
+                    }
+                })
+                res.status(200).send([{ message: 'Email Verification Sent' }])
             }
             else {
                 res.status(400).send([{ message: 'User not found' }])
@@ -67,6 +91,29 @@ const walletViewer_post = async (req, res) => {
 
     }
 }
+
+const wallet_verify = async (req, res) => {
+    console.log('test verify')
+    try {
+        const token = req.query.token;
+        console.log(token)
+
+        await prisma.walletViewer.updateMany({
+            where: {
+                emailToken: token
+            },
+            data: {
+                isVerified: true,
+                emailToken: null
+            }
+        });
+        res.redirect('http://localhost:3000/wallet')
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 
 const walletViewer_get = async (req, res) => {
     if (req.session.userId) {
@@ -93,12 +140,14 @@ const walletViewer_get = async (req, res) => {
                     })
                 console.log(wallet)
                 res.status(200).send(wallet);
-            } 
+            }
         } catch {
             res.status(400).send('error');
         }
     }
 }
+
+
 
 const wallet_edit = async (req, res) => {
     if (req.session.userId) {
@@ -189,5 +238,11 @@ const wallet_get = async (req, res) => {
     } else res.status(401).send('please login')
 };
 module.exports = {
-    wallet_get, wallet_post, wallet_delete, wallet_edit, walletViewer_post, walletViewer_get
+    wallet_get,
+    wallet_post,
+    wallet_delete,
+    wallet_edit,
+    walletViewer_post,
+    walletViewer_get,
+    wallet_verify
 };

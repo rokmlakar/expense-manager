@@ -11,7 +11,7 @@ router.delete(
   );
 router.post("/walletViewer", walletController.walletViewer_post)
 router.get("/walletViewers", walletController.walletViewer_get)
-
+router.get('/verify-wallet-viewer', walletController.wallet_verify)
 
 
 module.exports = router;

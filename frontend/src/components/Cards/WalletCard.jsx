@@ -25,9 +25,11 @@ const WalletCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, w
     isLoading,
     isError,
     isSuccess,
+    message,
     error,
   } = useWalletViewerPost();
 
+  console.log(message)
 
 
   const [addMoney, setAddMoney] = useState('');
@@ -111,7 +113,7 @@ const WalletCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, w
                       {` ${err.message ? err.message : ""} `}</div>
                   );
                 })}
-              {isSuccess && <div style={{ color: 'green' }}>Success</div>}
+              {isSuccess && <div style={{ color: 'green' }}>Email verification has been sent </div>}
             </div>
             <div
               className={styles.iconContainerDelete}

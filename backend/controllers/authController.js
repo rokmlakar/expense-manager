@@ -108,8 +108,8 @@ const auth_register = async (req, res) => {
                 data: {
                     email: email,
                     password: salted_password,
-                    firstName: "ss",
-                    lastName: "ss",
+                    firstName: "",
+                    lastName: "",
                     emailToken: crypto.randomBytes(64).toString('hex'),
                     isVerified: false
                 },
@@ -132,10 +132,10 @@ const auth_register = async (req, res) => {
                     console.log(error)
                 }
                 else {
+                    res.status(200).send([{message: "Verification email is sent to your gmail account"}])
                     console.log('Verification email is sent to your gmail account')
                 }
             })
-            res.redirect('/auth')
 
             //ČE PRIDE DO ERRORJA VRNEMO ERR MESSAGE
         } catch {
@@ -160,7 +160,6 @@ const auth_register = async (req, res) => {
 };
 
 const auth_verify = async (req, res) => {
-    console.log('test')
     try {
         const token = req.query.token;
         console.log(token)
@@ -174,40 +173,7 @@ const auth_verify = async (req, res) => {
                 emailToken: null
             }
         });
-        res.redirect('/auth')
-        // console.log(user)
-
-        // const user = await prisma.user.findMany({
-        //     where: {
-        //         emailToken: token
-        //     }
-        // })
-        // if (user) {
-        //     user.emailToken = null
-        //     user.isVerified = true
-        //     res.redirect('/auth')
-        //     console.log('verfied')
-        //     console.log(user)
-        //     await user.prisma.save()
-        // }
-        // else {
-        //    
-        //     console.log('not verified')
-        // }
-    }
-    catch (err) {
-        console.log(err)
-    }
-}
-
-const verifyEmail = async (req, res, next) => {
-    try {
-        const user = await prisma.user.findUnique({
-            email: req.body.email
-        })
-        if (user.isVerified) {
-
-        }
+        res.redirect('http://localhost:3000/auth')
     }
     catch (err) {
         console.log(err)

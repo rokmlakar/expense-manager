@@ -85,52 +85,6 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
               <span className={styles.title} style={{ borderBottom: `1px solid ${color}`, padding: '2px', width: '90px' }}>Balance</span>
               <span className={styles.money} style={{ width: '90px' }}>${money}</span>
             </div>
-            <div className={styles.column}>
-              {/* <span onClick={addFunds} className={styles.title} style={{ borderBottom: `1px solid ${color}` }}>Add Funds</span> */}
-              <div
-                className={styles.iconContainerAdd}>
-                <input
-                  type="number"
-                  placeholder='Add Funds'
-                  onChange={(e) => setAddMoney(e.target.value)}
-                  value={addMoney}
-                />
-                <BsPlusSquare onClick={handleClick} /></div>
-            </div>
-
-            <div className={styles.column}>
-              {/* <span onClick={addFunds} className={styles.title} style={{ borderBottom: `1px solid ${color}` }}>Add Funds</span> */}
-              <div className={styles.iconContainerAdd}>
-                <input
-                  style={{ width: '200px' }}
-                  type="text"
-                  placeholder='Add wallet viewer email'
-                  onChange={(e) => setWalletViewer(e.target.value)}
-                  value={walletViewer}
-                />
-                <BsPlusSquare onClick={handleUserMonitor} /></div>
-              {isError &&
-                error.response.data.map((err, index) => {
-                  return (
-                    <div style={{ color: 'red' }} key={index}>
-                      {` ${err.message ? err.message : ""} `}</div>
-                  );
-                })}
-              {isSuccess && <div style={{ color: 'green' }}>Success</div>}
-            </div>
-            <div
-              className={styles.iconContainerDelete}
-              onClick={() => {
-                deleteWall(wallet, {
-                  onSuccess: async () => {
-                    await queryClient
-                      .invalidateQueries("Trs")
-                      .then(await reloadSetter(!reload))
-                      .catch();
-                  },
-                });
-              }}
-            ><BsTrash /></div>
           </div>
         </div>
       </div>

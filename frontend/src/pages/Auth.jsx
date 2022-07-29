@@ -16,14 +16,17 @@ const Auth = () => {
     const [email, setEmail] = useState('');
     const [pw, setPw] = useState('');
     const [logErr, setLogError] = useState();
+    const [logVerErr, setLogVerErr] = useState();
     //REGISTER 
     const [regEmail, setRegEmail] = useState('');
     const [regPw, setRegPw] = useState('');
     const [regPwConf, setRegPwConf] = useState('');
     const [errPassMatch, setErrPassMatch] = useState(false);
     const [errPass, setErrPass] = useState(false);
+    const [serverErr, setServerErr] = useState();
 
     const [errEmail, setErrEmail] = useState(false);
+    const [verificationSent, setVerificationSent ] = useState(false);
 
     //CONTEXT
     const { auth, setAuth } = useContext(AuthContext);
@@ -47,9 +50,9 @@ const Auth = () => {
             !passMatchTest &&
                 setErrPassMatch(true);
 
-            console.log(errEmail, errPass, errPassMatch)
         }
         else {
+            setVerificationSent(true)
 
             if (emailTest === true) {
                 console.log('tRUUU')
@@ -57,9 +60,11 @@ const Auth = () => {
                     //ON SUCCESS USE LOGINHANDLER
                     onSuccess: () => {
                         loginHandler(regBody, {
-                            onSuccess: () => setAuth(true),
+                            onSuccess: () =>{
+                            },
                             onError: () => {
                                 console.log(loginErr);
+                                setServerErr(loginErr)
                             },
                         });
                     },
@@ -107,13 +112,14 @@ const Auth = () => {
         error: loginErr,
     } = useLoginUser();
 
-    console.log(loginErr, loginError)
+    console.log(loginErr, loginError, verificationSent)
 
     const {
         mutateAsync: registerHandler,
         isSuccess: registerSucc,
         isError: registerError,
         error: registerErr,
+        message
     } = useRegisterUser();
 
 
@@ -157,6 +163,7 @@ const Auth = () => {
                             onError: () => {
                                 console.log(loginErr.response.data)
                                 setLogError(loginErr.response.data)
+                                logVerErr(true)
 
                             },
                             onSuccess: () => setAuth(true)
@@ -164,6 +171,9 @@ const Auth = () => {
                         {/* {logErr && */}
                         {logErr &&
                             <span style={{ color: 'red', fontSize: '20px', fontWeight: '600', border: '1px solid red', background: '#e3e3e3', padding: '5px', borderRadius: '10px', marginBottom: '1rem' }}>{logErr}</span>
+                        }
+                        {logVerErr &&
+                            <span style={{ color: 'red', fontSize: '20px', fontWeight: '600', border: '1px solid red', background: '#e3e3e3', padding: '5px', borderRadius: '10px', marginBottom: '1rem' }}>Pease verify your Email!</span>
                         }
                     </div>
                 </form>
@@ -212,6 +222,9 @@ const Auth = () => {
                         >
                             Register Now
                         </button>
+                        {verificationSent &&
+                         <span style={{ color: 'green', fontSize: '20px', fontWeight: '600', border: '1px solid green', background: '#e3e3e3', padding: '5px', borderRadius: '10px', marginBottom: '1rem', marginTop: '5px' }}>Verification email has been sent to your accout!</span>
+                        }
                     </div>
                 </form>
 

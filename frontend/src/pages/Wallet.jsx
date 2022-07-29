@@ -1,6 +1,7 @@
 import styles from '../styles/walletComponents/Wallet.module.scss';
 import { Title } from '../components/Titles/Titles';
 import WalletCard from '../components/Cards/WalletCard';
+import WalletViewerCard from '../components/Cards/WalletViewerCard';
 import AddWalletForm from '../components/walletComponents/AddWalletForm';
 
 import { DateTime } from 'luxon';
@@ -95,7 +96,7 @@ const Wallet = () => {
           ))
           :
           walletViewers.data && walletViewers.data.map((wallet) => (
-            <WalletCard title={wallet.name}
+            <WalletViewerCard title={wallet.name}
               wallet={wallet.id} money={wallet.money}
               color={wallet.color}
               reloadSetter={setReload}
