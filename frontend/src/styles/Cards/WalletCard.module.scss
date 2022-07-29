@@ -105,6 +105,7 @@
 
                 input{
                     padding: 8px 4px ;
+                    width: 160px;
                     font-size: 20px;
                     background-color: #f3f3f3;
                     border-radius: 5px;
@@ -152,24 +153,27 @@
 
     .iconContainerAdd {
         cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 10px;
-        border: 2px solid var(--color-green-300);
-        display: flex;
+        padding: 3px;
+        // border-radius: 10px;
+        // border: 2px solid var(--color-green-300);
+        // display: flex;
         // background: var(--color-red-100);
+        display: flex;
         transition: all ease-in-out 300ms;
         align-items: center;
+        justify-content: center;
 
         &:hover {
-            background: var(--color-green-300);
+            // background: var(--color-green-300);
             color: whitesmoke;
         }
 
         svg {
-            width: 40px;
-            height: 60px;
+            width: 50px;
+            height: 40px;
             align-content: center;
-
+            justify-content: center;
+            
             color: var(--color-green-600);
         }
     }

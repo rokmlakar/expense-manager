@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 import { useState, useEffect } from 'react';
 import { useCategoriesGet } from '../queries/category';
 import { useTransactionsGet } from '../queries/transaction';
-import { useWalletsGet } from '../queries/wallet';
+import { useWalletsGet, useWalletViewerGet } from '../queries/wallet';
 
 
 const Wallet = () => {
@@ -23,12 +23,17 @@ const Wallet = () => {
   const [sortingField, setSortingField] = useState('dateSort');
   const [order, setOrder] = useState('asc');
   const [skip, setSkip] = useState(0);
-  const [reload, setReload] = useState(false)
+  const [reload, setReload] = useState(false);
+  const [showSharedWallets, setShowSharedWallets] = useState(false);
 
 
   const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
 
   const { data: wallets, refetch: fetchWallets } = useWalletsGet();
+
+  const { data: walletViewers, refetch: fetchWalletViews } = useWalletViewerGet();
+
+  console.log(walletViewers)
 
   useEffect(() => {
     if (wallets) {
@@ -52,6 +57,15 @@ const Wallet = () => {
       key: 'CategoriesTrs',
     });
 
+  const switchView = () => {
+    setShowSharedWallets(!showSharedWallets)
+  };
+
+  // walletViewers && walletViewers.map((wall) => {
+  //   console.log(wall)
+  // })
+
+
 
   return (
     <div className={styles.flexContainer}>
@@ -59,20 +73,39 @@ const Wallet = () => {
       <div className={styles.mainContent}>
         <Title>Wallets</Title>
 
-        <button onClick={fetchWallets}>FETCH</button>
+        {
+          walletViewers &&
+          <div className={styles.btns} >
+            <button onClick={fetchWallets}>FETCH</button>
+            <button onClick={switchView}>{!showSharedWallets ? 'Show Shared Wallets' : 'Show My Wallets'}</button>
+          </div>
+        }
 
-        {wallets && wallets.data.map((wallet) => (
-          <WalletCard title={wallet.name}
-            wallet={wallet.id} money={wallet.money}
-            color={wallet.color}
-            reloadSetter={setReload}
-            reload={reload}
-            ftch={fetchWallets}
-            walletId={wallet.id}
-          />
-        ))}
+        {!showSharedWallets ?
+
+          wallets && wallets.data.map((wallet) => (
+            <WalletCard title={wallet.name}
+              wallet={wallet.id} money={wallet.money}
+              color={wallet.color}
+              reloadSetter={setReload}
+              reload={reload}
+              ftch={fetchWallets}
+              walletId={wallet.id}
+            />
+          ))
+          :
+          walletViewers.data && walletViewers.data.map((wallet) => (
+            <WalletCard title={wallet.name}
+              wallet={wallet.id} money={wallet.money}
+              color={wallet.color}
+              reloadSetter={setReload}
+              reload={reload}
+              ftch={fetchWallets}
+              walletId={wallet.id}
+            />
+          ))
+        }
       </div>
-
       <div className={styles.sideContent}>
         <AddWalletForm
           reloadSetter={setReload}

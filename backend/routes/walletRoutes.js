@@ -9,6 +9,9 @@ router.delete(
     "/wallet/delete/:walletId",
     walletController.wallet_delete
   );
+router.post("/walletViewer", walletController.walletViewer_post)
+router.get("/walletViewers", walletController.walletViewer_get)
+
 
 
 module.exports = router;

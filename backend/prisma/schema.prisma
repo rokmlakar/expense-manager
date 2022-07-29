@@ -34,7 +34,8 @@ model WalletViewer {
   userId   Int
   wallet   Wallet @relation(fields: [walletId], references: [id])
   walletId Int
-
+  emailToken   String?
+  isVerified   Boolean?
   @@id([userId, walletId])
 }
 

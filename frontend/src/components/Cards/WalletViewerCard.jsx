@@ -8,13 +8,13 @@ import { HiOutlineFire } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { BsPlusSquare } from "react-icons/bs";
-import { useWalletDelete, useWalletEdit, useWalletViewerPost } from "../../queries/wallet";
+import { useWalletDelete, useWalletEdit, useWalletViewerPost, useWalletViewerGet } from "../../queries/wallet";
 import { queryClient } from '../../constants/config';
 
 
 
 //CATEGORYCARDU PODAMO IZBRANO KATEGORIJO IN PA DENAR
-const WalletCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, walletId }) => {
+const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, walletId }) => {
   //NASTAVIMO STIL(VSAKA KATEGORIJA IMA SVOJO BARVO)
   const [style, setStyle] = useState({});
 
@@ -28,7 +28,12 @@ const WalletCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, w
     error,
   } = useWalletViewerPost();
 
+  const { data: walletViewers, refetch: fetchWalletViews } =
+  useWalletViewerGet({
+      key: 'WallViewers',
+  });
 
+  console.log(walletViewers)
 
   const [addMoney, setAddMoney] = useState('');
   const [walletViewer, setWalletViewer] = useState('');
@@ -133,9 +138,9 @@ const WalletCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, w
   );
 };
 
-WalletCard.defaultProps = {
+WalletViewerCard.defaultProps = {
   category: "other",
   money: "50k",
 };
 
-export default WalletCard;
+export default WalletViewerCard;

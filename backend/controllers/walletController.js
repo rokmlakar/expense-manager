@@ -1,4 +1,7 @@
 const { prisma } = require('../constants/config.js');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const wallet_post = async (req, res) => {
     if (req.session.userId) {
@@ -20,28 +23,105 @@ const wallet_post = async (req, res) => {
     } else res.status(401).send('please login');
 };
 
-const wallet_edit = async (req,res) => {
-    if(req.session.userId){
+let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+        user: 'roky.mlakar@gmail.com', // generated ethereal user
+        pass: 'gtmwkghxfljrjiul', // generated ethereal password
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+
+const walletViewer_post = async (req, res) => {
+    if (req.session.userId) {
+        console.log(req.body);
+        let wallet = parseInt(req.body.wallet)
+        let viewerEmail = req.body.viewer
+        try {
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: viewerEmail
+                },
+            })
+            if (user) {
+                const newViewer = await prisma.walletViewer.create({
+                    data: {
+                        userId: user.id,
+                        walletId: wallet
+                    },
+                });
+                console.log(newViewer)
+            }
+            else {
+                res.status(400).send([{ message: 'User not found' }])
+            }
+            console.log(user)
+        }
+        catch {
+
+        }
+
+    }
+}
+
+const walletViewer_get = async (req, res) => {
+    if (req.session.userId) {
+        let user = req.session.userId;
+        console.log(user)
+        try {
+            const walletView = await prisma.walletViewer.
+                findMany({
+                    where: {
+                        userId: user
+                    }
+                })
+                .catch(() => console.log('err'));
+
+            if (walletView) {
+                const wallId = walletView[0].walletId
+                console.log(walletView)
+                console.log('wallllll', wallId)
+                const wallet = await prisma.wallet.
+                    findMany({
+                        where: {
+                            id: wallId
+                        }
+                    })
+                console.log(wallet)
+                res.status(200).send(wallet);
+            } 
+        } catch {
+            res.status(400).send('error');
+        }
+    }
+}
+
+const wallet_edit = async (req, res) => {
+    if (req.session.userId) {
         console.log(req.body)
         let wallet = parseInt(req.body.wallet);
         let money = parseInt(req.body.money);
         console.log(wallet)
         console.log(money)
-        try{
+        try {
 
             await prisma.wallet.update({
                 where: {
                     id: wallet
                 },
-                data:{
-                    money:{
+                data: {
+                    money: {
                         increment: money,
                     },
                 },
             })
             res.status(200).send('success');
-        } catch{
-            res.status(400).send([{ instancePath: 'err', message: 'Error'}]);
+        } catch {
+            res.status(400).send([{ instancePath: 'err', message: 'Error' }]);
         }
     }
 }
@@ -64,7 +144,6 @@ const wallet_delete = async (req, res) => {
                     // },
                 },
             })
-            console.log('yo')
             wallets = await prisma.wallet.deleteMany({
                 where: {
                     id: wallet,
@@ -79,8 +158,6 @@ const wallet_delete = async (req, res) => {
                 );
             return;
         }
-
-        console.log('hgell')
         //ČE COUNT OBSTAJA POMENI DA SE TRANSAKCIJA USPEŠNO POBRIŠE
         // if (tr?.count) {
         //     res.status(200).send('success');
@@ -112,5 +189,5 @@ const wallet_get = async (req, res) => {
     } else res.status(401).send('please login')
 };
 module.exports = {
-    wallet_get, wallet_post, wallet_delete, wallet_edit
+    wallet_get, wallet_post, wallet_delete, wallet_edit, walletViewer_post, walletViewer_get
 };
