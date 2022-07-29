@@ -10,7 +10,6 @@ const exphbs = require('express-handlebars');
 const auth_login = async (req, res) => {
     if (req.session.userId) {
         res.status(500).send("Logged in");
-        console.log('loggd')
         return;
     }
     let user; // V SPREMENLJIVKO USER ZAPIŠEMO USERJA IZ DB KATERI EMAIL SE UJEMA Z NAVEDENIM
@@ -23,13 +22,30 @@ const auth_login = async (req, res) => {
         });
         //CHECK PW ČE SE UJEMA Z NAVEDENO
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if (isPasswordCorrect) {
+        // if (!user.isVerified) {
+        //     res.status(401).send('not verified')
+        //     console.log('user isnt verified')
+        //     return
+        // }
+        if (isPasswordCorrect && user.isVerified) {
             req.session.userId = user.id
             res.status(200).send("Authed")
-        } else {
-            //ČE SE NE VRNEMO 401
-            res.status(401).send("Wrong creds");
         }
+        else {
+            if(isPasswordCorrect){
+                console.log('pass')
+                res.status(401).send("Wrong credidentials");
+            }
+
+            if(user.isVerified !== true){
+                console.log('verr')
+                res.status(401).send("Not verified");
+            }
+        }
+        // else {
+        //     //ČE SE NE VRNEMO 401
+        //     res.status(401).send("Wrong creds");
+        // }
     } catch {
         if (!user) {
             //ČE NE NAJDEMO USERJA Z NAVEDENIM EMAILOM VRNEMO 401
@@ -44,8 +60,6 @@ const createToken = (id) => {
     return jwt.sign({ id }, JWT_SECRET)
 }
 
-
-let testAccount = nodemailer.createTestAccount();
 let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -135,6 +149,7 @@ const auth_register = async (req, res) => {
                 data: {
                     name: 'Wallet 1',
                     userId: newUser?.id,
+                    color: '#5a92d6'
                 },
             });
             res.status(200).send("ok");
@@ -149,7 +164,7 @@ const auth_verify = async (req, res) => {
     try {
         const token = req.query.token;
         console.log(token)
-       
+
         await prisma.user.updateMany({
             where: {
                 emailToken: token
@@ -159,8 +174,9 @@ const auth_verify = async (req, res) => {
                 emailToken: null
             }
         });
+        res.redirect('/auth')
         // console.log(user)
-       
+
         // const user = await prisma.user.findMany({
         //     where: {
         //         emailToken: token
@@ -175,26 +191,23 @@ const auth_verify = async (req, res) => {
         //     await user.prisma.save()
         // }
         // else {
-        //     res.redirect('/auth')
+        //    
         //     console.log('not verified')
         // }
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
 
+const verifyEmail = async (req, res, next) => {
+    try {
+        const user = await prisma.user.findUnique({
+            email: req.body.email
+        })
+        if (user.isVerified) {
 
-        
-
-        //await user.save()
-        // if (user) {
-
-        //     console.log(user)
-        //     user.emailToken = null
-        //     user.isVerified = true
-        //     await user.save()
-        //     res.redirect('/auth')
-        // }
-        // else {
-        //     res.redirect('/rip')
-        //     console.log('email is not verified')
-        // }
+        }
     }
     catch (err) {
         console.log(err)

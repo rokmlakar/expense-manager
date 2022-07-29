@@ -2,14 +2,16 @@ import styles from '../../styles/walletComponents/AddWalletForm.module.scss';
 import { useEffect, useState } from 'react';
 import { queryClient } from '../../constants/config';
 import { Title } from '../Titles/Titles';
-
+import { CirclePicker } from 'react-color';
 import { useWalletPost } from '../../queries/wallet';
 
 
-const AddWalletForm = () => {
+const AddWalletForm = ({reloadSetter, reload}) => {
     const [title, setTitle] = useState('');
     const [money, setMoney] = useState('');
     const [info, setInfo] = useState('');
+    const [visible, setVisible] = useState(false);
+    const [color, setColor] = useState('#5a92d6');
 
     const {
         mutate: postWallet,
@@ -22,6 +24,8 @@ const AddWalletForm = () => {
     let body = {
         title: title,
         money: parseFloat(money),
+        info: info,
+        color: color.background,
         // info: info,
     };
 
@@ -35,6 +39,32 @@ const AddWalletForm = () => {
 
     // console.log(data)
 
+    const vis = () => {
+        setVisible(!visible);
+    }
+
+    const handleChange = (color) => {
+        setVisible(!visible)
+        setColor({ background: color.hex })
+    }
+
+    const handleClick = () => {
+
+        postWallet(body, {
+            onSuccess: async () => {
+                await reloadSetter(!reload)
+            },
+        });
+
+        // postCategory(body, {
+        //     onSuccess: async () => {
+        //         await queryClient.invalidateQueries('Categories_Sum')
+        //             .then(await reloadSetter(!reload))
+        //             .catch;
+        //     },
+        // });
+        // fetchTransactions()
+    }
 
     return (
         <div className={styles.container}>
@@ -61,14 +91,19 @@ const AddWalletForm = () => {
                     value={info}
                 />
 
+                <button className={styles.color} onClick={vis} style={{ background: color.background }}>
+                    Pick a Category Color
+                </button>
+
+                {visible &&
+                    <CirclePicker
+                        color={color.background}
+                        onChangeComplete={handleChange}
+                    />
+                }
+
                 <button
-                    onClick={() => {
-                        postWallet(body, {
-                            onSuccess: async () => {
-                                await queryClient.invalidateQueries('Categories_Sum');
-                            },
-                        });
-                    }}
+                    onClick={handleClick}
                 >
                     {isLoading ? 'Loading...' : 'Add Wallet'}
                 </button>

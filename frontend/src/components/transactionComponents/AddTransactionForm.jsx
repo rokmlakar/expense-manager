@@ -48,7 +48,6 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
         transactionCategoryId: parseInt(category),
         walletId: parseInt(wallet)
     };
-
     return (
 
         <div className={styles.container}>

@@ -10,7 +10,20 @@ const postWall = async (params) => {
     return await Ax.post('wallet', params)
 };
 
+const editWall = async (params) => {
+    console.log(params)
+    return await Ax.put(`wallet/edit/${params.wallet}`, params)
+}
+
+const deleteWall = async (params) => {
+    return await Ax.delete(`wallet/delete/${params}`);
+  };
+
 const useWalletPost = () => useMutation("postWallet", postWall)
+
+const useWalletDelete = () => useMutation("deleteWall", deleteWall);
+
+const useWalletEdit = () => useMutation("editWallet", editWall);
 
 const useWalletsGet = () =>
     useQuery("Wallets", getWall, {
@@ -28,4 +41,4 @@ const useWalletsGet = () =>
 //     }
 // )
 
-export { useWalletPost, useWalletsGet }
+export { useWalletPost, useWalletsGet, useWalletDelete, useWalletEdit }

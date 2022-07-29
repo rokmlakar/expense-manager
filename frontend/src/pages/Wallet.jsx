@@ -23,18 +23,19 @@ const Wallet = () => {
   const [sortingField, setSortingField] = useState('dateSort');
   const [order, setOrder] = useState('asc');
   const [skip, setSkip] = useState(0);
+  const [reload, setReload] = useState(false)
 
 
   const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
 
-  const { data: wallets } = useWalletsGet();
+  const { data: wallets, refetch: fetchWallets } = useWalletsGet();
 
-   useEffect(() => {
-     if (wallets) {
-       console.log(wallets)
-     }
-
-   }, [wallets])
+  useEffect(() => {
+    if (wallets) {
+      console.log(wallets)
+    }
+    fetchWallets()
+  }, [reload])
 
   useEffect(() => {
     if (ctgs) setCategories(ctgs.data[0].id);
@@ -58,13 +59,26 @@ const Wallet = () => {
       <div className={styles.mainContent}>
         <Title>Wallets</Title>
 
+        <button onClick={fetchWallets}>FETCH</button>
+
         {wallets && wallets.data.map((wallet) => (
-          <WalletCard name={wallet.name} money={wallet.money} />
+          <WalletCard title={wallet.name}
+            wallet={wallet.id} money={wallet.money}
+            color={wallet.color}
+            reloadSetter={setReload}
+            reload={reload}
+            ftch={fetchWallets}
+            walletId={wallet.id}
+          />
         ))}
       </div>
 
       <div className={styles.sideContent}>
-        <AddWalletForm />
+        <AddWalletForm
+          reloadSetter={setReload}
+          reload={reload}
+
+        />
       </div>
     </div>
   )

@@ -65,7 +65,7 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
                     .catch;
             },
         });
-        fetchTransactions()
+        // fetchTransactions()
     }
 
     return (

@@ -53,6 +53,7 @@ const Transactions = () => {
 
   useEffect(() => {
     fetchTransactions()
+    
   }, [reload])
   
   const [firstDate, setFirstDate] = useState(

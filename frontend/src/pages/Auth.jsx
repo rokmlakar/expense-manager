@@ -15,6 +15,7 @@ const Auth = () => {
     //LOGIN VNOS EMAIL, GESLA
     const [email, setEmail] = useState('');
     const [pw, setPw] = useState('');
+    const [logErr, setLogError] = useState();
     //REGISTER 
     const [regEmail, setRegEmail] = useState('');
     const [regPw, setRegPw] = useState('');
@@ -93,6 +94,10 @@ const Auth = () => {
             setErrPassMatch(false);
     }, [regPwConf])
 
+    //  useEffect(() => {
+    //      setLogError();
+    //  },[email, pw])
+    // console.log(logErr)
 
     //useLoginUser => useMutation('loginUser', loginUser)
     //loginUser => async klic z (body) parametrom => Ax.post('auth',body)
@@ -101,6 +106,8 @@ const Auth = () => {
         isError: loginError,
         error: loginErr,
     } = useLoginUser();
+
+    console.log(loginErr, loginError)
 
     const {
         mutateAsync: registerHandler,
@@ -148,10 +155,16 @@ const Auth = () => {
                         {/* LOGIN BTN */}
                         <button onClick={() => loginHandler(body, {
                             onError: () => {
-                                console.log(loginErr)
+                                console.log(loginErr.response.data)
+                                setLogError(loginErr.response.data)
+
                             },
                             onSuccess: () => setAuth(true)
                         })}>Login Now</button>
+                        {/* {logErr && */}
+                        {logErr &&
+                            <span style={{ color: 'red', fontSize: '20px', fontWeight: '600', border: '1px solid red', background: '#e3e3e3', padding: '5px', borderRadius: '10px', marginBottom: '1rem' }}>{logErr}</span>
+                        }
                     </div>
                 </form>
                 {/* REGISTER FORM */}
