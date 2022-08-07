@@ -18,6 +18,7 @@ const Auth = () => {
     const [logErr, setLogError] = useState();
     const [logVerErr, setLogVerErr] = useState();
     //REGISTER 
+    const [regUsername, setRegUsername] = useState('');
     const [regEmail, setRegEmail] = useState('');
     const [regPw, setRegPw] = useState('');
     const [regPwConf, setRegPwConf] = useState('');
@@ -82,6 +83,7 @@ const Auth = () => {
     }
 
     let regBody = {
+        username: regUsername,
         email: regEmail,
         password: regPw,
     }
@@ -185,6 +187,11 @@ const Auth = () => {
                 >
                     <div className={styles.container}>
                         <Title>Register</Title>
+                        <span>Username :</span>
+                        <input type="text"
+                            onChange={(e) => setRegUsername(e.target.value)}
+                            value={regUsername}
+                        />
                         <span>Email :</span>
                         <input type="email"
                             onChange={(e) => setRegEmail(e.target.value)}

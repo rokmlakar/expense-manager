@@ -24,7 +24,7 @@ const AddWalletForm = ({reloadSetter, reload}) => {
     let body = {
         title: title,
         money: parseFloat(money),
-        info: info,
+        description: info,
         color: color.background,
         // info: info,
     };
@@ -92,7 +92,7 @@ const AddWalletForm = ({reloadSetter, reload}) => {
                 />
 
                 <button className={styles.color} onClick={vis} style={{ background: color.background }}>
-                    Pick a Category Color
+                    Pick a Wallet Color
                 </button>
 
                 {visible &&

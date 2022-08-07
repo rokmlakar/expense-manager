@@ -2,7 +2,8 @@ const { prisma } = require('../constants/config.js');
 const bcrypt = require('bcrypt');
 
 const user_update_meta = async (req, res) => {
-    const { firstName, lastName } = req.body;
+    const { username } = req.body;
+    console.log(req.body)
     //IF USER IS LOGGED IN
     if (req.session.userId) {
         try {
@@ -11,8 +12,7 @@ const user_update_meta = async (req, res) => {
                     id: req.session.userId,
                 },
                 data: {
-                    firstName: firstName,
-                    lastName: lastName,
+                    userName: username
                 },
             });
             res.status(200).send('Updated');
@@ -27,7 +27,7 @@ const user_update_meta = async (req, res) => {
 
 //UPDATE PW
 const user_update_password = async (req, res) => {
-    const {password, oldPassword} = req.body;
+    const { password, oldPassword } = req.body;
     //PASSWORD NOVI PASS KI GA USER HOČE, OLDPASS TRENUTEN PASS OD USERJA
     let user;
     if (req.session.userId) {

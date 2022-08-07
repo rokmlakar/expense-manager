@@ -96,13 +96,15 @@ const Wallet = () => {
           ))
           :
           walletViewers.data && walletViewers.data.map((wallet) => (
-            <WalletViewerCard title={wallet.name}
-              wallet={wallet.id} money={wallet.money}
-              color={wallet.color}
+            <WalletViewerCard title={wallet[0].name}
+              wallet={wallet.id} money={wallet[0].money}
+              color={wallet[0].color}
+              description={wallet[0].description}
+              username={wallet[0].username}
               reloadSetter={setReload}
               reload={reload}
               ftch={fetchWallets}
-              walletId={wallet.id}
+              walletId={wallet[0].id}
             />
           ))
         }

@@ -125,10 +125,11 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
                         <span className={styles.title}>{title}</span>
                         <span className={styles.categoryName}>{categoryName}</span>
                         <span className={styles.date}>{date}</span>
-                        <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}
+                        <span>{description}</span>
+                        {/* <div className={`${visible ? styles.descriptionActive : undefined} ${styles.description}`}
                         >
                             <p>{description}</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {/* MONEY */}

@@ -9,6 +9,7 @@ import { useUser } from '../../queries/user';
 const HomeProfile = () => {
     //V konst data se zapisejo podatki userja (email, firstName, lastName, userId)
     const {data} = useUser();
+    console.log(data)
     return (
         <div className={styles.container}>
             <div className={styles.iconContainer}>
@@ -16,7 +17,7 @@ const HomeProfile = () => {
             </div>
             <div className={styles.info}>
                 <span className={styles.welcome}>
-                    {data && `Hi ${data?.data.firstName}!`}
+                    {data && `Hi ${data?.data.username}!`}
                 </span>
                 <div className={styles.options}>
                     {/* NAS PREUSMERI NA PROFILE */}

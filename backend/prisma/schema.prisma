@@ -19,8 +19,7 @@ model Session {
 
 model User {
   id           Int            @id @default(autoincrement())
-  firstName    String?
-  lastName     String?
+  userName     String?
   email        String         @unique
   password     String
   emailToken   String?
@@ -30,23 +29,24 @@ model User {
 }
 
 model WalletViewer {
-  user     User?  @relation(fields: [userId], references: [id])
-  userId   Int
-  wallet   Wallet @relation(fields: [walletId], references: [id])
-  walletId Int
-  emailToken   String?
-  isVerified   Boolean?
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     Int
+  wallet     Wallet   @relation(fields: [walletId], references: [id])
+  walletId   Int
+  emailToken String?
+  isVerified Boolean?
+
   @@id([userId, walletId])
 }
 
 model Wallet {
-  name   String?
-  id     Int     @id @default(autoincrement())
-  user   User?   @relation(fields: [userId], references: [id])
-  userId Int?
-  color       String?
+  name         String?
+  id           Int            @id @default(autoincrement())
+  user         User?          @relation(fields: [userId], references: [id])
+  userId       Int?
+  color        String?
   transactions Transaction[]
-
+  description  String?
   money        Float?
   WalletViewer WalletViewer[]
 }

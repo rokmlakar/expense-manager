@@ -13,21 +13,18 @@ const Profile = () => {
     } = useUserUpdate();
 
     //STATE
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
 
     useEffect(() => {
         if (isSuccess) {
             try {
-                setFirstName(user.data.firstName);
-                setLastName(user.data.lastName);
+                setUsername(user.data.username);
             } catch { }
         }
     }, [isSuccess, user]);
 
     const body = {
-        firstName: firstName,
-        lastName: lastName,
+        username: username
     };
 
     return <MainContainer>
@@ -36,20 +33,11 @@ const Profile = () => {
             <div className={styles.container}>
                 {/* FIRSTNAME */}
                 <div className={styles.firstName}>
-                    <label htmlFor="firstName">FirstName :</label>
+                    <label htmlFor="firstName">Username :</label>
                     <input type="text"
-                        name="firstName"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    />
-                </div>
-                {/* LASTNAME */}
-                <div className={styles.lastName}>
-                    <label htmlFor="lastName">LastName :</label>
-                    <input type="text"
-                        name="lastName"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        name="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
                 {/* BUTTON */}

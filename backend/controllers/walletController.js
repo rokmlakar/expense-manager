@@ -6,14 +6,15 @@ const nodemailer = require('nodemailer');
 const wallet_post = async (req, res) => {
     if (req.session.userId) {
         console.log('ssss')
-        console.log(req.body.color)
+        console.log(req.body)
         try {
             await prisma.wallet.create({
                 data: {
                     name: req.body.title,
                     userId: req.session.userId,
                     money: req.body.money,
-                    color: req.body.color
+                    color: req.body.color,
+                    description: req.body.description,
                 }
             })
             res.status(200).send('success');
@@ -28,8 +29,8 @@ let transporter = nodemailer.createTransport({
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-        user: 'roky.mlakar@gmail.com', // generated ethereal user
-        pass: 'gtmwkghxfljrjiul', // generated ethereal password
+        user: 'roky.mlakar@gmail.com',
+        pass: 'gtmwkghxfljrjiul',
     },
     tls: {
         rejectUnauthorized: false
@@ -118,7 +119,8 @@ const wallet_verify = async (req, res) => {
 const walletViewer_get = async (req, res) => {
     if (req.session.userId) {
         let user = req.session.userId;
-        console.log(user)
+        let wallArray = [];
+        console.log('USRRRR', user)
         try {
             const walletView = await prisma.walletViewer.
                 findMany({
@@ -129,18 +131,36 @@ const walletViewer_get = async (req, res) => {
                 .catch(() => console.log('err'));
 
             if (walletView) {
-                const wallId = walletView[0].walletId
-                console.log(walletView)
-                console.log('wallllll', wallId)
-                const wallet = await prisma.wallet.
-                    findMany({
+
+                for (let i in walletView) {
+                    console.log('WALAAAZZ', walletView[i])
+                    const wallViewId = walletView[i].walletId
+                    const usrViewId = walletView[i].userId
+                    const wallet = await prisma.wallet.
+                        findMany({
+                            where: {
+                                id: wallViewId
+                            }
+                        })
+                    console.log('WalLLLinho', wallet)
+                    
+                    const usrName = await prisma.user.
+                    findUnique({
                         where: {
-                            id: wallId
+                            id: usrViewId
+                        },
+                        select: {
+                            userName: true,
                         }
                     })
-                console.log(wallet)
-                res.status(200).send(wallet);
+                    console.log('USRNAME', usrName.userName)
+                    wallet[0].username = usrName.userName
+                    console.log('WALALALA', wallet)
+                    wallArray.push(wallet)
+                }
             }
+            console.log('ARRRAY', wallArray)
+            res.status(200).send(wallArray);
         } catch {
             res.status(400).send('error');
         }

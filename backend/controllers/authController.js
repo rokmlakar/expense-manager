@@ -76,7 +76,8 @@ let transporter = nodemailer.createTransport({
 
 
 const auth_register = async (req, res) => {
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
+    console.log(req.body)
     let emailCheck;
     //PREVERIMO ALI UPORABNIK S TEM EMAILOM ŽE OBSTAJA
     try {
@@ -108,8 +109,7 @@ const auth_register = async (req, res) => {
                 data: {
                     email: email,
                     password: salted_password,
-                    firstName: "",
-                    lastName: "",
+                    userName: username,
                     emailToken: crypto.randomBytes(64).toString('hex'),
                     isVerified: false
                 },
@@ -210,8 +210,7 @@ const auth_user = async (req, res) => {
         const data = {
             email: user.email,
             userId: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            username: user.userName
         };
         //VRNEMO DATA V JSON OBLIKI
         res.status(200).json(data);
