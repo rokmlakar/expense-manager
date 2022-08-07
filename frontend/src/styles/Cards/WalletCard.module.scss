@@ -24,6 +24,11 @@
 .inner {
     display: flex;
     align-items: flex-start;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: -4px 6px 12px 3px rgba(0, 0, 0, 0.12);
 
     @media screen and (max-width: 480px) {
         flex-direction: column;
@@ -41,10 +46,7 @@
             // flex-direction: column;
             width: 100%;
             gap: 2.5rem;
-            border-radius: 10px;
-            padding: 1rem;
-            background-color: white;
-            box-shadow: -4px 6px 12px 3px rgba(0, 0, 0, 0.12);
+           
 
             .column {
                 width: 30%;
@@ -81,6 +83,11 @@
                     font-size: 21px;
                 }
 
+                .description{
+                    font-size: 18px;
+
+                }
+
                 // .description {
                 //     height: 0;
                 //     transition: all ease-in-out 0.2s;
@@ -101,6 +108,10 @@
                         transition-delay: 200ms;
                         opacity: 1;
                     }
+                }
+
+                .descriptionInactive{
+                    display: none;
                 }
 
                 input{

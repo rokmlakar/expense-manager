@@ -40,6 +40,59 @@ const transaction_count_category = async (req, res) => {
     console.log(transactions)
 }
 
+const viewer_transactions = async (req, res) => {
+    if (req.session.userId) {
+        console.log('bodyyyyy', req.body)
+        let user = req.session.userId;
+        let trnsArray = [];
+        try {
+            const walletView = await prisma.walletViewer.
+                findMany({
+                    where: {
+                        userId: user
+                    }
+                })
+                .catch(() => console.log('err'));
+
+            if (walletView) {
+                // console.log('wallV', walletView)
+
+                for (let i in walletView) {
+                    const wallViewId = walletView[i].walletId
+                    const usrViewId = walletView[i].userId
+
+
+                    const viewedTrns = await prisma.transaction
+                        .findMany({
+                            where: {
+                                walletId: wallViewId
+                            }
+                        })
+
+
+                    trnsArray.push(viewedTrns)
+
+                    // const usrName = await prisma.user.
+                    //     findUnique({
+                    //         where: {
+                    //             id: wallet[0].userId
+                    //         },
+                    //         select: {
+                    //             userName: true,
+                    //         }
+                    //     })
+                    // wallet[0].username = usrName.userName
+                    // wallArray.push(wallet)
+                }
+                // console.log('WALARY', trnsArray)
+            }
+            res.status(200).send(trnsArray);
+        } catch {
+            res.status(400).send('error');
+        }
+    }
+}
+
 const transactions_get = async (req, res) => {
     if (req.session.userId) {
         console.log(req.query)
@@ -144,5 +197,6 @@ module.exports = {
     transaction_post,
     transactions_get,
     transaction_delete,
-    transaction_count_category
+    transaction_count_category,
+    viewer_transactions,
 };

@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 
 const wallet_post = async (req, res) => {
     if (req.session.userId) {
-        console.log('ssss')
         console.log(req.body)
         try {
             await prisma.wallet.create({
@@ -120,7 +119,6 @@ const walletViewer_get = async (req, res) => {
     if (req.session.userId) {
         let user = req.session.userId;
         let wallArray = [];
-        console.log('USRRRR', user)
         try {
             const walletView = await prisma.walletViewer.
                 findMany({
@@ -133,7 +131,6 @@ const walletViewer_get = async (req, res) => {
             if (walletView) {
 
                 for (let i in walletView) {
-                    console.log('WALAAAZZ', walletView[i])
                     const wallViewId = walletView[i].walletId
                     const usrViewId = walletView[i].userId
                     const wallet = await prisma.wallet.
@@ -142,24 +139,20 @@ const walletViewer_get = async (req, res) => {
                                 id: wallViewId
                             }
                         })
-                    console.log('WalLLLinho', wallet)
                     
                     const usrName = await prisma.user.
                     findUnique({
                         where: {
-                            id: usrViewId
+                            id: wallet[0].userId
                         },
                         select: {
                             userName: true,
                         }
                     })
-                    console.log('USRNAME', usrName.userName)
                     wallet[0].username = usrName.userName
-                    console.log('WALALALA', wallet)
                     wallArray.push(wallet)
                 }
             }
-            console.log('ARRRAY', wallArray)
             res.status(200).send(wallArray);
         } catch {
             res.status(400).send('error');

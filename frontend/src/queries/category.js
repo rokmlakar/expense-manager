@@ -25,7 +25,7 @@ const useCategoriesGet = () =>
   useQuery("Categories", getCtgs
   );
 
-  const useCategoryDelete = () => useMutation("deleteCtg", deleteCtg);
+const useCategoryDelete = () => useMutation("deleteCtg", deleteCtg);
 
 const useCategoriesSum = () =>
   useQuery("Categories_Sum", getCtgsSum, { staleTime: 30000 });

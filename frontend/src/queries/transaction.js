@@ -12,6 +12,16 @@ const getTrs = async (params) => {
   );
 };
 
+const getViewerTrs = async (params) => {
+  return await Ax.get('viewerTransactions', params)
+}
+
+// const getViewerTrs = async (params) => {
+//   return await Ax.get("viewerTransactions", { params: params }).catch((e) =>
+//     console.log(e)
+//   );
+// }
+
 const getTrsCount = async (params) => {
   return await Ax.get('transactionsCount', { params: params }).catch((e) =>
     console.log(e)
@@ -69,5 +79,12 @@ const useTransactionsGet = ({
     }
   );
 
+const useViewerTransactionsGet = ({ key, walletId }) => useQuery(key, () => getViewerTrs({ walletId }), {
+  refetchOnWindowFocus: false,
+  enabled: false,
+  keepPreviousData: true,
+});
+
+
 const useTransactionPost = () => useMutation("postTransaction", postTr);
-export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount };
+export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount, useViewerTransactionsGet };
