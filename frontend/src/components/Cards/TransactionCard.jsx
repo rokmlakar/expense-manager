@@ -73,7 +73,7 @@ import { queryClient } from "../../constants/config";
 // }
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload }) => {
+const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload, viewer }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [currentCat, setCurrentCat] = useState()
@@ -141,30 +141,32 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
                         style={description ? {} : { opacity: 0, pointerEvents: 'none' }}
 
                     >
-                        {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
+                        {/* {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />} */}
                     </div>
                 </div>
-                <div
-                    className={styles.iconContainerDelete}
-                    style={
-                        transactionsLoading
-                            ? {
-                                pointerEvents: "none",
-                                background: "#333",
-                            }
-                            : {}
-                    }
-                    onClick={() => {
-                        deleteTr(transactionId, {
-                            onSuccess: async () => {
-                                await queryClient
-                                    .invalidateQueries("Trs")
-                                    .then(await reloadSetter(!reload))
-                                    .catch();
-                            },
-                        });
-                    }}
-                ><BsTrash /></div>
+                {!viewer &&
+                    <div
+                        className={styles.iconContainerDelete}
+                        style={
+                            transactionsLoading
+                                ? {
+                                    pointerEvents: "none",
+                                    background: "#333",
+                                }
+                                : {}
+                        }
+                        onClick={() => {
+                            deleteTr(transactionId, {
+                                onSuccess: async () => {
+                                    await queryClient
+                                        .invalidateQueries("Trs")
+                                        .then(await reloadSetter(!reload))
+                                        .catch();
+                                },
+                            });
+                        }}
+                    ><BsTrash /></div>
+                }
             </div>
         </div>
     );

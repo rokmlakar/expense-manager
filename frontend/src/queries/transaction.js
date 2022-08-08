@@ -13,8 +13,10 @@ const getTrs = async (params) => {
 };
 
 const getViewerTrs = async (params) => {
-  return await Ax.get('viewerTransactions', params)
-}
+  return await Ax.get('viewerTransactions', { params: params }).catch((e) =>
+    console.log(e)
+  );
+};
 
 // const getViewerTrs = async (params) => {
 //   return await Ax.get("viewerTransactions", { params: params }).catch((e) =>
@@ -56,6 +58,7 @@ const useTransactionsGet = ({
   category,
   dateSort,
   priceSort,
+  walletId,
   skip,
   take,
   key,
@@ -69,6 +72,7 @@ const useTransactionsGet = ({
         category,
         dateSort,
         priceSort,
+        walletId,
         skip,
         take,
       }),

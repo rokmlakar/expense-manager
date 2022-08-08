@@ -137,8 +137,12 @@ const walletViewer_get = async (req, res) => {
                         findMany({
                             where: {
                                 id: wallViewId
+                            },
+                            include:{
+                                transactions:true
                             }
                         })
+                    console.log('WALALALA', wallet)
                     
                     const usrName = await prisma.user.
                     findUnique({
@@ -149,6 +153,7 @@ const walletViewer_get = async (req, res) => {
                             userName: true,
                         }
                     })
+
                     wallet[0].username = usrName.userName
                     wallArray.push(wallet)
                 }

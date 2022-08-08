@@ -125,6 +125,15 @@
         }
     }
 
+    .transactions{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
     //MONEYCONTAINER
     .moneyContainer {
         display: flex;

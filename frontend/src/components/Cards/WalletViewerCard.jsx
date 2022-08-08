@@ -9,14 +9,17 @@ import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { BsPlusSquare } from "react-icons/bs";
-import { useWalletDelete, useWalletEdit, useWalletViewerPost, useWalletViewerGet } from "../../queries/wallet";
+import { useWalletDelete, useWalletEdit, useWalletViewerPost, useWalletViewerGet, } from "../../queries/wallet";
 import { queryClient } from '../../constants/config';
-import { useViewerTransactionsGet } from '../../queries/transaction';
+import { useViewerTransactionsGet, useTransactionsGet } from '../../queries/transaction';
+import TransactionCard from "./TransactionCard";
+import { DateTime } from 'luxon';
+import { Title } from "../Titles/Titles";
 
 
 
 //CATEGORYCARDU PODAMO IZBRANO KATEGORIJO IN PA DENAR
-const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, walletId, description, username }) => {
+const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, walletId, description, username, transactions }) => {
   //NASTAVIMO STIL(VSAKA KATEGORIJA IMA SVOJO BARVO)
   const [style, setStyle] = useState({});
   const [visible, setVisible] = useState(false);
@@ -31,17 +34,16 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
     error,
   } = useWalletViewerPost();
 
-  const { data: walletViewers, refetch: fetchWalletViews } =
-    useWalletViewerGet({
-      key: 'WallViewers',
-    });
+  // const { data: walletViewers, refetch: fetchWalletViews } =
+  //   useWalletViewerGet({
+  //     key: 'WallViewers',
+  //   });
 
-  const { data: viewedTrns } = useViewerTransactionsGet({
+  const { data: viewedTrns, refetch: fetchViewedTrns } = useTransactionsGet({
     key: 'ViewedTrns',
     walletId: walletId
   });
 
-  console.log(walletId)
 
   useEffect(() => {
     if (viewedTrns) {
@@ -51,8 +53,7 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
     }
   }, [viewedTrns])
 
-  // console.log(walletViewers)
-  console.log(viewedTrns)
+  // console.log(viewedTrns)
 
   const [addMoney, setAddMoney] = useState('');
   const [walletViewer, setWalletViewer] = useState('');
@@ -93,6 +94,14 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
     });
   }
 
+  const handleShowTrns = () => {
+    setVisible(!visible);
+    fetchViewedTrns();
+
+  }
+
+  console.log('TRRRRR', transactions)
+
   //VRNEMO IZBRANO KATEGORIJO Z DOLOČENIM STILOM(BARVO) TER PODAMO ŠE IME KATEGORIJE IN PA VSOTO VSEH TRANSAKCIJ KI SPADAJO POD TO KATEGORIJO
   return (
     <div className={styles.container} style={{ background: color }}>
@@ -119,7 +128,7 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
             <div className={styles.moneyContainer}>
               <div
                 className={styles.iconContainer}
-                onClick={() => setVisible(!visible)}
+                onClick={handleShowTrns}
 
               >
                 {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
@@ -128,10 +137,23 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
           </div>
         </div>
         {visible &&
-          <div className={styles.info}>
-            <div className={styles.categoryContainer}  >
-              <p>{description}</p>
-            </div>
+          <div className={styles.transactions} style={{ borderTop: `2px solid ${color}` }}>
+            <span style={{fontSize:'22px', marginBottom:'-10px'}}>Transactions</span>
+            {transactions?.map((transaction, index) => {
+              return (
+                <TransactionCard
+                  key={index}
+                  money={transaction.money}
+                  date={DateTime.fromISO(transaction.date).toISODate()}
+                  description={transaction.info}
+                  title={transaction.title}
+                  transactionId={transaction.id}
+                  viewer={true}
+                />
+
+              );
+            })}
+
           </div>
         }
         {/* <div className={`${visible ? styles.descriptionActive : styles.descriptionInactive} `}

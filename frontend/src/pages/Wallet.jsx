@@ -34,7 +34,6 @@ const Wallet = () => {
 
   const { data: walletViewers, refetch: fetchWalletViews } = useWalletViewerGet();
 
-  console.log(walletViewers)
 
   useEffect(() => {
     if (wallets) {
@@ -101,6 +100,7 @@ const Wallet = () => {
               color={wallet[0].color}
               description={wallet[0].description}
               username={wallet[0].username}
+              transactions={wallet[0].transactions}
               reloadSetter={setReload}
               reload={reload}
               ftch={fetchWallets}
