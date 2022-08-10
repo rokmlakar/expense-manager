@@ -19,9 +19,15 @@ import {
   useTransactionDelete,
 } from "../queries/transaction";
 import { queryClient } from "../constants/config";
+import { useContext } from 'react';
+import { WalletContext } from '../context/WalletProvider';
 
 
 const Transactions = () => {
+
+  const {walletCon, setWalletCon} = useContext(WalletContext);
+
+  console.log('WALALLA', walletCon)
 
   //SEARCH FILTERS
   const [timeSpan, setTimeSpan] = useState(

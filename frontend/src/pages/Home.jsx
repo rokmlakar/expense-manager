@@ -2,23 +2,27 @@ import MainContainer from "../components/Containers/MainContainer";
 import SearchBar from "../components/homeComponents/SearchBar";
 import { Title } from "../components/Titles/Titles";
 import CategorySumCard from "../components/Cards/CategorySumCard";
+import WalletHomeCard from '../components/Cards/WalletHomeCard';
 import TransactionCard from "../components/Cards/TransactionCard";
 import CategoryCard from '../components/Cards/CategoryCard';
 import HomeProfile from "../components/homeComponents/HomeProfile";
 
 
+import { WalletContext } from '../context/WalletProvider';
+import { useContext } from 'react';
 import { DateTime } from 'luxon';
 import { useTransactionsGet } from "../queries/transaction";
 import { useCategoriesSum } from "../queries/category";
 import { useCategoriesGet } from '../queries/category';
 import { useWalletsGet } from '../queries/wallet';
-import { useEffect } from "react";
+import { useEffect } from "react"
 
 import styles from '../styles/homeComponents/Home.module.scss';
 import { useState } from "react";
 
 const Home = () => {
-
+    
+    const {walletCon, setWalletCon} = useContext(WalletContext);
     const [ctgs, setCtgs] = useState();
     const [showTrns, setShowTrns] = useState(true);
     const [showCtgs, setShowCtgs] = useState(false);
@@ -57,7 +61,6 @@ const Home = () => {
 
     const {data: wallets, refetch: fetchWallets} = useWalletsGet()
 
-    console.log(wallets)
 
     useEffect(() => {
         fetchCategories()
@@ -86,17 +89,18 @@ const Home = () => {
 
                 {/* CATEGORIES */}
                 <div className={styles.categories}>
-                    <Title>Categories Last 30 Days</Title>
+                    <Title>Wallets</Title>
                     <div className={styles.content}>
                         {/* SUM */}
-                        {CategoriesSum && ctgs && CategoriesSum.data.map((category, index) => {
+                        {wallets && wallets.data.map((wallet, index) => {
                             return (
-                                <CategorySumCard
+                                <WalletHomeCard
                                     key={index}
-                                    category={category.transactionCategoryId}
-                                    money={category._sum.money.toFixed(2)}
-                                    ctgs={ctgs.data}
-                                    color={ctgs.color}
+                                    title={wallet.name}
+                                    wallet={wallet.id}
+                                    money={wallet.money}
+                                    description={wallet.description}
+                                    color={wallet.color}
                                 />
                             );
                         })}

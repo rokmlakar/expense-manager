@@ -5,6 +5,7 @@ import MobileNavbar from './components/Navbar/MobileNavbar';
 import MainContainer from './components/Containers/MainContainer';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import { AuthProvider } from './context/AuthProvider';
+import { WalletContext } from './context/WalletProvider';
 
 import Auth from './pages/Auth';
 import Home from './pages/Home';
@@ -18,9 +19,12 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClientProvider } from 'react-query';
 import { queryClient } from './constants/config';
+import { useState } from 'react';
 
 
 function App() {
+  const [walletCon, setWalletCon] = useState(0);
+
   return (
     <div className="App">
       <QueryClientProvider client={queryClient}>
@@ -30,43 +34,46 @@ function App() {
             <div className='mobileMenu'>
               <MobileNavbar />
             </div>
-            <Routes>
-              {/* AUTH PAGE */}
-              <Route path='/auth' element={<Auth />}></Route>
-              {/* PROTECTED ROUTES */}
-              <Route element={<ProtectedRoutes />}>
+            <WalletContext.Provider value={{ walletCon, setWalletCon }}>
+              <Routes>
+                {/* AUTH PAGE */}
+                <Route path='/auth' element={<Auth />}></Route>
+                {/* PROTECTED ROUTES */}
+                <Route element={<ProtectedRoutes />}>
 
 
-                {/* HOME */}
-                <Route path='/' element={<Home />} />
+                  {/* HOME */}
 
-                {/* SETTINGS */}
-                <Route path='/settings' element={<Settings />} />
-                
-                {/* PROFILE */}
-                <Route path='/profile' element={<Profile />} />
+                  <Route path='/' element={<Home />} />
 
-                {/* TRANSACTIONS */}
-                <Route path='/transactions' element={<Transactions />} />
+                  {/* SETTINGS */}
+                  <Route path='/settings' element={<Settings />} />
 
-                {/* CATEGORIES */}
-                <Route path='/categories' element={<Categories />} />
+                  {/* PROFILE */}
+                  <Route path='/profile' element={<Profile />} />
 
-                {/* WALLET */}
-                <Route path='/wallet' element={<Wallet />} />
+                  {/* TRANSACTIONS */}
+                  <Route path='/transactions' element={<Transactions />} />
 
-                {/* 404 */}
-                <Route
-                  path='/*'
-                  element={
-                    <MainContainer>
-                      <span style={{ fontSize: '1.2rem' }}>
-                        404 Page Not Found
-                      </span>
-                    </MainContainer>
-                  } />
-              </Route>
-            </Routes>
+                  {/* CATEGORIES */}
+                  <Route path='/categories' element={<Categories />} />
+
+                  {/* WALLET */}
+                  <Route path='/wallet' element={<Wallet />} />
+
+                  {/* 404 */}
+                  <Route
+                    path='/*'
+                    element={
+                      <MainContainer>
+                        <span style={{ fontSize: '1.2rem' }}>
+                          404 Page Not Found
+                        </span>
+                      </MainContainer>
+                    } />
+                </Route>
+              </Routes>
+            </WalletContext.Provider>
           </PageContainer>
         </AuthProvider>
         <ReactQueryDevtools />

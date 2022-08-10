@@ -9,7 +9,6 @@ import { useUser } from '../../queries/user';
 const HomeProfile = () => {
     //V konst data se zapisejo podatki userja (email, firstName, lastName, userId)
     const {data} = useUser();
-    console.log(data)
     return (
         <div className={styles.container}>
             <div className={styles.iconContainer}>
