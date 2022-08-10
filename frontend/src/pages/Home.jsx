@@ -3,6 +3,7 @@ import SearchBar from "../components/homeComponents/SearchBar";
 import { Title } from "../components/Titles/Titles";
 import CategorySumCard from "../components/Cards/CategorySumCard";
 import TransactionCard from "../components/Cards/TransactionCard";
+import CategoryCard from '../components/Cards/CategoryCard';
 import HomeProfile from "../components/homeComponents/HomeProfile";
 
 
@@ -10,6 +11,7 @@ import { DateTime } from 'luxon';
 import { useTransactionsGet } from "../queries/transaction";
 import { useCategoriesSum } from "../queries/category";
 import { useCategoriesGet } from '../queries/category';
+import { useWalletsGet } from '../queries/wallet';
 import { useEffect } from "react";
 
 import styles from '../styles/homeComponents/Home.module.scss';
@@ -18,6 +20,12 @@ import { useState } from "react";
 const Home = () => {
 
     const [ctgs, setCtgs] = useState();
+    const [showTrns, setShowTrns] = useState(true);
+    const [showCtgs, setShowCtgs] = useState(false);
+    const [showWall, setShowWall] = useState(false);
+    const [dropDown, setDropDown] = useState(false);
+    const [selectedView, setSelectedView] = useState('Transactions');
+
 
     //LATEST TRANSACTIONS
     //OBJEKT USETRANSACTIONS KI PREJME PARAMETRE KEY SKIP TAKE IN NASTAVI OBJEKT KI IMA DATA KJER SO VSI 
@@ -37,7 +45,7 @@ const Home = () => {
     // }
 
     const { data: cat, refetch: fetchCategories } = useCategoriesGet();
-    
+
     useEffect(() => {
         setCtgs(cat)
     }, [cat])
@@ -46,9 +54,14 @@ const Home = () => {
 
         // setctgs(cat)
     }
-    // if (cat) {
-    //     setctgs(cat)
-    // }
+
+    const {data: wallets, refetch: fetchWallets} = useWalletsGet()
+
+    console.log(wallets)
+
+    useEffect(() => {
+        fetchCategories()
+    }, [])
 
     const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
     // useCategoriesSum() = {
@@ -61,7 +74,6 @@ const Home = () => {
         fetchCategories();
         fetchCategoriesSum();
     }, [])
-    console.log(ctgs)
 
     return (
         <MainContainer optionClass={styles.container}>
@@ -92,23 +104,73 @@ const Home = () => {
                 </div>
 
                 {/* TRANSACTIONS */}
-                <div className={styles.transactions}>
-                    <Title>Latest Transactions</Title>
-                    <div className={styles.content}>
-                        {/* LATEST TRANSACTIONS */}
-                        {transactions && transactions.data.map((transaction, index) => {
-                            return (
-                                <TransactionCard
-                                    key={index}
-                                    category={transaction.category.name}
-                                    date={DateTime.fromISO(transaction.date).toISODate()}
-                                    money={transaction.money.toFixed(2)}
-                                    description={transaction.info}
-                                    title={transaction.title}
-                                />
-                            );
-                        })}
+                <div className={styles.overview}>
+                    <div className={styles.top}>
+                        <Title>Latest Transactions</Title>
+                        <div className={styles.filter}>
+                            <label htmlFor="selectedView">Selected View</label>
+                            <select
+                                name="selectedView"
+                                onChange={(e) => {
+                                    setSelectedView(e.target.value)
+                                }}
+                            >
+                                <option
+                                    value='Transactions'
+                                >
+                                    View by Transactions
+                                </option>
+                                <option
+                                    value='Categories'
+                                >
+                                    View by Categories
+                                </option>
+                                <option
+                                    value='Wallets'
+                                >
+                                    View by Wallets
+                                </option>
+                            </select>
+                        </div>
                     </div>
+
+
+                    {
+                        selectedView === 'Transactions' &&
+                        <div className={styles.content}>
+                            {/* LATEST TRANSACTIONS */}
+                            {transactions && transactions.data.map((transaction, index) => {
+                                return (
+                                    <TransactionCard
+                                        key={index}
+                                        category={transaction.category.name}
+                                        date={DateTime.fromISO(transaction.date).toISODate()}
+                                        money={transaction.money.toFixed(2)}
+                                        description={transaction.info}
+                                        title={transaction.title}
+                                    />
+                                );
+                            })}
+                        </div>
+                    }
+
+                    {selectedView === 'Categories' &&
+                        ctgs && [...ctgs.data].map((cat, index) => (
+                            <CategoryCard
+                                key={index}
+                                title={cat.name}
+                                category={cat.id}
+                                color={cat.color}
+                                info={cat.info}
+                                userId={cat.userId}
+                            />
+
+                        ))}
+
+
+
+
+
                 </div>
             </div>
             <div className={styles.profile}>

@@ -96,9 +96,6 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
                         onChangeComplete={handleChange}
                     />
                 }
-                {/* <IconPicker/> */}
-
-
 
                 <button
                     onClick={handleClick}

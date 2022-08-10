@@ -37,7 +37,6 @@ const Wallet = () => {
 
   useEffect(() => {
     if (wallets) {
-      console.log(wallets)
     }
     fetchWallets()
   }, [reload])

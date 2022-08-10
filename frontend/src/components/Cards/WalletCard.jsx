@@ -29,7 +29,6 @@ const WalletCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, w
     error,
   } = useWalletViewerPost();
 
-  console.log(message)
 
 
   const [addMoney, setAddMoney] = useState('');
@@ -47,7 +46,6 @@ const WalletCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, w
 
   const handleClick = () => {
 
-    console.log(addMoney)
     editWall(body, {
       onSuccess: async () => {
         await queryClient

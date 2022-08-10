@@ -47,7 +47,6 @@ const Categories = () => {
 
     useEffect(() => {
         fetchCategories()
-        console.log('YOOYOYO')
     }, [reload])
 
 
@@ -60,7 +59,7 @@ const Categories = () => {
 
                     {/* FILTERS */}
                     LIST OF CATEGORIES
-                    {ctgs && [...ctgs.data].reverse().map((cat, index) => (
+                    {ctgs && [...ctgs.data].map((cat, index) => (
                         <CategoryCard
                             key={index}
                             title={cat.name}

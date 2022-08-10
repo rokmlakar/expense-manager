@@ -6,77 +6,23 @@ import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { HiOutlineFire } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 import { useCategoriesGet } from '../../queries/category';
-import { useTransactionsGet, useTransactionDelete } from '../../queries/transaction';
+import { useTransactionsGet, useTransactionDelete, useTransactionEdit } from '../../queries/transaction';
 import { DateTime } from 'luxon';
 //STYLES
-import { BsTrash } from "react-icons/bs";
+import { BsTrash, BsPencilSquare, BsPlusSquare } from "react-icons/bs";
 //UTILS
 import { queryClient } from "../../constants/config";
 
-
-//CATEGORY ICON PREJME KATEGORIJO TAKO DA GELEDE NA KATEGORIJO PODAMO IKONO KATEGORIJE IN USTREZNO BARVO
-// const CategoryIcon = ({ category }) => {
-//     const [style, setStyle] = useState({});
-//     const categoryStyle = () => {
-//         switch (category) {
-//             default: {
-//                 return {
-//                     background: '#ffbece',
-//                     icon: <HiOutlineFire />,
-//                     color: "#ff6275",
-//                 };
-//             }
-//             case "Products":
-//             case 1: {
-//                 return {
-//                     background: '#fdeacc',
-//                     icon: <FiBox />,
-//                     color: "#f8aa35",
-//                 };
-//             }
-
-//             case "Entertainment":
-//             case 2:
-//                 return {
-//                     background: '#e4f1d5',
-//                     icon: <IoGameControllerOutline />,
-//                     color: "#92c44c",
-//                 };
-
-//             case "Bills":
-//             case 3: {
-//                 return {
-//                     background: '#b7dffd',
-//                     icon: <BsHouseDoor />,
-//                     color: "#5a92d6",
-//                 };
-//             }
-//         }
-//     };
-
-
-
-//     useEffect(() => {
-//         setStyle(categoryStyle());
-//     }, [category]);
-
-//     return (<div className={styles.iconContainer}
-//         style={{ background: style.background, color: style.color }}
-//     >
-//         {style.icon}
-//     </div>
-//     );
-// };
-
-// CategoryIcon.defaultProps = {
-//     category: 'Products',
-// }
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
 const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload, viewer }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
-    const [currentCat, setCurrentCat] = useState()
+    const [currentCat, setCurrentCat] = useState();
+    const [newName, setNewName] = useState();
+    const [newDescription, setNewDescription] = useState();
+    const [newMoney, setNewMoney] = useState();
+    const [showEdit, setShowEdit] = useState(false);
     const [firstDate, setFirstDate] = useState(
         DateTime.now()
             .minus({
@@ -88,10 +34,26 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
         DateTime.now()
             .toISODate()
     );
-
-    // setterChange('neki')
+    const { mutate: editTr } = useTransactionEdit();
 
     const { data: categories, refetch: fetchCategories } = useCategoriesGet();
+
+    const handleClick = () => {
+
+
+        setShowEdit(!showEdit);
+
+        // console.log(addMoney)
+        // editWall(body, {
+        //   onSuccess: async () => {
+        //     await queryClient
+        //       .invalidateQueries("Trs")
+        //       .then(await reloadSetter(!reload))
+        //       .catch();
+        //   },
+        // });
+        // reloadSetter(!reload)
+    }
 
     categories && categories.data.map((cat) => {
         //   console.log('ctg',category)
@@ -111,8 +73,6 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
         lastDate: lastDate,
         key: "Trs",
     });
-
-
 
 
     return (
@@ -145,29 +105,70 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
                     </div>
                 </div>
                 {!viewer &&
-                    <div
-                        className={styles.iconContainerDelete}
-                        style={
-                            transactionsLoading
-                                ? {
-                                    pointerEvents: "none",
-                                    background: "#333",
-                                }
-                                : {}
-                        }
-                        onClick={() => {
-                            deleteTr(transactionId, {
-                                onSuccess: async () => {
-                                    await queryClient
-                                        .invalidateQueries("Trs")
-                                        .then(await reloadSetter(!reload))
-                                        .catch();
-                                },
-                            });
-                        }}
-                    ><BsTrash /></div>
+                    <>
+                        <div
+                            className={styles.iconContainerEdit}
+                            style={
+                                transactionsLoading
+                                    ? {
+                                        pointerEvents: "none",
+                                        background: "#333",
+                                    }
+                                    : {}
+                            }
+                            onClick={handleClick}
+                        ><BsPencilSquare /></div>
+                        <div
+                            className={styles.iconContainerDelete}
+                            style={
+                                transactionsLoading
+                                    ? {
+                                        pointerEvents: "none",
+                                        background: "#333",
+                                    }
+                                    : {}
+                            }
+                            onClick={() => {
+                                deleteTr(transactionId, {
+                                    onSuccess: async () => {
+                                        await queryClient
+                                            .invalidateQueries("Trs")
+                                            .then(await reloadSetter(!reload))
+                                            .catch();
+                                    },
+                                });
+                            }}
+                        ><BsTrash /></div>
+                    </>
                 }
             </div>
+            {
+                showEdit &&
+                <div
+                    className={styles.iconContainerAdd}>
+                    <input
+                        type="number"
+                        placeholder='Add Funds'
+                        onChange={(e) => setNewMoney(e.target.value)}
+                        value={newName}
+                    />
+                    <BsPlusSquare onClick={handleClick} />
+                    <input
+                        type="number"
+                        placeholder='Add Funds'
+                        onChange={(e) => setNewMoney(e.target.value)}
+                        value={newName}
+                    />
+                    <BsPlusSquare onClick={handleClick} />
+                    <input
+                        type="number"
+                        placeholder='Add Funds'
+                        onChange={(e) => setNewMoney(e.target.value)}
+                        value={newName}
+                    />
+                    <BsPlusSquare onClick={handleClick} />
+                </div>
+            }
         </div>
     );
 };

@@ -12,6 +12,11 @@ const getTrs = async (params) => {
   );
 };
 
+const editTrs = async (params) => {
+  console.log(params)
+  return await Ax.put(`transaction/edit/${params.transaction}`, params)
+}
+
 const getViewerTrs = async (params) => {
   return await Ax.get('viewerTransactions', { params: params }).catch((e) =>
     console.log(e)
@@ -34,6 +39,8 @@ const postTr = async (params) => {
   return await Ax.post("transaction", params);
 };
 const useTransactionDelete = () => useMutation("deleteTr", deleteTr);
+
+const useTransactionEdit = () => useMutation("editTransaction", editTrs);
 
 const useTransactionsGetCount = ({
   category,
@@ -91,4 +98,4 @@ const useViewerTransactionsGet = ({ key, walletId }) => useQuery(key, () => getV
 
 
 const useTransactionPost = () => useMutation("postTransaction", postTr);
-export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount, useViewerTransactionsGet };
+export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount, useViewerTransactionsGet, useTransactionEdit };
