@@ -27,7 +27,6 @@ const Transactions = () => {
 
   const {walletCon, setWalletCon} = useContext(WalletContext);
 
-  console.log('WALALLA', walletCon)
 
   //SEARCH FILTERS
   const [timeSpan, setTimeSpan] = useState(

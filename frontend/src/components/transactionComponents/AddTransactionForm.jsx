@@ -2,14 +2,15 @@ import styles from '../../styles/transactionComponents/AddTransactionForm.module
 
 import { Title } from '../Titles/Titles';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useCategoriesGet } from '../../queries/category'
 import { useTransactionPost } from '../../queries/transaction';
 import { DateTime } from 'luxon';
 import { queryClient } from '../../constants/config';
 import { useWalletsGet } from '../../queries/wallet';
+import { WalletContext } from '../../context/WalletProvider';
 
-const AddTransactionForm = ({reloadSetter, reload}) => {
+const AddTransactionForm = ({ reloadSetter, reload }) => {
     //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
     const [title, setTitle] = useState('');
     const [money, setMoney] = useState('');
@@ -18,6 +19,9 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
     const [category, setCategory] = useState(10);
     const [wallet, setWallet] = useState();
 
+    const { walletCon, setWalletCon } = useContext(WalletContext);
+
+
     //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
 
     const { data: ctgs, refetch: fetchCategories } = useCategoriesGet();
@@ -25,10 +29,25 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
         fetchCategories()
         if (ctgs) setCategory(ctgs.data[0].id);
         else setCategory(1);
-        if(wallets) setWallet(wallets.data[0].id)
+        if (wallets) setWallet(wallets.data[0].id)
     }, []);
 
     const { data: wallets } = useWalletsGet();
+    // console.log(wallets)
+    // console.log(wallet)
+    useEffect(() => {
+
+        // wallets && wallets.data.map((wallet) => {
+        //     console.log(wallet)
+        //     console.log(walletCon)
+        //     if (wallet.id === walletCon){
+        //         console.log('WALLJET', wallet)
+        //     }
+        // })
+        setWallet(walletCon)
+
+    }, [walletCon, wallets])
+
 
     //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
     const {
@@ -95,7 +114,7 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
 
                 {/* WALLET */}
                 {wallets ? (
-                    <select onChange={(e) => setWallet(e.target.value)}>
+                    <select onChange={(e) => setWallet()}>
                         {wallets.data.map((wal) => {
                             return (
                                 <option key={wal.id} value={wal.id}>
@@ -113,8 +132,8 @@ const AddTransactionForm = ({reloadSetter, reload}) => {
                         postTransaction(body, {
                             onSuccess: async () => {
                                 await queryClient.invalidateQueries('Categories_Sum')
-                                .then(await reloadSetter(!reload))
-                                .catch;
+                                    .then(await reloadSetter(!reload))
+                                    .catch;
                             },
                         });
                     }}
