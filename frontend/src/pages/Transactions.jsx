@@ -88,7 +88,8 @@ const Transactions = () => {
     <div className={styles.flexContainer}>
 
       <div className={styles.mainContent}>
-        <Title>Transactions</Title>
+        <Title onClick={fetchTransactions}>Transactions</Title>
+        <Title onClick={fetchTransactions}>FETCCCH</Title>
         {/* FILTERS */}
         <div className={styles.filters}>
           <div className={styles.filterContainer}>

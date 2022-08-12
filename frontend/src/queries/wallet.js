@@ -37,10 +37,7 @@ const useWalletDelete = () => useMutation("deleteWall", deleteWall);
 
 const useWalletEdit = () => useMutation("editWallet", editWall);
 
-const useWalletsGet = () =>
-    useQuery("Wallets", getWall, {
-        staleTime: 50000,
-    });
+const useWalletsGet = () => useQuery("Wallets", getWall);
 
 // const useWalletGet = ({ key }) => useQuery(key,
 //     () => getWall({

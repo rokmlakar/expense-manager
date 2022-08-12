@@ -6,6 +6,7 @@ import MainContainer from './components/Containers/MainContainer';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import { AuthProvider } from './context/AuthProvider';
 import { WalletContext } from './context/WalletProvider';
+import { EditTrsContext } from './context/EditTransactionProvider';
 
 import Auth from './pages/Auth';
 import Home from './pages/Home';
@@ -24,6 +25,7 @@ import { useState } from 'react';
 
 function App() {
   const [walletCon, setWalletCon] = useState(0);
+  const [trsCon, setTrsCon] = useState(0);
 
   return (
     <div className="App">
@@ -35,44 +37,46 @@ function App() {
               <MobileNavbar />
             </div>
             <WalletContext.Provider value={{ walletCon, setWalletCon }}>
-              <Routes>
-                {/* AUTH PAGE */}
-                <Route path='/auth' element={<Auth />}></Route>
-                {/* PROTECTED ROUTES */}
-                <Route element={<ProtectedRoutes />}>
+              <EditTrsContext.Provider value={{ trsCon, setTrsCon }}>
+                <Routes>
+                  {/* AUTH PAGE */}
+                  <Route path='/auth' element={<Auth />}></Route>
+                  {/* PROTECTED ROUTES */}
+                  <Route element={<ProtectedRoutes />}>
 
 
-                  {/* HOME */}
+                    {/* HOME */}
 
-                  <Route path='/' element={<Home />} />
+                    <Route path='/' element={<Home />} />
 
-                  {/* SETTINGS */}
-                  <Route path='/settings' element={<Settings />} />
+                    {/* SETTINGS */}
+                    <Route path='/settings' element={<Settings />} />
 
-                  {/* PROFILE */}
-                  <Route path='/profile' element={<Profile />} />
+                    {/* PROFILE */}
+                    <Route path='/profile' element={<Profile />} />
 
-                  {/* TRANSACTIONS */}
-                  <Route path='/transactions' element={<Transactions />} />
+                    {/* TRANSACTIONS */}
+                    <Route path='/transactions' element={<Transactions />} />
 
-                  {/* CATEGORIES */}
-                  <Route path='/categories' element={<Categories />} />
+                    {/* CATEGORIES */}
+                    <Route path='/categories' element={<Categories />} />
 
-                  {/* WALLET */}
-                  <Route path='/wallet' element={<Wallet />} />
+                    {/* WALLET */}
+                    <Route path='/wallet' element={<Wallet />} />
 
-                  {/* 404 */}
-                  <Route
-                    path='/*'
-                    element={
-                      <MainContainer>
-                        <span style={{ fontSize: '1.2rem' }}>
-                          404 Page Not Found
-                        </span>
-                      </MainContainer>
-                    } />
-                </Route>
-              </Routes>
+                    {/* 404 */}
+                    <Route
+                      path='/*'
+                      element={
+                        <MainContainer>
+                          <span style={{ fontSize: '1.2rem' }}>
+                            404 Page Not Found
+                          </span>
+                        </MainContainer>
+                      } />
+                  </Route>
+                </Routes>
+              </EditTrsContext.Provider>
             </WalletContext.Provider>
           </PageContainer>
         </AuthProvider>

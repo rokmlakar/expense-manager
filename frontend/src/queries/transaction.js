@@ -12,9 +12,20 @@ const getTrs = async (params) => {
   );
 };
 
+const getWallViewer = async (params) => {
+  return await Ax.get('/walletViewers', params)
+}
+
+
 const editTrs = async (params) => {
   console.log(params)
   return await Ax.put(`transaction/edit/${params.transaction}`, params)
+}
+
+const getTrEdit = async (params) => {
+  console.log(params)
+  return await Ax.get('trEdit', params )
+  
 }
 
 const getViewerTrs = async (params) => {
@@ -59,6 +70,16 @@ const useTransactionsGetCount = ({
     }
   );
 
+const useEditTrGet = ({
+  transactionId,
+  key,
+}) =>
+  useQuery(key, () => getTrEdit({
+    transactionId,
+  }));
+
+
+
 const useTransactionsGet = ({
   firstDate,
   lastDate,
@@ -66,6 +87,7 @@ const useTransactionsGet = ({
   dateSort,
   priceSort,
   walletId,
+  transactionId,
   skip,
   take,
   key,
@@ -80,6 +102,7 @@ const useTransactionsGet = ({
         dateSort,
         priceSort,
         walletId,
+        transactionId,
         skip,
         take,
       }),
@@ -98,4 +121,4 @@ const useViewerTransactionsGet = ({ key, walletId }) => useQuery(key, () => getV
 
 
 const useTransactionPost = () => useMutation("postTransaction", postTr);
-export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount, useViewerTransactionsGet, useTransactionEdit };
+export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount, useViewerTransactionsGet, useTransactionEdit, useEditTrGet };

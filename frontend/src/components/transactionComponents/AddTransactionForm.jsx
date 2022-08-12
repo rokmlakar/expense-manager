@@ -4,11 +4,12 @@ import { Title } from '../Titles/Titles';
 
 import { useEffect, useState, useContext } from 'react';
 import { useCategoriesGet } from '../../queries/category'
-import { useTransactionPost } from '../../queries/transaction';
+import { useTransactionPost, useTransactionsGet, useEditTrGet } from '../../queries/transaction';
 import { DateTime } from 'luxon';
 import { queryClient } from '../../constants/config';
 import { useWalletsGet } from '../../queries/wallet';
 import { WalletContext } from '../../context/WalletProvider';
+import { EditTrsContext } from '../../context/EditTransactionProvider';
 
 const AddTransactionForm = ({ reloadSetter, reload }) => {
     //VREDNOSTI ZA NOVO DODANO TRANSAKCIJO
@@ -18,8 +19,14 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
     const [info, setInfo] = useState('');
     const [category, setCategory] = useState(10);
     const [wallet, setWallet] = useState();
+    const [editMode, setEditMode] = useState(false);
+    const [editTitle, setEditTitle] = useState();
+    const [editMoney, setEditMoney] = useState();
+    const [editInfo, setEditInfo] = useState();
+
 
     const { walletCon, setWalletCon } = useContext(WalletContext);
+    const { trsCon, setTrsCon } = useContext(EditTrsContext);
 
 
     //DOBIMO VSE KATEGORIJE KI SO NA VOLJO DA LAHKO TRANSAKCIJI PODAMO KATEGORIJO
@@ -32,21 +39,43 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
         if (wallets) setWallet(wallets.data[0].id)
     }, []);
 
+    const { data: transaction, refetch: fetchTransaction } =
+        useEditTrGet({
+            transactionId: trsCon
+        });
+
+    const { data: transactions, refetch: fetchTransactions } =
+        useTransactionsGet({ take: 10, key: 'CategoriesTrs', });
+
+
     const { data: wallets } = useWalletsGet();
     // console.log(wallets)
     // console.log(wallet)
     useEffect(() => {
 
-        // wallets && wallets.data.map((wallet) => {
-        //     console.log(wallet)
-        //     console.log(walletCon)
-        //     if (wallet.id === walletCon){
-        //         console.log('WALLJET', wallet)
-        //     }
-        // })
         setWallet(walletCon)
 
     }, [walletCon, wallets])
+
+
+    //EDIT TRANSS
+    useEffect(() => {
+        console.log('efff', trsCon)
+        fetchTransactions()
+        setEditMode(true);
+    }, [trsCon])
+
+    useEffect(() => {
+        transactions && transactions.data.map((tr) => {
+            console.log(tr)
+            if (tr.id === trsCon) {
+                // setEditedTr(tr);
+                setEditTitle(tr.title)
+                setEditMoney(tr.money)
+                setEditInfo(tr.info)
+            }
+        })
+    }, [transactions])
 
 
     //POST TRANSACTION, KLIČE SE USETRANSACTIONPOST FUNKCIJA
@@ -67,34 +96,73 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
         transactionCategoryId: parseInt(category),
         walletId: parseInt(wallet)
     };
+
+    const handleTransaction = () => {
+        console.log('clik')
+        fetchTransaction()
+        console.log(transaction)
+
+    }
+
+    const handleTitle = () => {
+        console.log('ss')
+        setEditTitle();
+    }
+    const handleMoney = () => {
+        setEditMoney();
+    }
+    const handleInfo = () => {
+        setEditInfo();
+    }
+
+    const cancelEdit = () => {
+        setEditTitle();
+        setEditMoney();
+        setEditInfo();
+        setEditMode(false);
+        setTrsCon();
+    }
+
+    console.log(editMode)
+    console.log(trsCon)
+    // useEffect(() => {
+    //     window.scrollTo(0, 0)
+    //   }, [])
+
     return (
 
-        <div className={styles.container}>
-            <Title>Add a Transaction</Title>
+        <div className={ !trsCon ? styles.container : styles.editContainer}  onClick={() => fetchTransaction}>
+            <Title onClick={() => fetchTransactions()}>{editMode ? 'Edit Transaction' :  'Add a Transaction'}</Title>
             <div className={styles.inner}>
                 <input
                     type="text"
                     placeholder='title'
                     onChange={(e) => setTitle(e.target.value)}
-                    value={title}
+                    onFocus={handleTitle}
+                    value={editTitle ? editTitle : title}
                 />
                 <input
                     type="number"
                     placeholder='money'
                     onChange={(e) => setMoney(e.target.value)}
-                    value={money}
+                    onFocus={handleMoney}
+                    value={editMoney ? editMoney : money}
                 />
                 <input
                     type="date"
                     placeholder='date'
                     onChange={(e) => setDate(e.target.value)}
-                    value={date}
+                    onFocus={handleInfo}
+                    value={
+                        // editedTr ? editedTr.date : 
+                        date}
                 />
                 <input
                     type="text"
                     placeholder='info'
                     onChange={(e) => setInfo(e.target.value)}
-                    value={info}
+                    onFocus={handleInfo}
+                    value={editInfo ? editInfo : info}
                 />
 
                 {/* CATEGORIES */}
@@ -126,20 +194,44 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                 ) : (
                     <div>loading...</div>
                 )}
-                {/* POST TRANSACTION */}
-                <button
-                    onClick={() => {
-                        postTransaction(body, {
-                            onSuccess: async () => {
-                                await queryClient.invalidateQueries('Categories_Sum')
-                                    .then(await reloadSetter(!reload))
-                                    .catch;
-                            },
-                        });
-                    }}
-                >
-                    {isLoading ? 'Loading...' : 'Add Transaction'}
-                </button>
+
+                {/* POST/EDIT TRANSACTION */}
+                {!editMode ?
+                    <button
+                        onClick={() => {
+                            postTransaction(body, {
+                                onSuccess: async () => {
+                                    await queryClient.invalidateQueries('Categories_Sum')
+                                        .then(await reloadSetter(!reload))
+                                        .catch;
+                                },
+                            });
+                        }}
+                    >
+                        {isLoading ? 'Loading...' : 'Add Transaction'}
+                    </button>
+                    :
+                    <div className={styles.editBtns}>
+                        < button style={{ background: '#e3e3e3' }}
+                            onClick={() => {
+                                postTransaction(body, {
+                                    onSuccess: async () => {
+                                        await queryClient.invalidateQueries('Categories_Sum')
+                                            .then(await reloadSetter(!reload))
+                                            .catch;
+                                    },
+                                });
+                            }}
+                        >
+                            {isLoading ? 'Loading...' : 'Edit Transaction'}
+                        </button>
+                        < button style={{ background: '#e3e3e3' }}
+                            onClick={cancelEdit}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                }
 
                 {/* ERROR */}
                 <div style={{ marginBottom: '1rem' }}>

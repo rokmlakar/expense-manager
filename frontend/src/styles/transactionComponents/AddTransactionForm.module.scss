@@ -28,7 +28,7 @@
 //     }
 // }
 
-.container{
+.container, .editContainer{
     padding: 2rem;
     // padding-left: 4rem;
     .inner{
@@ -58,5 +58,15 @@
                 color: whitesmoke;
             }
         }
+        .editBtns{
+            display: flex;
+            justify-content: space-between;
+            width: 78%;
+        }
     }
+}
+
+.editContainer{
+    background: #49c5b7;
+    border-radius: 15px;
 }

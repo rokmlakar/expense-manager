@@ -61,65 +61,40 @@ const viewer_transactions = async (req, res) => {
             res.status(400).send('error');
         }
 
+    }
+}
 
+const transaction_edit_get = async (req, res) => {
+    console.log('ssss', req)
+    if (req.session.userId) {
+        console.log(req.query)
+        let trId = req.transactionId
+        if (req.transactionId) {
+            try {
 
-
-
-        // try {
-        //     const walletView = await prisma.walletViewer.
-        //         findMany({
-        //             where: {
-        //                 userId: user
-        //             }
-        //         })
-        //         .catch(() => console.log('err'));
-
-        //     if (walletView) {
-        //         // console.log('wallV', walletView)
-
-        //         for (let i in walletView) {
-        //             const wallViewId = walletView[i].walletId
-        //             const usrViewId = walletView[i].userId
-
-
-        //             const viewedTrns = await prisma.transaction
-        //                 .findMany({
-        //                     where: {
-        //                         walletId: wallViewId
-        //                     }
-        //                 })
-
-
-        //             trnsArray.push(viewedTrns)
-
-        //             // const usrName = await prisma.user.
-        //             //     findUnique({
-        //             //         where: {
-        //             //             id: wallet[0].userId
-        //             //         },
-        //             //         select: {
-        //             //             userName: true,
-        //             //         }
-        //             //     })
-        //             // wallet[0].username = usrName.userName
-        //             // wallArray.push(wallet)
-        //         }
-        //         // console.log('WALARY', trnsArray)
-        //     }
-        // }
-
+                const editTr = await prisma.transaction.findUnique({
+                    where: {
+                        trId: id,
+                    }
+                })
+                res.status(200).send(editTr)
+            }
+            catch{
+                res.status(400).send('error');
+                console.log('err')
+            }
+        }
     }
 }
 
 const transactions_get = async (req, res) => {
     if (req.session.userId) {
-        // console.log(req.query)
-        // console.log('sdadsadad')
         //ZAPIŠE SI PODANE PARAMETRE TO SO LAHKO KATERIKOLI OD NAVEDENIH SPODAJ (1 ali več)
         let { firstDate, lastDate, category, dateSort, priceSort, skip, take, walletId } =
             req.query;
 
         // console.log(walletId)
+
 
         if (walletId) {
             // console.log('waaaaa')
@@ -238,4 +213,5 @@ module.exports = {
     transaction_delete,
     transaction_count_category,
     viewer_transactions,
+    transaction_edit_get
 };

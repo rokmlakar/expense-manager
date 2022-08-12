@@ -4,15 +4,16 @@ import { IoGameControllerOutline } from 'react-icons/io5';
 import { BsHouseDoor } from 'react-icons/bs';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { HiOutlineFire } from 'react-icons/hi';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useCategoriesGet } from '../../queries/category';
-import { useTransactionsGet, useTransactionDelete, useTransactionEdit } from '../../queries/transaction';
+import { useTransactionsGet, useTransactionDelete, useTransactionEdit, useEditTrGet } from '../../queries/transaction';
 import { DateTime } from 'luxon';
 //STYLES
 import { BsTrash, BsPencilSquare, BsPlusSquare } from "react-icons/bs";
 //UTILS
 import { queryClient } from "../../constants/config";
-
+import { WalletContext } from '../../context/WalletProvider';
+import { EditTrsContext } from '../../context/EditTransactionProvider';
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
 const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload, viewer }) => {
@@ -23,6 +24,7 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
     const [newDescription, setNewDescription] = useState();
     const [newMoney, setNewMoney] = useState();
     const [showEdit, setShowEdit] = useState(false);
+    const [edited, setEdited] = useState(false);
     const [firstDate, setFirstDate] = useState(
         DateTime.now()
             .minus({
@@ -34,25 +36,20 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
         DateTime.now()
             .toISODate()
     );
+
+    const { trsCon, setTrsCon } = useContext(EditTrsContext);
+
     const { mutate: editTr } = useTransactionEdit();
 
     const { data: categories, refetch: fetchCategories } = useCategoriesGet();
 
     const handleClick = () => {
-
-
-        setShowEdit(!showEdit);
-
-        // console.log(addMoney)
-        // editWall(body, {
-        //   onSuccess: async () => {
-        //     await queryClient
-        //       .invalidateQueries("Trs")
-        //       .then(await reloadSetter(!reload))
-        //       .catch();
-        //   },
-        // });
-        // reloadSetter(!reload)
+        fetchTransaction()
+        setTrsCon(transactionId)
+        setEdited(true);
+        window.scrollTo({
+            top:0,
+            behavior:'smooth'})
     }
 
     categories && categories.data.map((cat) => {
@@ -62,6 +59,12 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
         }
         //  console.log('KAT' , currentCat)
     })
+
+    const { data: transaction, refetch: fetchTransaction } =
+    useEditTrGet({
+        transactionId: trsCon,
+        take: 10,
+    });
 
     const { mutate: deleteTr } = useTransactionDelete();
     const {
@@ -74,9 +77,15 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
         key: "Trs",
     });
 
+    const { data: FilteredTransactions, refetch: fetchTransactionss } =
+    useTransactionsGet({
+      take: 10,
+      key: 'CategoriesTrs',
+    });
+
 
     return (
-        <div className={styles.container}>
+        <div className={trsCon === transactionId ? styles.containerEdit : styles.container}>
             <div className={styles.inner}>
                 {/* INFO */}
                 <div className={styles.info}>

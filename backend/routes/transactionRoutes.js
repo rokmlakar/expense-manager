@@ -13,4 +13,6 @@ router.get("/transactionsCount", transactionController.transaction_count_categor
 
 router.get("/viewerTransactions", transactionController.viewer_transactions);
 
+router.get("/trEdit", transactionController.transaction_edit_get);
+
 module.exports = router;

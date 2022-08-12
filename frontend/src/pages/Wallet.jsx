@@ -5,10 +5,11 @@ import WalletViewerCard from '../components/Cards/WalletViewerCard';
 import AddWalletForm from '../components/walletComponents/AddWalletForm';
 
 import { DateTime } from 'luxon';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useCategoriesGet } from '../queries/category';
-import { useTransactionsGet } from '../queries/transaction';
+import { useTransactionsGet, useEditTrGet } from '../queries/transaction';
 import { useWalletsGet, useWalletViewerGet } from '../queries/wallet';
+import { EditTrsContext } from '../context/EditTransactionProvider';
 
 
 const Wallet = () => {
@@ -26,7 +27,13 @@ const Wallet = () => {
   const [skip, setSkip] = useState(0);
   const [reload, setReload] = useState(false);
   const [showSharedWallets, setShowSharedWallets] = useState(false);
+  const { trsCon, setTrsCon } = useContext(EditTrsContext);
 
+  const { data: transaction, refetch: fetchTran } =
+  useEditTrGet({
+      transactionId: trsCon,
+      key: 'TrsEdit',
+  });
 
   const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
 
