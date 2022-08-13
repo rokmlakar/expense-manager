@@ -16,7 +16,7 @@ import { WalletContext } from '../../context/WalletProvider';
 import { EditTrsContext } from '../../context/EditTransactionProvider';
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload, viewer }) => {
+const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload, viewer, homepage }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [currentCat, setCurrentCat] = useState();
@@ -45,7 +45,9 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
 
     const handleClick = () => {
         fetchTransaction()
-        setTrsCon(transactionId)
+        console.log(trsCon)
+        trsCon === 0  ? setTrsCon(transactionId) : setTrsCon(0);
+        
         setEdited(true);
         window.scrollTo({
             top:0,
@@ -113,7 +115,7 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
                         {/* {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />} */}
                     </div>
                 </div>
-                {!viewer &&
+                {!viewer && !homepage &&
                     <>
                         <div
                             className={styles.iconContainerEdit}

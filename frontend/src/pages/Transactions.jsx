@@ -4,12 +4,14 @@ import MainContainer from '../components/Containers/MainContainer';
 import AddTransactionForm from '../components/transactionComponents/AddTransactionForm';
 import DeleteTransactionForm from '../components/transactionComponents/DeleteTransactionForm';
 import TransactionCard from '../components/Cards/TransactionCard';
+import CategorySumCard from '../components/Cards/CategorySumCard';
 import { useState, useEffect } from 'react';
 
-import { DateTime } from 'luxon';
-import { useCategoriesGet } from '../queries/category';
-import { useTransactionsGet } from '../queries/transaction';
 
+import { DateTime } from 'luxon';
+import { useCategoriesGet, useCategoriesSum } from '../queries/category';
+import { useTransactionsGet } from '../queries/transaction';
+import { useWalletsGet } from '../queries/wallet';
 
 
 //STYLES
@@ -25,11 +27,23 @@ import { EditTrsContext } from '../context/EditTransactionProvider';
 
 
 const Transactions = () => {
-  
-  const {walletCon, setWalletCon} = useContext(WalletContext);
-  const { trsCon, setTrsCon } = useContext(EditTrsContext);
 
-  console.log(walletCon)
+  const { walletCon, setWalletCon } = useContext(WalletContext);
+  const { trsCon, setTrsCon } = useContext(EditTrsContext);
+  const [wallet, setWallet] = useState();
+
+
+  const { data: wallets, refetch: fetchWallets } = useWalletsGet();
+
+
+  useEffect(() => {
+    wallets.data?.forEach(element => {
+      if (element.id === walletCon) {
+        setWallet(element.name)
+      }
+    });
+
+  }, [wallets])
 
   //SEARCH FILTERS
   const [timeSpan, setTimeSpan] = useState(
@@ -45,10 +59,27 @@ const Transactions = () => {
   const { data: ctgs, isFetched: isCtgsFetched } = useCategoriesGet();
   const [skip, setSkip] = useState(0);
   const [reload, setReload] = useState(false)
+  const [transactions, setTransactions] = useState();
   // useEffect(() => {
   //    if (ctgs) setCategories(ctgs.data[0].id);
   // }, [ctgs])
 
+  useEffect(() => {
+    setTransactions(FilteredTransactions);
+    // console.log('ssssdadsasad', transactions);
+  }, [])
+  
+  // useEffect(() => {
+  //   let arr = [];
+  //   transactions?.map((tr) => {
+  //     if(tr.walletId === walletCon){
+  //       arr.push(tr);
+  //     }
+
+  //   })
+  //   console.log('arr', arr)
+  // })
+  // console.log('FILL', transactions)
   const { data: FilteredTransactions, refetch: fetchTransactions } =
     useTransactionsGet({
       firstDate: timeSpan,
@@ -56,16 +87,33 @@ const Transactions = () => {
       [sortingField]: order,
       skip: skip,
       key: 'CategoriesTrs',
+      walletId: walletCon
     });
 
-    console.log(FilteredTransactions)
+if(FilteredTransactions){
+  console.log(FilteredTransactions)
+  let arr = [];
+  FilteredTransactions.data.map((tr) => {
+    if(tr.walletId === walletCon){
+      arr.push(tr);
+    }
+  })
+  console.log('arr',arr);
+  console.log(walletCon)
+}
 
-    console.log('Tr',trsCon)
+
+  const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
+
   useEffect(() => {
-    fetchTransactions()
-    
-  }, [reload, trsCon])
-  
+    // fetchTransactions()
+    fetchCategoriesSum()
+    fetchWallets()
+    // setTransactions(FilteredTransactions.data);
+    console.log(FilteredTransactions)
+  }, [reload, trsCon, walletCon])
+
+
   const [firstDate, setFirstDate] = useState(
     DateTime.now()
       .minus({
@@ -78,23 +126,36 @@ const Transactions = () => {
       .toISODate()
   );
   const { mutate: deleteTr } = useTransactionDelete();
-  const {
-    data,
-    refetch: fetchTransactionsDel,
-    isLoading: transactionsLoading,
-  } = useTransactionsGet({
-    firstDate: firstDate,
-    lastDate: lastDate,
-    key: "Trs",
-  });
-
+  // const {
+  //   data,
+  //   refetch: fetchTransactionsDel,
+  //   isLoading: transactionsLoading,
+  // } = useTransactionsGet({
+  //   firstDate: firstDate,
+  //   lastDate: lastDate,
+  //   key: "Trs",
+  // });
+  // console.log(CategoriesSum)
   return (
 
     <div className={styles.flexContainer}>
 
       <div className={styles.mainContent}>
+
+        <Title onClick={fetchTransactions}>{wallet}</Title>
+        <Title onClick={fetchTransactions}>Categories last 30 days</Title>
+        {CategoriesSum && ctgs && CategoriesSum.data.map((category, index) => {
+          return (
+            <CategorySumCard
+              key={index}
+              category={category.transactionCategoryId}
+              money={category._sum.money.toFixed(2)}
+              ctgs={ctgs.data}
+              color={ctgs.color}
+            />
+          );
+        })}
         <Title onClick={fetchTransactions}>Transactions</Title>
-        <Title onClick={fetchTransactions}>FETCCCH</Title>
         {/* FILTERS */}
         <div className={styles.filters}>
           <div className={styles.filterContainer}>

@@ -94,29 +94,30 @@ const transaction_edit_get = async (req, res) => {
 }
 
 const transactions_get = async (req, res) => {
+    console.log(req.query)
     if (req.session.userId) {
         //ZAPIŠE SI PODANE PARAMETRE TO SO LAHKO KATERIKOLI OD NAVEDENIH SPODAJ (1 ali več)
         let { firstDate, lastDate, category, dateSort, priceSort, skip, take, walletId } =
             req.query;
 
-        // console.log(walletId)
+        console.log(walletId)
 
 
-        if (walletId) {
+        // if (walletId) {
             // console.log('waaaaa')
-            try {
+            // try {
 
-                const viewedTransactions = await prisma.transaction.findUnique({
-                    where: {
-                        walletId: walletId
-                    }
-                })
-                console.log(viewedTransactions)
-            } catch {
-                res.status(400).send('error');
-            }
-        }
-        else {
+            //     const viewedTransactions = await prisma.transaction.findUnique({
+            //         where: {
+            //             walletId: walletId
+            //         }
+            //     })
+            //     console.log(viewedTransactions)
+            // } catch {
+            //     res.status(400).send('error');
+            // }
+        // }
+        // else {
 
 
             //ČE SKIP NI PODAN JE DEFAULT 0
@@ -132,9 +133,7 @@ const transactions_get = async (req, res) => {
             const transactions = await prisma.transaction.findMany({
                 where: {
                     //WALLET USERID MORA USTREZATI USERIDJU SESSIONA
-                    wallet: {
-                        userId: req.session.userId,
-                    },
+                    walletId: parseInt(walletId),
                     //DATUM MORA USTREZATI MED DANAŠNJIM IN 30 DNI NAZAJ (NPR ZA BRISANJE TRANSAKCIJ DEFINIRAMO DATUMA MED KATERIM IŠČEMO TRANSAKCIJE)
                     date: {
                         gte: firstDate != undefined
@@ -164,6 +163,7 @@ const transactions_get = async (req, res) => {
                     date: true,
                     info: true,
                     id: true,
+                    walletId: true,
                     category: {
                         select: {
                             name: true,
@@ -175,7 +175,7 @@ const transactions_get = async (req, res) => {
                     res.status(400).send('error');
                 });
             res.json(transactions);
-        }
+        // }
     } else res.status(401).send('please login');
 };
 

@@ -69,11 +69,13 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
         console.log('efff', trsCon)
         fetchTransactions()
         setEditMode(true);
+        setTitle();
+        setMoney();
+        setInfo();
     }, [trsCon])
 
     useEffect(() => {
         transactions && transactions.data.map((tr) => {
-            console.log(tr)
             if (tr.id === trsCon) {
                 // setEditedTr(tr);
                 setEditTitle(tr.title)
@@ -147,6 +149,22 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
             },
         });
         setTrsCon()
+        setEditTitle();
+        setEditMoney();
+        setEditInfo();
+    }
+
+    const handleAdd = () => {
+        postTransaction(body, {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries('Categories_Sum')
+                    .then(await reloadSetter(!reload))
+                    .catch;
+            },
+        });
+        setTitle();
+        setMoney();
+        setInfo();
     }
 
     // useEffect(() => {
@@ -163,14 +181,14 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                     placeholder='title'
                     onChange={(e) => !trsCon ? setTitle(e.target.value) : setEditTitle(e.target.value)}
                     onFocus={handleTitle}
-                    value={editTitle ? editTitle : title}
+                    value={trsCon ? editTitle ? editTitle : '' : title ? title : ''}
                 />
                 <input
                     type="number"
                     placeholder='money'
                     onChange={(e) => !trsCon ? setMoney(e.target.value) : setEditMoney(e.target.value)}
                     onFocus={handleMoney}
-                    value={editMoney ? editMoney : money}
+                    value={trsCon ? editMoney ? editMoney : '' : money ? money : ''}
                 />
                 <input
                     type="date"
@@ -186,7 +204,7 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                     placeholder='info'
                     onChange={(e) => !trsCon ? setInfo(e.target.value) : setEditInfo(e.target.value)}
                     onFocus={handleInfo}
-                    value={editInfo ? editInfo : info}
+                    value={trsCon ? editInfo ? editInfo : '' : info ? info : ''}
                 />
 
                 {/* CATEGORIES */}
@@ -222,15 +240,7 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                 {/* POST/EDIT TRANSACTION */}
                 {!trsCon ?
                     <button
-                        onClick={() => {
-                            postTransaction(body, {
-                                onSuccess: async () => {
-                                    await queryClient.invalidateQueries('Categories_Sum')
-                                        .then(await reloadSetter(!reload))
-                                        .catch;
-                                },
-                            });
-                        }}
+                        onClick={handleAdd}
                     >
                         {isLoading ? 'Loading...' : 'Add Transaction'}
                     </button>
