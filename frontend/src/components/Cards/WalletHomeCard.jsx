@@ -30,7 +30,6 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
   const navigate = useNavigate();
   const {walletCon, setWalletCon} = useContext(WalletContext);
 
-  console.log(wallet)
 
 
   const { mutate: deleteWall } = useWalletDelete();
@@ -112,8 +111,6 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
   const clickHandler = () => {
     setWalletCon(wallet)
   }
-
-  console.log('TRRRRR', transactions)
 
   //VRNEMO IZBRANO KATEGORIJO Z DOLOČENIM STILOM(BARVO) TER PODAMO ŠE IME KATEGORIJE IN PA VSOTO VSEH TRANSAKCIJ KI SPADAJO POD TO KATEGORIJO
   return (

@@ -12,12 +12,13 @@ const getTrs = async (params) => {
   );
 };
 
+
 const getWallViewer = async (params) => {
   return await Ax.get('/walletViewers', params)
 }
 
 
-const editTrs = async (params) => {
+const editTr = async (params) => {
   console.log(params)
   return await Ax.put(`transaction/edit/${params.transaction}`, params)
 }
@@ -51,7 +52,7 @@ const postTr = async (params) => {
 };
 const useTransactionDelete = () => useMutation("deleteTr", deleteTr);
 
-const useTransactionEdit = () => useMutation("editTransaction", editTrs);
+const useTransactionEdit = () => useMutation("editTransaction", editTr);
 
 const useTransactionsGetCount = ({
   category,

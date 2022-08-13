@@ -15,4 +15,6 @@ router.get("/viewerTransactions", transactionController.viewer_transactions);
 
 router.get("/trEdit", transactionController.transaction_edit_get);
 
+router.put("/transaction/edit/:transactionId", transactionController.transaction_edit)
+
 module.exports = router;
