@@ -133,7 +133,7 @@ const transactions_get = async (req, res) => {
             const transactions = await prisma.transaction.findMany({
                 where: {
                     //WALLET USERID MORA USTREZATI USERIDJU SESSIONA
-                    walletId: parseInt(walletId),
+                    walletId: walletId ? parseInt(walletId) : undefined,
                     //DATUM MORA USTREZATI MED DANAŠNJIM IN 30 DNI NAZAJ (NPR ZA BRISANJE TRANSAKCIJ DEFINIRAMO DATUMA MED KATERIM IŠČEMO TRANSAKCIJE)
                     date: {
                         gte: firstDate != undefined
