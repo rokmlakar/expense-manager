@@ -21,12 +21,15 @@ import {
 import { queryClient } from "../constants/config";
 import { useContext } from 'react';
 import { WalletContext } from '../context/WalletProvider';
+import { EditTrsContext } from '../context/EditTransactionProvider';
 
 
 const Transactions = () => {
-
+  
   const {walletCon, setWalletCon} = useContext(WalletContext);
+  const { trsCon, setTrsCon } = useContext(EditTrsContext);
 
+  console.log(walletCon)
 
   //SEARCH FILTERS
   const [timeSpan, setTimeSpan] = useState(
@@ -52,14 +55,16 @@ const Transactions = () => {
       category: categories ? categories : undefined,
       [sortingField]: order,
       skip: skip,
-      take: 10,
       key: 'CategoriesTrs',
     });
 
+    console.log(FilteredTransactions)
+
+    console.log('Tr',trsCon)
   useEffect(() => {
     fetchTransactions()
     
-  }, [reload])
+  }, [reload, trsCon])
   
   const [firstDate, setFirstDate] = useState(
     DateTime.now()

@@ -59,7 +59,7 @@ model Transaction {
   date     DateTime            @default(now())
   info     String?
   category TransactionCategory @relation(references: [id], fields: [transactionCategoryId])
-
+  timestamp   Int?
   transactionCategoryId Int
 
   wallet   Wallet @relation(fields: [walletId], references: [id])
