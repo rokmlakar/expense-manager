@@ -19,7 +19,6 @@ const getWallViewer = async (params) => {
 }
 
 const editWall = async (params) => {
-    console.log(params)
     return await Ax.put(`wallet/edit/${params.wallet}`, params)
 }
 

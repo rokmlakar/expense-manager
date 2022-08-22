@@ -4,6 +4,10 @@ import Ax from '../utils/Axios';
 const fetchUser = async () => {
     return await Ax.get('user');
 }
+
+const fetchUsers = async () => {
+    return await Ax.get('users');
+}
 const loginUser = async (body) => {
     return await Ax.post('auth', body)
 }
@@ -28,6 +32,12 @@ const useUser = () =>
         retry: false,
     });
 
+const useUsers = () =>
+    useQuery('users', fetchUsers, {
+        refetchOnWindowFocus: true,
+        retry: false,
+    });
+
 const useLoginUser = () => useMutation('loginUser', loginUser); //odstranjen prvi param ki je bil 'loginUser,' enako pri ostalih
 const useLogoutUser = () => useMutation('logoutUser', logoutUser);
 const useRegisterUser = () => useMutation(registerUser);
@@ -40,5 +50,6 @@ export {
     useRegisterUser,
     useLogoutUser,
     useUserUpdate,
-    useUserUpdatePassword
+    useUserUpdatePassword,
+    useUsers
 };

@@ -114,7 +114,6 @@ const Auth = () => {
         error: loginErr,
     } = useLoginUser();
 
-    console.log(loginErr, loginError, verificationSent)
 
     const {
         mutateAsync: registerHandler,

@@ -29,7 +29,6 @@ const Transactions = () => {
   const {walletCon, setWalletCon} = useContext(WalletContext);
   const { trsCon, setTrsCon } = useContext(EditTrsContext);
 
-  console.log(walletCon)
 
   //SEARCH FILTERS
   const [timeSpan, setTimeSpan] = useState(
@@ -58,9 +57,6 @@ const Transactions = () => {
       key: 'CategoriesTrs',
     });
 
-    console.log(FilteredTransactions)
-
-    console.log('Tr',trsCon)
   useEffect(() => {
     fetchTransactions()
     
@@ -239,7 +235,6 @@ const Transactions = () => {
         <AddTransactionForm
           reloadSetter={setReload}
           reload={reload} />
-        <DeleteTransactionForm />
       </div>
     </div>
   )

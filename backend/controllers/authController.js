@@ -210,7 +210,8 @@ const auth_user = async (req, res) => {
         const data = {
             email: user.email,
             userId: user.id,
-            username: user.userName
+            username: user.userName,
+            superAdmin: user.superAdmin
         };
         //VRNEMO DATA V JSON OBLIKI
         res.status(200).json(data);

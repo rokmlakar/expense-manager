@@ -4,14 +4,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { useLogoutUser } from '../../queries/user';
+import { SuperUserCon } from '../../context/SuperUserProvider';
 
 import { queryClient, queryclient } from '../../constants/config';
 
 const Navbar = () => {
   const { setAuth, auth } = useContext(AuthContext);
+  const {superUsrCon, setSuperUsrCon} = useContext(SuperUserCon);
   const navigate = useNavigate();
   const { mutate: logoutHandler, isSuccess } = useLogoutUser();
-
   useEffect(() => {
     if (isSuccess) {
       queryClient.removeQueries();
@@ -19,6 +20,8 @@ const Navbar = () => {
       if (!auth) navigate('auth');
     }
   }, [isSuccess]);
+  
+  console.log(superUsrCon)
 
   return (
     <div className={styles.container}>
@@ -47,11 +50,11 @@ const Navbar = () => {
           }
 
           {/* TRANSACTIONS */}
-          {auth &&
+          {/* {auth &&
             <ListItemLink url="transactions">
               <h3>Transactions</h3>
             </ListItemLink>
-          }
+          } */}
 
           {/* WALLET */}
           {auth &&
@@ -76,6 +79,13 @@ const Navbar = () => {
                 <h3>Settings</h3>
               </ListItemLink>
             </div>
+          }
+
+           {/* ADMIN PAGE */}
+           {auth && superUsrCon && 
+            <ListItemLink url="admin">
+              <h3>Admin Page</h3>
+            </ListItemLink>
           }
 
           {/* LOGOUT */}

@@ -120,9 +120,11 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
     const handleTitle = () => {
         console.log('ss')
         setEditTitle();
+        setTitle();
     }
     const handleMoney = () => {
         setEditMoney();
+        setMoney();
     }
     const handleInfo = () => {
         setEditInfo();
@@ -146,7 +148,11 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                     .catch();
             },
         });
-        setTrsCon()
+        setTrsCon();
+        setEditTitle();
+        setEditMoney();
+        setEditInfo();
+        setEditMode(false);
     }
 
     // useEffect(() => {
@@ -163,11 +169,11 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                     placeholder='title'
                     onChange={(e) => !trsCon ? setTitle(e.target.value) : setEditTitle(e.target.value)}
                     onFocus={handleTitle}
-                    value={editTitle ? editTitle : title}
+                    value={trsCon ? editTitle ? editTitle : title : undefined}
                 />
                 <input
                     type="number"
-                    placeholder='money'
+                    placeholder='amount'
                     onChange={(e) => !trsCon ? setMoney(e.target.value) : setEditMoney(e.target.value)}
                     onFocus={handleMoney}
                     value={editMoney ? editMoney : money}
@@ -205,19 +211,6 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                 )}
 
                 {/* WALLET */}
-                {wallets ? (
-                    <select onChange={(e) => setWallet()}>
-                        {wallets.data.map((wal) => {
-                            return (
-                                <option key={wal.id} value={wal.id}>
-                                    {wal.name}
-                                </option>
-                            );
-                        })}
-                    </select>
-                ) : (
-                    <div>loading...</div>
-                )}
 
                 {/* POST/EDIT TRANSACTION */}
                 {!trsCon ?

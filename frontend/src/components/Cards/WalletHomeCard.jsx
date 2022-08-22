@@ -23,7 +23,7 @@ import { useContext } from 'react';
 
 
 //CATEGORYCARDU PODAMO IZBRANO KATEGORIJO IN PA DENAR
-const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, walletId, description, username, transactions }) => {
+const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, walletId, description, username, transactions, admin }) => {
   //NASTAVIMO STIL(VSAKA KATEGORIJA IMA SVOJO BARVO)
   const [style, setStyle] = useState({});
   const [visible, setVisible] = useState(false);

@@ -16,7 +16,7 @@ import { WalletContext } from '../../context/WalletProvider';
 import { EditTrsContext } from '../../context/EditTransactionProvider';
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
-const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload, viewer }) => {
+const TransactionCard = ({ categoryName, date, money, description, title, transactionId, reloadSetter, reload, viewer, home, walletColor }) => {
     //lahko še odpremo transaction card kjer se nam prikaže opis, po defaultu pa ni visible, na visible ga nastavimo z onclick
     const [visible, setVisible] = useState(false);
     const [currentCat, setCurrentCat] = useState();
@@ -48,8 +48,9 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
         setTrsCon(transactionId)
         setEdited(true);
         window.scrollTo({
-            top:0,
-            behavior:'smooth'})
+            top: 0,
+            behavior: 'smooth'
+        })
     }
 
     categories && categories.data.map((cat) => {
@@ -61,10 +62,10 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
     })
 
     const { data: transaction, refetch: fetchTransaction } =
-    useEditTrGet({
-        transactionId: trsCon,
-        take: 10,
-    });
+        useEditTrGet({
+            transactionId: trsCon,
+            take: 10,
+        });
 
     const { mutate: deleteTr } = useTransactionDelete();
     const {
@@ -78,16 +79,19 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
     });
 
     const { data: FilteredTransactions, refetch: fetchTransactionss } =
-    useTransactionsGet({
-      take: 10,
-      key: 'CategoriesTrs',
-    });
+        useTransactionsGet({
+            take: 10,
+            key: 'CategoriesTrs',
+        });
 
 
     return (
-        <div className={trsCon === transactionId ? styles.containerEdit : styles.container}>
-            <div className={styles.inner}>
-                {/* INFO */}
+        <div className={!home ? trsCon === transactionId ? styles.containerEdit : styles.container : styles.container}
+            style={home &&  { background: walletColor} }>
+
+                {/* <div style={{padding: '2rem', background:`${walletColor}`}}></div> */}
+            <div className={styles.inner} style={home && { borderRadius:'20px', padding:'1.5rem'}}>
+                {/* INFO */} 
                 <div className={styles.info}>
                     {/* <CategoryIcon category={category} /> */}
                     <div className={styles.categoryContainer}>
@@ -113,7 +117,7 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
                         {/* {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />} */}
                     </div>
                 </div>
-                {!viewer &&
+                {!viewer && !home &&
                     <>
                         <div
                             className={styles.iconContainerEdit}

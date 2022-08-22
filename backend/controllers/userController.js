@@ -92,4 +92,40 @@ const user_update_password = async (req, res) => {
     }
 };
 
-module.exports = { user_update_meta, user_update_password };
+
+const users_get = async (req, res) => {
+    if (req.session.userId) {
+
+        const users = await prisma.user.findMany({
+            where:{
+                isVerified: true
+            },
+            select:{
+                userName: true,
+                email: true,
+                Wallet: {
+                    select:{
+                        name:true,
+                        money:true,
+                        transactions:{
+                            select:{
+                                title:true,
+                                money:true,
+                                date:true,
+                                info:true
+                            }
+                        }
+                    }
+                } 
+            }
+
+        })
+        res.json(users);
+        console.log('test')
+        console.log(users)
+
+    } else res.status(401).send('please login');
+};
+
+
+module.exports = { user_update_meta, user_update_password, users_get };

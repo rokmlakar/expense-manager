@@ -169,11 +169,17 @@ const transactions_get = async (req, res) => {
                             name: true,
                         },
                     },
+                    wallet:{
+                        select:{
+                            color:true
+                        }
+                    }
                 },
             })
                 .catch((e) => {
                     res.status(400).send('error');
                 });
+            console.log(transactions)
             res.json(transactions);
         }
     } else res.status(401).send('please login');
