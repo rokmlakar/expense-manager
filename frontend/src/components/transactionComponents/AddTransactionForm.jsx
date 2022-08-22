@@ -4,7 +4,7 @@ import { Title } from '../Titles/Titles';
 
 import { useEffect, useState, useContext } from 'react';
 import { useCategoriesGet } from '../../queries/category'
-import { useTransactionPost, useTransactionsGet, useEditTrGet, useTransactionEdit } from '../../queries/transaction';
+import { useTransactionPost, useTransactionsGet, useEditTrGet } from '../../queries/transaction';
 import { DateTime } from 'luxon';
 import { queryClient } from '../../constants/config';
 import { useWalletsGet } from '../../queries/wallet';
@@ -24,7 +24,6 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
     const [editMoney, setEditMoney] = useState();
     const [editInfo, setEditInfo] = useState();
 
-    // console.log(date)
 
     const { walletCon, setWalletCon } = useContext(WalletContext);
     const { trsCon, setTrsCon } = useContext(EditTrsContext);
@@ -40,9 +39,6 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
         if (wallets) setWallet(wallets.data[0].id)
     }, []);
 
-
-
-
     const { data: transaction, refetch: fetchTransaction } =
         useEditTrGet({
             transactionId: trsCon
@@ -51,8 +47,6 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
     const { data: transactions, refetch: fetchTransactions } =
         useTransactionsGet({ take: 10, key: 'CategoriesTrs', });
 
-
-    const { mutate: editTrs } = useTransactionEdit();
 
     const { data: wallets } = useWalletsGet();
     // console.log(wallets)
@@ -69,13 +63,11 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
         console.log('efff', trsCon)
         fetchTransactions()
         setEditMode(true);
-        setTitle();
-        setMoney();
-        setInfo();
     }, [trsCon])
 
     useEffect(() => {
         transactions && transactions.data.map((tr) => {
+            console.log(tr)
             if (tr.id === trsCon) {
                 // setEditedTr(tr);
                 setEditTitle(tr.title)
@@ -105,13 +97,6 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
         walletId: parseInt(wallet)
     };
 
-    let bodyEdit = {
-        transactionId: trsCon,
-        title: editTitle,
-        money: editMoney,
-        info: editInfo,
-    }
-
     const handleTransaction = () => {
         console.log('clik')
         fetchTransaction()
@@ -138,57 +123,30 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
         setTrsCon();
     }
 
-    const handleEdit = () => {
-        console.log(bodyEdit)
-        editTrs(bodyEdit, {
-            onSuccess: async () => {
-                await queryClient
-                    .invalidateQueries("Trs")
-                    .then(await reloadSetter(!reload))
-                    .catch();
-            },
-        });
-        setTrsCon()
-        setEditTitle();
-        setEditMoney();
-        setEditInfo();
-    }
-
-    const handleAdd = () => {
-        postTransaction(body, {
-            onSuccess: async () => {
-                await queryClient.invalidateQueries('Categories_Sum')
-                    .then(await reloadSetter(!reload))
-                    .catch;
-            },
-        });
-        setTitle();
-        setMoney();
-        setInfo();
-    }
-
+    console.log(editMode)
+    console.log(trsCon)
     // useEffect(() => {
     //     window.scrollTo(0, 0)
     //   }, [])
 
     return (
 
-        <div className={!trsCon ? styles.container : styles.editContainer} onClick={() => fetchTransaction}>
-            <Title onClick={() => fetchTransactions()}>{!trsCon ? 'Add a Transaction' : 'Edit Transaction'}</Title>
+        <div className={ !trsCon ? styles.container : styles.editContainer}  onClick={() => fetchTransaction}>
+            <Title onClick={() => fetchTransactions()}>{editMode ? 'Edit Transaction' :  'Add a Transaction'}</Title>
             <div className={styles.inner}>
                 <input
                     type="text"
                     placeholder='title'
-                    onChange={(e) => !trsCon ? setTitle(e.target.value) : setEditTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     onFocus={handleTitle}
-                    value={trsCon ? editTitle ? editTitle : '' : title ? title : ''}
+                    value={editTitle ? editTitle : title}
                 />
                 <input
                     type="number"
                     placeholder='money'
-                    onChange={(e) => !trsCon ? setMoney(e.target.value) : setEditMoney(e.target.value)}
+                    onChange={(e) => setMoney(e.target.value)}
                     onFocus={handleMoney}
-                    value={trsCon ? editMoney ? editMoney : '' : money ? money : ''}
+                    value={editMoney ? editMoney : money}
                 />
                 <input
                     type="date"
@@ -202,9 +160,9 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                 <input
                     type="text"
                     placeholder='info'
-                    onChange={(e) => !trsCon ? setInfo(e.target.value) : setEditInfo(e.target.value)}
+                    onChange={(e) => setInfo(e.target.value)}
                     onFocus={handleInfo}
-                    value={trsCon ? editInfo ? editInfo : '' : info ? info : ''}
+                    value={editInfo ? editInfo : info}
                 />
 
                 {/* CATEGORIES */}
@@ -238,16 +196,32 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
                 )}
 
                 {/* POST/EDIT TRANSACTION */}
-                {!trsCon ?
+                {!editMode ?
                     <button
-                        onClick={handleAdd}
+                        onClick={() => {
+                            postTransaction(body, {
+                                onSuccess: async () => {
+                                    await queryClient.invalidateQueries('Categories_Sum')
+                                        .then(await reloadSetter(!reload))
+                                        .catch;
+                                },
+                            });
+                        }}
                     >
                         {isLoading ? 'Loading...' : 'Add Transaction'}
                     </button>
                     :
                     <div className={styles.editBtns}>
                         < button style={{ background: '#e3e3e3' }}
-                            onClick={handleEdit}
+                            onClick={() => {
+                                postTransaction(body, {
+                                    onSuccess: async () => {
+                                        await queryClient.invalidateQueries('Categories_Sum')
+                                            .then(await reloadSetter(!reload))
+                                            .catch;
+                                    },
+                                });
+                            }}
                         >
                             {isLoading ? 'Loading...' : 'Edit Transaction'}
                         </button>

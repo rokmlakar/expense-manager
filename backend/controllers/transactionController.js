@@ -3,12 +3,7 @@ const { DateTime } = require('luxon');
 
 const transaction_post = async (req, res) => {
     if (req.session.userId) {
-        console.log(req.body)
         const date = new Date(req.body.date).toISOString();
-        // const date = req.body.date
-        console.log(date)
-        const timestamp = new Date().getTime()
-        console.log(timestamp)
         try {
             await prisma.transaction.create({
                 data: {
@@ -18,7 +13,6 @@ const transaction_post = async (req, res) => {
                     info: req.body.info,
                     transactionCategoryId: req.body.transactionCategoryId,
                     walletId: req.body.walletId,
-                    timestamp: timestamp,
                 }
             })
             res.status(200).send('success');
@@ -85,7 +79,7 @@ const transaction_edit_get = async (req, res) => {
                 })
                 res.status(200).send(editTr)
             }
-            catch {
+            catch{
                 res.status(400).send('error');
                 console.log('err')
             }
@@ -94,30 +88,29 @@ const transaction_edit_get = async (req, res) => {
 }
 
 const transactions_get = async (req, res) => {
-    console.log(req.query)
     if (req.session.userId) {
         //ZAPIŠE SI PODANE PARAMETRE TO SO LAHKO KATERIKOLI OD NAVEDENIH SPODAJ (1 ali več)
         let { firstDate, lastDate, category, dateSort, priceSort, skip, take, walletId } =
             req.query;
 
-        console.log(walletId)
+        // console.log(walletId)
 
 
-        // if (walletId) {
+        if (walletId) {
             // console.log('waaaaa')
-            // try {
+            try {
 
-            //     const viewedTransactions = await prisma.transaction.findUnique({
-            //         where: {
-            //             walletId: walletId
-            //         }
-            //     })
-            //     console.log(viewedTransactions)
-            // } catch {
-            //     res.status(400).send('error');
-            // }
-        // }
-        // else {
+                const viewedTransactions = await prisma.transaction.findUnique({
+                    where: {
+                        walletId: walletId
+                    }
+                })
+                console.log(viewedTransactions)
+            } catch {
+                res.status(400).send('error');
+            }
+        }
+        else {
 
 
             //ČE SKIP NI PODAN JE DEFAULT 0
@@ -126,14 +119,16 @@ const transactions_get = async (req, res) => {
             }
             //ČE TAKE NI PODAN JE DEFAULT 5
             if (!Number(take)) {
-                take = 1000;
+                take = 5;
             }
 
             //NAJDE TRANSAKCIJE KI USTREZAJO PARAMETROM, 
             const transactions = await prisma.transaction.findMany({
                 where: {
                     //WALLET USERID MORA USTREZATI USERIDJU SESSIONA
-                    walletId: walletId ? parseInt(walletId) : undefined,
+                    wallet: {
+                        userId: req.session.userId,
+                    },
                     //DATUM MORA USTREZATI MED DANAŠNJIM IN 30 DNI NAZAJ (NPR ZA BRISANJE TRANSAKCIJ DEFINIRAMO DATUMA MED KATERIM IŠČEMO TRANSAKCIJE)
                     date: {
                         gte: firstDate != undefined
@@ -152,9 +147,8 @@ const transactions_get = async (req, res) => {
                 skip: parseInt(skip),
                 take: parseInt(take),
                 orderBy: {
-                     timestamp: 'desc',
-                    //  date: dateSort != undefined ? dateSort : undefined,
-                    //  money: priceSort != undefined ? priceSort : undefined,
+                    date: dateSort != undefined ? dateSort : undefined,
+                    money: priceSort != undefined ? priceSort : undefined,
                 },
                 //IZBERE KATERE PODATKE PODA UPORABNIKU KOT RESPONSE
                 select: {
@@ -163,7 +157,6 @@ const transactions_get = async (req, res) => {
                     date: true,
                     info: true,
                     id: true,
-                    walletId: true,
                     category: {
                         select: {
                             name: true,
@@ -175,7 +168,7 @@ const transactions_get = async (req, res) => {
                     res.status(400).send('error');
                 });
             res.json(transactions);
-        // }
+        }
     } else res.status(401).send('please login');
 };
 
@@ -214,41 +207,11 @@ const transaction_delete = async (req, res) => {
     }
 };
 
-const transaction_edit = async (req, res) => {
-    if (req.session.userId) {
-        console.log(req.body)
-        let transactionId = req.body.transactionId
-        let title = req.body.title;
-        let money = parseFloat(req.body.money);
-        let info = req.body.info;
-        console.log(title)
-        console.log(money)
-        console.log(info)
-        try {
-
-            await prisma.transaction.update({
-                where: {
-                    id: transactionId
-                },
-                data: {
-                    title: title,
-                    money: money,
-                    info: info
-                },
-            })
-            res.status(200).send('success');
-        } catch {
-            res.status(400).send([{ instancePath: 'err', message: 'Error' }]);
-        }
-    }
-}
-
 module.exports = {
     transaction_post,
     transactions_get,
     transaction_delete,
     transaction_count_category,
     viewer_transactions,
-    transaction_edit_get,
-    transaction_edit
+    transaction_edit_get
 };

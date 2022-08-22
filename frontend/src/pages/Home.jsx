@@ -64,9 +64,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchCategories()
-        setWalletCon();
     }, [])
-
 
     const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
     // useCategoriesSum() = {
@@ -154,7 +152,6 @@ const Home = () => {
                                         money={transaction.money.toFixed(2)}
                                         description={transaction.info}
                                         title={transaction.title}
-                                        homepage={true}
                                     />
                                 );
                             })}
