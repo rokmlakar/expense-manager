@@ -24,7 +24,6 @@ const auth_login = async (req, res) => {
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         // if (!user.isVerified) {
         //     res.status(401).send('not verified')
-        //     console.log('user isnt verified')
         //     return
         // }
         if (isPasswordCorrect && user.isVerified) {
@@ -33,12 +32,10 @@ const auth_login = async (req, res) => {
         }
         else {
             if(isPasswordCorrect){
-                console.log('pass')
                 res.status(401).send("Wrong credidentials");
             }
 
             if(user.isVerified !== true){
-                console.log('verr')
                 res.status(401).send("Not verified");
             }
         }

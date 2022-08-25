@@ -54,7 +54,6 @@ const categories_get = async (req, res) => {
 const category_delete = async (req, res) => {
     //KOT REQ PREJMEMO TRANSACTIONID
     if (req.session.userId) {
-        console.log(req.params)
         let category = parseInt(req.params.transactionCategoryId);
         let tr;
         let ctgs;
@@ -69,7 +68,6 @@ const category_delete = async (req, res) => {
                     },
                 },
             })
-            console.log('yo')
             ctgs = await prisma.transactionCategory.deleteMany({
                 where: {
                     id: category,

@@ -17,6 +17,7 @@ import { WalletContext } from '../../context/WalletProvider';
 import { EditTrsContext } from '../../context/EditTransactionProvider';
 import WalletHomeCard from '../../components/Cards/WalletHomeCard';
 import AdminCard from './AdminCard';
+import {AdminTrsContext} from '../../context/AdminTrsProvider';
 
 //TRANSACTIONCARDU PODAMO KATEGORIJO, DATUM, DENAR, OPIS in NASLOV
 const UserCard = ({ userName, email, wallets }) => {
@@ -28,6 +29,7 @@ const UserCard = ({ userName, email, wallets }) => {
     const [newMoney, setNewMoney] = useState();
     const [showEdit, setShowEdit] = useState(false);
     const [edited, setEdited] = useState(false);
+    const {adminTrsCon, setAdminTrsCon} = useContext(AdminTrsContext);
     const [firstDate, setFirstDate] = useState(
         DateTime.now()
             .minus({
@@ -41,6 +43,7 @@ const UserCard = ({ userName, email, wallets }) => {
     );
 
     const { trsCon, setTrsCon } = useContext(EditTrsContext);
+
 
 
 
@@ -68,10 +71,6 @@ const UserCard = ({ userName, email, wallets }) => {
         });
 
 
-    console.log(wallets)
-    wallets&& wallets.map(element => {
-        console.log('hee', element.transactions)
-    });
 
 
     return (
@@ -84,30 +83,27 @@ const UserCard = ({ userName, email, wallets }) => {
                         <span className={styles.title}>{userName}</span>
                         <span className={styles.categoryName}>{email}</span>
                         {/* {visible && */}
+                        <div className={styles.wallets}>
+
                             {wallets && wallets.map((wallet, index) => {
                                 return (
                                     <AdminCard
                                         key={index}
-                                        name={wallet.name}
+                                        color={wallet.color}
+                                        description={wallet.description}
+                                        title={wallet.name}
                                         money={wallet.money}
                                         transactions={wallet.transactions}
                                         admin={true}
+                                        wallet={wallet.id}
                                     />
                                 );
                             })}
+                        </div>
                         {/* } */}
                     </div>
                 </div>
                 {/* MONEY */}
-                <div className={styles.moneyContainer}>
-                    <div
-                        className={styles.iconContainer}
-                        onClick={() => setVisible(!visible)}
-
-                    >
-                        {visible ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
-                    </div>
-                </div>
 
             </div>
         </div>

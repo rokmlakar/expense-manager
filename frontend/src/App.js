@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthProvider';
 import { WalletContext } from './context/WalletProvider';
 import { EditTrsContext } from './context/EditTransactionProvider';
 import { SuperUserCon } from './context/SuperUserProvider';
+import { AdminTrsContext } from './context/AdminTrsProvider';
 
 import Auth from './pages/Auth';
 import Home from './pages/Home';
@@ -29,6 +30,7 @@ function App() {
   const [walletCon, setWalletCon] = useState(0);
   const [trsCon, setTrsCon] = useState(0);
   const [superUsrCon, setSuperUsrCon] = useState(false);
+  const [adminTrsCon, setAdminTrsCon] = useState(0);
 
   return (
     <div className="App">
@@ -42,6 +44,7 @@ function App() {
               </div>
               <WalletContext.Provider value={{ walletCon, setWalletCon }}>
                 <EditTrsContext.Provider value={{ trsCon, setTrsCon }}>
+                <AdminTrsContext.Provider value={{ adminTrsCon, setAdminTrsCon }}>
 
                   <Routes>
                     {/* AUTH PAGE */}
@@ -84,6 +87,7 @@ function App() {
                         } />
                     </Route>
                   </Routes>
+                  </AdminTrsContext.Provider>
                 </EditTrsContext.Provider>
               </WalletContext.Provider>
             </SuperUserCon.Provider>

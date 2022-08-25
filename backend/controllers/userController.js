@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 
 const user_update_meta = async (req, res) => {
     const { username } = req.body;
-    console.log(req.body)
     //IF USER IS LOGGED IN
     if (req.session.userId) {
         try {
@@ -107,6 +106,9 @@ const users_get = async (req, res) => {
                     select:{
                         name:true,
                         money:true,
+                        color:true,
+                        id:true,
+                        description:true,
                         transactions:{
                             select:{
                                 title:true,
@@ -122,7 +124,6 @@ const users_get = async (req, res) => {
         })
         res.json(users);
         console.log('test')
-        console.log(users)
 
     } else res.status(401).send('please login');
 };

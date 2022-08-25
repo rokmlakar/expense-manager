@@ -3,12 +3,9 @@ const { DateTime } = require('luxon');
 
 const transaction_post = async (req, res) => {
     if (req.session.userId) {
-        console.log(req.body)
         const date = new Date(req.body.date).toISOString();
         // const date = req.body.date
-        console.log(date)
         const timestamp = new Date().getTime()
-        console.log(timestamp)
         try {
             await prisma.transaction.create({
                 data: {
@@ -30,8 +27,6 @@ const transaction_post = async (req, res) => {
 
 const transaction_count_category = async (req, res) => {
     if (req.session.userId) {
-        console.log(req.query)
-        console.log('yyysss')
         let { category } = req.query
     }
 
@@ -48,7 +43,6 @@ const transaction_count_category = async (req, res) => {
 
 const viewer_transactions = async (req, res) => {
     if (req.session.userId) {
-        console.log('bodyyyyy', req.query.walletId)
         let user = req.session.userId;
         let trnsArray = [];
         let wallId = req.query.walletId
@@ -95,28 +89,28 @@ const transaction_edit_get = async (req, res) => {
 
 const transactions_get = async (req, res) => {
     if (req.session.userId) {
+        console.log('reqqqqq')
         //ZAPIŠE SI PODANE PARAMETRE TO SO LAHKO KATERIKOLI OD NAVEDENIH SPODAJ (1 ali več)
         let { firstDate, lastDate, category, dateSort, priceSort, skip, take, walletId } =
             req.query;
 
-        // console.log(walletId)
+        console.log(walletId)
 
 
-        if (walletId) {
-            // console.log('waaaaa')
-            try {
+        // if (walletId) {
+        //     // console.log('waaaaa')
+        //     try {
 
-                const viewedTransactions = await prisma.transaction.findUnique({
-                    where: {
-                        walletId: walletId
-                    }
-                })
-                console.log(viewedTransactions)
-            } catch {
-                res.status(400).send('error');
-            }
-        }
-        else {
+        //         const viewedTransactions = await prisma.transaction.findUnique({
+        //             where: {
+        //                 walletId: walletId
+        //             }
+        //         })
+        //     } catch {
+        //         res.status(400).send('error');
+        //     }
+        // }
+        // else {
 
 
             //ČE SKIP NI PODAN JE DEFAULT 0
@@ -132,9 +126,7 @@ const transactions_get = async (req, res) => {
             const transactions = await prisma.transaction.findMany({
                 where: {
                     //WALLET USERID MORA USTREZATI USERIDJU SESSIONA
-                    wallet: {
-                        userId: req.session.userId,
-                    },
+                    walletId: walletId ? parseInt(walletId) : undefined,
                     //DATUM MORA USTREZATI MED DANAŠNJIM IN 30 DNI NAZAJ (NPR ZA BRISANJE TRANSAKCIJ DEFINIRAMO DATUMA MED KATERIM IŠČEMO TRANSAKCIJE)
                     date: {
                         gte: firstDate != undefined
@@ -179,9 +171,8 @@ const transactions_get = async (req, res) => {
                 .catch((e) => {
                     res.status(400).send('error');
                 });
-            console.log(transactions)
             res.json(transactions);
-        }
+        // }
     } else res.status(401).send('please login');
 };
 
@@ -222,14 +213,10 @@ const transaction_delete = async (req, res) => {
 
 const transaction_edit = async (req, res) => {
     if (req.session.userId) {
-        console.log(req.body)
         let transactionId = req.body.transactionId
         let title = req.body.title;
         let money = parseFloat(req.body.money);
         let info = req.body.info;
-        console.log(title)
-        console.log(money)
-        console.log(info)
         try {
 
             await prisma.transaction.update({

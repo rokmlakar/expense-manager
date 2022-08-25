@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 
 const wallet_post = async (req, res) => {
     if (req.session.userId) {
-        console.log(req.body)
         try {
             await prisma.wallet.create({
                 data: {

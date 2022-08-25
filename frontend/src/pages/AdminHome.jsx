@@ -7,7 +7,7 @@ import TransactionCard from "../components/Cards/TransactionCard";
 import CategoryCard from '../components/Cards/CategoryCard';
 import HomeProfile from "../components/homeComponents/HomeProfile";
 import UserCard from '../components/Cards/UserCard';
-
+import { BsXLg } from "react-icons/bs";
 
 import { WalletContext } from '../context/WalletProvider';
 import { useContext } from 'react';
@@ -18,20 +18,22 @@ import { useCategoriesGet } from '../queries/category';
 import { useWalletsGet } from '../queries/wallet';
 import { useUsers } from "../queries/user";
 import { useEffect } from "react";
+import { AdminTrsContext } from '../context/AdminTrsProvider';
 
 import styles from '../styles/homeComponents/Home.module.scss';
 import { useState } from "react";
 
 const AdminHome = () => {
-    
-    const {walletCon, setWalletCon} = useContext(WalletContext);
+
+    const { walletCon, setWalletCon } = useContext(WalletContext);
     const [ctgs, setCtgs] = useState();
     const [showTrns, setShowTrns] = useState(true);
     const [showCtgs, setShowCtgs] = useState(false);
     const [showWall, setShowWall] = useState(false);
     const [dropDown, setDropDown] = useState(false);
     const [selectedView, setSelectedView] = useState('Transactions');
-
+    const { adminTrsCon, setAdminTrsCon } = useContext(AdminTrsContext);
+    const [trs, setTrs] = useState();
 
     //LATEST TRANSACTIONS
     //OBJEKT USETRANSACTIONS KI PREJME PARAMETRE KEY SKIP TAKE IN NASTAVI OBJEKT KI IMA DATA KJER SO VSI 
@@ -44,8 +46,31 @@ const AdminHome = () => {
     //     }
     // );
 
+    const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
+        {
+            key: 'Admin_trs',
+            walletId: adminTrsCon  //key v tem primeru je string ID
+        }
+    );
+
+    console.log(transactions)
+
+    // useEffect(() => {
+    //     if (transactions.data && transactions.data.length > 0) {
+    //         setTrs(transactions.data)
+    //     }
+    //     else setTrs()
+    // }, [transactions])
+
+
+    useEffect(() => {
+        fetchTransactions()
+    }, [adminTrsCon])
+
+    console.log('jdjdjdjd', trs)
+
     const { data, refetch: fetchUsrs } = useUsers();
-   
+
     //DOBI TRENUTNE TRANSAKCIJE, SPROZI SE OB LOADU IN POŠLJE FETCH
     useEffect(() => {
         fetchUsrs()
@@ -61,12 +86,12 @@ const AdminHome = () => {
 
 
                 {/* CATEGORIES */}
-               
+
                 {/* TRANSACTIONS */}
                 <div className={styles.overview}>
                     <div className={styles.top}>
                         <Title>Latest Transactions</Title>
-                        <div className={styles.filter}>
+                        {/* <div className={styles.filter}>
                             <label htmlFor="selectedView">Selected View</label>
                             <select
                                 name="selectedView"
@@ -90,18 +115,37 @@ const AdminHome = () => {
                                     View by Wallets
                                 </option>
                             </select>
-                        </div>
+                        </div> */}
+                        {adminTrsCon ? <BsXLg onClick={() => setAdminTrsCon()}/> : ''}
                     </div>
+                    {
+                        !adminTrsCon ?
 
-                    {data?.data.map((usr, index) => {
-                        return(
-                            <UserCard
-                            userName={usr.userName}
-                            email={usr.email}
-                            wallets={usr.Wallet}
-                            />
-                        )
-                    })}
+                            data?.data.map((usr, index) => {
+                                return (
+                                    <UserCard
+                                        userName={usr.userName}
+                                        email={usr.email}
+                                        wallets={usr.Wallet}
+                                    />
+                                )
+                            })
+                            :
+                            transactions?.data.map((transaction, index) => {
+                                return (
+                                    <TransactionCard
+                                        key={index}
+                                        category={transaction.category.name}
+                                        date={DateTime.fromISO(transaction.date).toISODate()}
+                                        money={transaction.money.toFixed(2)}
+                                        description={transaction.info}
+                                        title={transaction.title}
+                                        walletColor={transaction.wallet.color}
+                                        home={true}
+                                    />
+                                );
+                            })
+                    }
 
 
 
@@ -110,7 +154,7 @@ const AdminHome = () => {
                         selectedView === 'Transactions' &&
                         <div className={styles.content}>
 
-                            
+
 
                             {/* LATEST TRANSACTIONS */}
                             {/* {transactions && transactions.data.map((transaction, index) => {

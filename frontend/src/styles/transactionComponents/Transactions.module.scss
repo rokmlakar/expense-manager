@@ -7,6 +7,11 @@
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
     border-radius: 20px;
+    
+    @media screen and (max-width: 1200px) {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
 
     .mainContent {
         padding: 20px;
