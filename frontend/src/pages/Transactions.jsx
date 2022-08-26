@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import { useCategoriesGet } from '../queries/category';
 import { useTransactionsGet } from '../queries/transaction';
+import { useWalletsGet } from '../queries/wallet';
 
 
 
@@ -28,6 +29,19 @@ const Transactions = () => {
   
   const {walletCon, setWalletCon} = useContext(WalletContext);
   const { trsCon, setTrsCon } = useContext(EditTrsContext);
+  const [wallet, setWallet] = useState();
+
+  const { data: wallets, refetch: fetchWallets } = useWalletsGet();
+
+
+  useEffect(() => {
+    wallets.data?.forEach(element => {
+      if (element.id === walletCon) {
+        setWallet(element.name)
+      }
+    });
+
+  }, [wallets])
 
 
   //SEARCH FILTERS
@@ -61,6 +75,7 @@ const Transactions = () => {
     fetchTransactions()
     
   }, [reload, trsCon])
+
   
   const [firstDate, setFirstDate] = useState(
     DateTime.now()
@@ -89,8 +104,7 @@ const Transactions = () => {
     <div className={styles.flexContainer}>
 
       <div className={styles.mainContent}>
-        <Title onClick={fetchTransactions}>Transactions</Title>
-        <Title onClick={fetchTransactions}>FETCCCH</Title>
+        <Title>{wallet}</Title>
         {/* FILTERS */}
         <div className={styles.filters}>
           <div className={styles.filterContainer}>
