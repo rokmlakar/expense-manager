@@ -17,6 +17,7 @@ import { useCategoriesSum } from "../queries/category";
 import { useCategoriesGet } from '../queries/category';
 import { useWalletsGet } from '../queries/wallet';
 import { useEffect } from "react"
+import { useHomeTransactionsGet } from "../queries/transaction";
 
 import styles from '../styles/homeComponents/Home.module.scss';
 import { useState } from "react";
@@ -51,7 +52,7 @@ const Home = () => {
     //LATEST TRANSACTIONS
     //OBJEKT USETRANSACTIONS KI PREJME PARAMETRE KEY SKIP TAKE IN NASTAVI OBJEKT KI IMA DATA KJER SO VSI 
     //TRANSACTIONI IN REFETCH KI PONOVNO POŠLJE FETCH    
-    const { data: transactions, refetch: fetchTransactions } = useTransactionsGet(
+    const { data: transactions, refetch: fetchTransactions } = useHomeTransactionsGet(
         {
             key: 'Trs_latest',  //key v tem primeru je string ID
             skip: 0,  //koliko transactionov skipa

@@ -13,6 +13,13 @@ const getTrs = async (params) => {
 };
 
 
+const getHomeTrs = async (params) => {
+  return await Ax.get("transactionsHome", { params: params }).catch((e) =>
+    console.log(e)
+  );
+};
+
+
 const getWallViewer = async (params) => {
   return await Ax.get('/walletViewers', params)
 }
@@ -113,6 +120,38 @@ const useTransactionsGet = ({
       keepPreviousData: true,
     }
   );
+const useHomeTransactionsGet = ({
+  firstDate,
+  lastDate,
+  category,
+  dateSort,
+  priceSort,
+  walletId,
+  transactionId,
+  skip,
+  take,
+  key,
+}) =>
+  useQuery(
+    key,
+    () =>
+      getHomeTrs({
+        firstDate,
+        lastDate,
+        category,
+        dateSort,
+        priceSort,
+        walletId,
+        transactionId,
+        skip,
+        take,
+      }),
+    {
+      refetchOnWindowFocus: false,
+      enabled: false,
+      keepPreviousData: true,
+    }
+  );
 
 const useViewerTransactionsGet = ({ key, walletId }) => useQuery(key, () => getViewerTrs({ walletId }), {
   refetchOnWindowFocus: false,
@@ -122,4 +161,4 @@ const useViewerTransactionsGet = ({ key, walletId }) => useQuery(key, () => getV
 
 
 const useTransactionPost = () => useMutation("postTransaction", postTr);
-export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount, useViewerTransactionsGet, useTransactionEdit, useEditTrGet };
+export { useTransactionsGet, useTransactionDelete, useTransactionPost, useTransactionsGetCount, useViewerTransactionsGet, useTransactionEdit, useEditTrGet, useHomeTransactionsGet };

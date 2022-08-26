@@ -87,6 +87,80 @@ const transaction_edit_get = async (req, res) => {
     }
 }
 
+const transactionsHome_get = async (req, res) => {
+    if (req.session.userId) {
+        console.log('reqqqqq')
+        //ZAPIŠE SI PODANE PARAMETRE TO SO LAHKO KATERIKOLI OD NAVEDENIH SPODAJ (1 ali več)
+        let { firstDate, lastDate, category, dateSort, priceSort, skip, take, walletId } =
+            req.query;
+
+
+
+            //ČE SKIP NI PODAN JE DEFAULT 0
+            if (!Number(skip)) {
+                skip = 0;
+            }
+            //ČE TAKE NI PODAN JE DEFAULT 5
+            if (!Number(take)) {
+                take = 1000;
+            }
+
+            //NAJDE TRANSAKCIJE KI USTREZAJO PARAMETROM, 
+            const transactions = await prisma.transaction.findMany({
+                where: {
+                    //WALLET USERID MORA USTREZATI USERIDJU SESSIONA
+                    wallet: {
+                        userId: req.session.userId,
+                    },
+                    //DATUM MORA USTREZATI MED DANAŠNJIM IN 30 DNI NAZAJ (NPR ZA BRISANJE TRANSAKCIJ DEFINIRAMO DATUMA MED KATERIM IŠČEMO TRANSAKCIJE)
+                    date: {
+                        gte: firstDate != undefined
+                            ? DateTime.fromISO(firstDate).toISO()
+                            : DateTime.now().minus({ days: 30 }).toISO(),
+                        lt: lastDate != undefined
+                            ? DateTime.fromISO(lastDate).toISO()
+                            : DateTime.now().toISO(),
+                    },
+                    //PREVERIMO DA TRANSAKCIJA KATERO PODAJAMO KATEGORIJI KI NAM JO UPORABNIK POŠLJE, ČE JO POŠLJE
+                    transactionCategoryId: {
+                        equals: category != undefined ? parseInt(category) : undefined,
+                    },
+                },
+                //SKIP IN TAKE SE PODATA ČE STA DEFINIRANA, SKIP ZA KOLIKO TRANSAKCIJ PRESKOČI, TAKE ZA KOLIKO JIH POŠLJE
+                skip: parseInt(skip),
+                take: parseInt(take),
+                orderBy: {
+                     timestamp: 'desc',
+                    //  date: dateSort != undefined ? dateSort : undefined,
+                    //  money: priceSort != undefined ? priceSort : undefined,
+                },
+                //IZBERE KATERE PODATKE PODA UPORABNIKU KOT RESPONSE
+                select: {
+                    title: true,
+                    money: true,
+                    date: true,
+                    info: true,
+                    id: true,
+                    category: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                    wallet:{
+                        select:{
+                            color:true
+                        }
+                    }
+                },
+            })
+                .catch((e) => {
+                    res.status(400).send('error');
+                });
+            res.json(transactions);
+        // }
+    } else res.status(401).send('please login');
+};
+
 const transactions_get = async (req, res) => {
     if (req.session.userId) {
         console.log('reqqqqq')
@@ -243,5 +317,6 @@ module.exports = {
     transaction_count_category,
     viewer_transactions,
     transaction_edit_get,
-    transaction_edit
+    transaction_edit,
+    transactionsHome_get
 };

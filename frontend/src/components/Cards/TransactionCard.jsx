@@ -45,7 +45,9 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
 
     const handleClick = () => {
         fetchTransaction()
-        setTrsCon(transactionId)
+        if(!trsCon){
+            setTrsCon(transactionId)
+        } else setTrsCon();
         setEdited(true);
         window.scrollTo({
             top: 0,
