@@ -124,8 +124,6 @@ const CategoryCard = ({ title, category, color, info: description, userId, reloa
         //     },
         // });
     }
-
-    // console.log(CategoriesSum)
     return (
         <div className={styles.container} style={{ background: color }}>
             <div className={styles.inner} >

@@ -74,7 +74,6 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
 
   const handleClick = () => {
 
-    console.log(addMoney)
     editWall(body, {
       onSuccess: async () => {
         await queryClient
@@ -100,7 +99,6 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
 
   }
 
-  console.log('TRRRRR', transactions)
 
   //VRNEMO IZBRANO KATEGORIJO Z DOLOČENIM STILOM(BARVO) TER PODAMO ŠE IME KATEGORIJE IN PA VSOTO VSEH TRANSAKCIJ KI SPADAJO POD TO KATEGORIJO
   return (

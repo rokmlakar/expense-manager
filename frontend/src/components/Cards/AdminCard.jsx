@@ -84,7 +84,6 @@ const AdminCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, wa
 
   const handleClick = () => {
 
-    console.log(addMoney)
     editWall(body, {
       onSuccess: async () => {
         await queryClient
@@ -138,6 +137,7 @@ const AdminCard = ({ title, wallet, money, color, reloadSetter, reload, ftch, wa
         </div> */}
 
       </div>
+      
     </div >
   );
 };

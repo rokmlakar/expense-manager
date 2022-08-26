@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 const CategorySumCard = ({ category, money, ctgs }) => {
   //NASTAVIMO STIL(VSAKA KATEGORIJA IMA SVOJO BARVO)
   const [style, setStyle] = useState({});
-  // console.log(ctgs)
 
   const [ctgName, setCtgName] = useState();
   const [ctgInfo, setCtgInfo] = useState();

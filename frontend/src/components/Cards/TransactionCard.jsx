@@ -45,14 +45,14 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
 
     const handleClick = () => {
         fetchTransaction()
-        if(!trsCon){
+        if (!trsCon) {
             setTrsCon(transactionId)
         } else setTrsCon();
         setEdited(true);
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        })
+        // window.scrollTo({
+        //     top: 0,
+        //     behavior: 'smooth'
+        // })
     }
 
     categories && categories.data.map((cat) => {
@@ -89,11 +89,11 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
 
     return (
         <div className={!home ? trsCon === transactionId ? styles.containerEdit : styles.container : styles.container}
-            style={home &&  { background: walletColor} }>
+            style={home && { background: walletColor }}>
 
-                {/* <div style={{padding: '2rem', background:`${walletColor}`}}></div> */}
-            <div className={styles.inner} style={home && { borderRadius:'20px', padding:'1.5rem'}}>
-                {/* INFO */} 
+            {/* <div style={{padding: '2rem', background:`${walletColor}`}}></div> */}
+            <div className={styles.inner} style={home && { borderRadius: '20px', padding: '1.5rem' }}>
+                {/* INFO */}
                 <div className={styles.info}>
                     {/* <CategoryIcon category={category} /> */}
                     <div className={styles.categoryContainer}>
@@ -133,27 +133,31 @@ const TransactionCard = ({ categoryName, date, money, description, title, transa
                             }
                             onClick={handleClick}
                         ><BsPencilSquare /></div>
-                        <div
-                            className={styles.iconContainerDelete}
-                            style={
-                                transactionsLoading
-                                    ? {
-                                        pointerEvents: "none",
-                                        background: "#333",
-                                    }
-                                    : {}
-                            }
-                            onClick={() => {
-                                deleteTr(transactionId, {
-                                    onSuccess: async () => {
-                                        await queryClient
-                                            .invalidateQueries("Trs")
-                                            .then(await reloadSetter(!reload))
-                                            .catch();
-                                    },
-                                });
-                            }}
-                        ><BsTrash /></div>
+                        {!trsCon ?
+                            <div
+                                className={styles.iconContainerDelete}
+                                style={
+                                    transactionsLoading
+                                        ? {
+                                            pointerEvents: "none",
+                                            background: "#333",
+                                        }
+                                        : {}
+                                }
+                                onClick={() => {
+                                    deleteTr(transactionId, {
+                                        onSuccess: async () => {
+                                            await queryClient
+                                                .invalidateQueries("Trs")
+                                                .then(await reloadSetter(!reload))
+                                                .catch();
+                                        },
+                                    });
+                                }}
+                            ><BsTrash /></div>
+                            : <div className={styles.iconContainerDeleteDisabled}
+                            ><BsTrash /></div>
+                        }
                     </>
                 }
             </div>

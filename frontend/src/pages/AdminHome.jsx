@@ -53,8 +53,6 @@ const AdminHome = () => {
         }
     );
 
-    console.log(transactions)
-
     // useEffect(() => {
     //     if (transactions.data && transactions.data.length > 0) {
     //         setTrs(transactions.data)
@@ -67,7 +65,6 @@ const AdminHome = () => {
         fetchTransactions()
     }, [adminTrsCon])
 
-    console.log('jdjdjdjd', trs)
 
     const { data, refetch: fetchUsrs } = useUsers();
 

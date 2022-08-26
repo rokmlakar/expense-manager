@@ -80,7 +80,6 @@ const Home = () => {
     const {data: wallets, refetch: fetchWallets} = useWalletsGet()
 
 
-    console.log(wallets)
 
     useEffect(() => {
         fetchCategories()
@@ -98,7 +97,6 @@ const Home = () => {
         fetchCategoriesSum();
     }, [])
 
-    console.log(transactions)
 
     return (
         <MainContainer optionClass={styles.container}>

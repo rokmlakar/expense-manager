@@ -82,7 +82,6 @@ const WalletViewerCard = ({ title, wallet, money, color, reloadSetter, reload, f
 
   const handleClick = () => {
 
-    console.log(addMoney)
     editWall(body, {
       onSuccess: async () => {
         await queryClient

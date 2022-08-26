@@ -73,7 +73,7 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
 
     useEffect(() => {
         transactions && transactions.data.map((tr) => {
-            console.log(tr)
+            // console.log(tr)
             if (tr.id === trsCon) {
                 // setEditedTr(tr);
                 setEditTitle(tr.title)
@@ -111,14 +111,11 @@ const AddTransactionForm = ({ reloadSetter, reload }) => {
     }
 
     const handleTransaction = () => {
-        console.log('clik')
         fetchTransaction()
-        console.log(transaction)
 
     }
 
     const handleTitle = () => {
-        console.log('ss')
         setEditTitle();
         setTitle();
     }

@@ -21,7 +21,7 @@ const Navbar = () => {
     }
   }, [isSuccess]);
   
-  console.log(superUsrCon)
+  
 
   return (
     <div className={styles.container}>
