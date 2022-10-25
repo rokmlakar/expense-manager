@@ -52,9 +52,7 @@ function App() {
                     {/* PROTECTED ROUTES */}
                     <Route element={<ProtectedRoutes />}>
 
-
                       {/* HOME */}
-
                       <Route path='/' element={<Home />} />
 
                       {/* SETTINGS */}

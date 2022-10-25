@@ -26,11 +26,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://localhost:5000",
-      'http://expenseTracker20/5000',
-      'http://expenseTracker20'
+      "https://localhost:5000"
     ],
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE", "PATCH"],
+    methods: ["POST", "PUT", "GET", "DELETE"],
     credentials: true,
   })
 );

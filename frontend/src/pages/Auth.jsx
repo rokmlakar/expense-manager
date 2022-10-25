@@ -135,7 +135,7 @@ const Auth = () => {
                 <Title>Easily keep track of all your expenses</Title>
                 <div className={styles.container}>
                     <div className={styles.img}>
-                        <img src={require('../imgs/expenseLanding.png')} alt="" />
+                        <img src={require('../imgs/expensev3.png')} alt="" />
                     </div>
                 </div>
             </div>

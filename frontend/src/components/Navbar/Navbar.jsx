@@ -5,7 +5,7 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { useLogoutUser } from '../../queries/user';
 import { SuperUserCon } from '../../context/SuperUserProvider';
-
+import { WalletContext } from '../../context/WalletProvider';
 import { queryClient, queryclient } from '../../constants/config';
 
 const Navbar = () => {
@@ -13,6 +13,7 @@ const Navbar = () => {
   const {superUsrCon, setSuperUsrCon} = useContext(SuperUserCon);
   const navigate = useNavigate();
   const { mutate: logoutHandler, isSuccess } = useLogoutUser();
+  const {walletCon, setWalletCon} = useContext(WalletContext);
   useEffect(() => {
     if (isSuccess) {
       queryClient.removeQueries();
@@ -38,7 +39,7 @@ const Navbar = () => {
           {/* HOME */}
           {auth &&
             <ListItemLink url="">
-              <h3>Home</h3>
+              <h3 onClick={ () => setWalletCon()}>Home</h3>
             </ListItemLink>
           }
 
@@ -48,14 +49,7 @@ const Navbar = () => {
               <h3>Categories</h3>
             </ListItemLink>
           }
-
-          {/* TRANSACTIONS */}
-          {/* {auth &&
-            <ListItemLink url="transactions">
-              <h3>Transactions</h3>
-            </ListItemLink>
-          } */}
-
+          
           {/* WALLET */}
           {auth &&
             <ListItemLink url="wallet">

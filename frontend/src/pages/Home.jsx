@@ -1,7 +1,5 @@
 import MainContainer from "../components/Containers/MainContainer";
-import SearchBar from "../components/homeComponents/SearchBar";
 import { Title } from "../components/Titles/Titles";
-import CategorySumCard from "../components/Cards/CategorySumCard";
 import WalletHomeCard from '../components/Cards/WalletHomeCard';
 import TransactionCard from "../components/Cards/TransactionCard";
 import CategoryCard from '../components/Cards/CategoryCard';
@@ -12,7 +10,6 @@ import { WalletContext } from '../context/WalletProvider';
 import { SuperUserCon } from "../context/SuperUserProvider";
 import { useContext } from 'react';
 import { DateTime } from 'luxon';
-import { useTransactionsGet } from "../queries/transaction";
 import { useCategoriesSum } from "../queries/category";
 import { useCategoriesGet } from '../queries/category';
 import { useWalletsGet } from '../queries/wallet';
@@ -24,34 +21,30 @@ import { useState } from "react";
 import { useUser } from '../queries/user';
 
 const Home = () => {
-    
-    const {walletCon, setWalletCon} = useContext(WalletContext);
-    const {superUsrCon, setSuperUsrCon} = useContext(SuperUserCon);
+
+    const { walletCon, setWalletCon } = useContext(WalletContext);
+    const { setSuperUsrCon } = useContext(SuperUserCon);
 
     const [ctgs, setCtgs] = useState();
-    const [showTrns, setShowTrns] = useState(true);
-    const [showCtgs, setShowCtgs] = useState(false);
-    const [showWall, setShowWall] = useState(false);
-    const [dropDown, setDropDown] = useState(false);
     const [selectedView, setSelectedView] = useState('Transactions');
 
-
-    // console.log(superUsrCon)
 
     const { data, isError } = useUser();
 
     useEffect(() => {
-    
-        if(data?.data.superAdmin){
+
+        if (data?.data.superAdmin) {
             setSuperUsrCon(true)
         }
 
-
     }, [data]);
 
-    //LATEST TRANSACTIONS
-    //OBJEKT USETRANSACTIONS KI PREJME PARAMETRE KEY SKIP TAKE IN NASTAVI OBJEKT KI IMA DATA KJER SO VSI 
-    //TRANSACTIONI IN REFETCH KI PONOVNO POŠLJE FETCH    
+    useEffect(() => {
+        if (walletCon) {
+            console.log('yoo')
+            setWalletCon(0);
+        }
+    }, []);
     const { data: transactions, refetch: fetchTransactions } = useHomeTransactionsGet(
         {
             key: 'Trs_latest',  //key v tem primeru je string ID
@@ -60,11 +53,6 @@ const Home = () => {
         }
     );
 
-    //ISTO KOT ZGORAJ
-    // useTransactionsGet({key: 'Trs_latest', skip: 0, take: 5,}) = {
-    //     data:transactions, 
-    //     refetch: fetchTransactions
-    // }
 
     const { data: cat, refetch: fetchCategories } = useCategoriesGet();
 
@@ -72,23 +60,13 @@ const Home = () => {
         setCtgs(cat)
     }, [cat])
 
-    if (!ctgs) {
-
-        // setctgs(cat)
-    }
-
-    const {data: wallets, refetch: fetchWallets} = useWalletsGet()
-
-
+    const { data: wallets, refetch: fetchWallets } = useWalletsGet()
 
     useEffect(() => {
         fetchCategories()
     }, [])
 
     const { data: CategoriesSum, refetch: fetchCategoriesSum } = useCategoriesSum();
-    // useCategoriesSum() = {
-    //     data: CategoriesSum
-    // } 
 
     //DOBI TRENUTNE TRANSAKCIJE, SPROZI SE OB LOADU IN POŠLJE FETCH
     useEffect(() => {
@@ -97,17 +75,11 @@ const Home = () => {
         fetchCategoriesSum();
     }, [])
 
-
     return (
         <MainContainer optionClass={styles.container}>
             <div className={styles.main}>
-                {/* SEARCHBAR */}
-                {/* <div className={styles.searchbar}>
-                    <SearchBar />
-                </div> */}
 
-
-                {/* CATEGORIES */}
+                {/* Wallets */}
                 <div className={styles.categories}>
                     <Title>Wallets</Title>
                     <div className={styles.content}>

@@ -118,7 +118,7 @@ const auth_register = async (req, res) => {
                 from: ' "Verify your email" <roky.mlakar@gmail.com> ',
                 to: newUser.email,
                 subject: 'verify your email',
-                html: `<h2> "${newUser.name}! Thanks for registering </h2>
+                html: `<h2> "${newUser.userName}! Thanks for registering </h2>
                         <h4> Please verify your mail to continue...</h4>
                         <a href="http://localhost:5000/api/verify-email?token=${newUser.emailToken}">Verify Your Email</a>`
             }

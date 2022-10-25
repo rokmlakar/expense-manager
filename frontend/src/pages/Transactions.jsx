@@ -43,6 +43,11 @@ const Transactions = () => {
 
   }, [wallets])
 
+  useEffect(() => {
+    console.log('rerr')
+    fetchTransactions()
+  }, [])
+
 
   //SEARCH FILTERS
   const [timeSpan, setTimeSpan] = useState(
@@ -73,8 +78,8 @@ const Transactions = () => {
 
   useEffect(() => {
     fetchTransactions()
-    
-  }, [reload, trsCon])
+    console.log(walletCon)
+  }, [reload, trsCon, walletCon])
 
   
   const [firstDate, setFirstDate] = useState(
@@ -238,9 +243,7 @@ const Transactions = () => {
 
                   </div>
                 );
-
               })}
-
           </div>
         </div>
       </div>
